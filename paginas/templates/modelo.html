@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/modelo.css' %}">
+    <title>Pagina modelo Padrão</title>
+</head>
+
+<body>
+    <div class="container">
+        {%block menu%}
+        <!-- Menu lateral -->
+        <aside class="aside-menu">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>RGN Academia</span>
+            </div>
+
+            <nav class="menu">
+                <div class="itens-menu">
+                    <h4>Principal</h4>
+                    <ul>
+                        <li><i class="fas fa-home"></i>Dashboard</li>
+                        <li><i class="fas fa-users"></i>Alunos</li>
+                    </ul>
+                </div>
+
+                <div class="itens-menu">
+                    <h4>Cadastros</h4>
+                    <ul>
+                        <li><i class="fas fa-user-plus"></i>Novo Aluno</li>
+                        <li><i class="fas fa-ruler"></i>Medidas</li>
+                    </ul>
+                </div>
+
+                <div class="itens-menu">
+                    <h4>Configurações</h4>
+                    <ul>
+                        <li><i class="fas fa-map"></i>Estados</li>
+                        <li><i class="fas fa-city"></i>Cidades</li>
+                    </ul>
+                </div>
+
+                <div class="itens-menu">
+                    <h4>Registros de Usuários</h4>
+                    <ul>
+                        <li><i class="fas fa-user-graduate"></i>Novo Usuario</li>
+                        <li><i class="fas fa-user-shield"></i>Novo Professor</li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        {%endblock%}
+
+        <!-- Conteudo main -->
+        {%block header%}
+        <header>
+            <div class="pesquisar">
+                <input type="text" placeholder="Pesquisar Aluno...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </header>
+        {%endblock%}
+    </div>
+
+</body>
+
+</html>
