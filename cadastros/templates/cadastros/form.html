@@ -1,0 +1,13 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+
+<h4 class="lead">Preencha todos os campos obrigatorios</h4>
+
+<form action="" method="get">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+</form>
