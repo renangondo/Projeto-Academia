@@ -8,15 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/modelo.css' %}">
     <title>Pagina modelo Padrão</title>
 </head>
 
 <body>
-    <div class="container">
+
+    <div class="layout">
+
         {%block menu%}
-        <!-- Menu lateral -->
         <aside class="aside-menu">
             <div class="logo">
                 <i class="fas fa-dumbbell"></i>
@@ -59,16 +62,35 @@
         </aside>
         {%endblock%}
 
-        <!-- Conteudo main -->
-        {%block header%}
-        <header>
-            <div class="pesquisar">
-                <input type="text" placeholder="Pesquisar Aluno...">
-                <button><i class="fas fa-search"></i></button>
+
+        <!-- MAIN AREA  -->
+        <div class="main-area">
+            {%block header%}
+            <header>
+                <div class="pesquisar">
+                    <input type="text" placeholder="Pesquisar Aluno...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </header>
+            {% endblock %}
+
+
+            
+            <!-- Container para conteúdo principal -->
+            <div class="container-main">
+            {%block main%}
+                <main class="main-content">
+                        <h3>teste</h3>
+                        <p>Este é o conteúdo principal da página</p>
+                </main>
+            {% endblock %}
             </div>
-        </header>
-        {%endblock%}
+        </div>
+
+
     </div>
+    <!-- Menu lateral fixo -->
+
 
 </body>
 
