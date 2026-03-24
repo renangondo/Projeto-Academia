@@ -4,7 +4,7 @@
 {%block main%}
 <h4 class="lead">Preencha todos os campos obrigatorios</h4>
 
-<form action="" method="get">
+<form action="" method="POST">
     {% csrf_token %}
 
     {{ form.as_p }}
