@@ -8,6 +8,8 @@ class Estado(models.Model):
     def __str__(self):
         return "{} ({})".format(self.nome, self.sigla)
     
+###########################################################################################
+
 # Models Cidade
 class Cidade(models.Model):
     nome = models.CharField(max_length=50, verbose_name="Nome da Cidade")
@@ -16,6 +18,7 @@ class Cidade(models.Model):
     def __str__(self):
         return "{} ({})".format(self.nome, self.estado.sigla)
 
+###########################################################################################
 #Models Professor
 class Professor(models.Model):
     nome = models.CharField(max_length=50, verbose_name="Nome do Professor")
@@ -26,6 +29,7 @@ class Professor(models.Model):
     def __str__(self):
         return "{} ({})".format(self.nome, self.cidade.nome)
 
+###########################################################################################
 #Models Aluno
 class Aluno(models.Model):
     SEXO_CHOICES = [

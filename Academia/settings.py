@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     # Ativação dos módulos
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
+    'exercicio.apps.ExercicioConfig',
+
 
 ]
 

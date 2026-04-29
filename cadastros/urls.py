@@ -20,8 +20,4 @@ urlpatterns = [
     path('excluir/cidade/<int:pk>/', CidadeDelete.as_view(), name="excluir-cidade"),
     path('excluir/professor/<int:pk>/', ProfessorDelete.as_view(), name="excluir-professor"),
     path('excluir/aluno/<int:pk>/', AlunoDelete.as_view(), name="excluir-aluno"),
-
-
-     
-
 ]
