@@ -4,6 +4,13 @@ from cadastros.models import Aluno, Professor
 
 # Create your models here.
 
+class Categoria(models.Model):
+    nome = models.CharField(max_length=100, verbose_name="Categoria")
+
+    def __str__(self):
+        return "Categoria do treino: {}".format(self.nome)
+
+###########################################################################################
 class Treino(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
     nomeTreino = models.CharField(max_length=20, verbose_name="Nome do Treino")
@@ -16,13 +23,6 @@ class Treino(models.Model):
     def __str__(self):
         return "{} Treino: {}".format(self.aluno, self.nomeTreino)
 
-###########################################################################################
-
-class Categoria(models.Model):
-    nome = models.CharField(max_length=100, verbose_name="Categoria")
-
-    def __str__(self):
-        return "Categoria do treino: {}".format(self.nome)
 
 ###########################################################################################
 
