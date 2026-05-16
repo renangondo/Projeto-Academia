@@ -36,7 +36,7 @@ class Exercicio(models.Model):
 
 ###########################################################################################
 
-class ExericioTreino(models.Model):
+class ExercicioTreino(models.Model):
     treino = models.ForeignKey(Treino, on_delete=models.PROTECT)
     exercicio = models.ForeignKey(Exercicio, on_delete=models.PROTECT)
     series = models.IntegerField(verbose_name="Séries")
@@ -44,5 +44,8 @@ class ExericioTreino(models.Model):
     descanso = models.IntegerField(verbose_name="Descanso")
     cadastraoEm = models.DateField(verbose_name="Cadastrado em")
     pesoAtual = models.FloatField(verbose_name="Peso Atual")
+
+    def __str__(self):
+        return "({}) {} {} Séries {} Rep".format(self.treino, self.exercicio, self.series, self.repeticoes)
 
 
