@@ -1,4 +1,4 @@
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.urls import reverse_lazy
 
@@ -29,4 +29,61 @@ class ExercicioTreinoCreate(CreateView):
     model = ExercicioTreino
     fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'cadastraoEm', 'pesoAtual']
     template_name = 'form.html'
+    success_url = reverse_lazy('inicio')
+
+############################## UPDATE #########################################
+
+
+class CategoriaUpdate(UpdateView):
+    model = Categoria
+    fields = ['nome']
+    template_name = 'form.html'
+    success_url = reverse_lazy('inicio')
+
+
+class TreinoUpdate(UpdateView):
+    model = Treino
+    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    template_name = 'form.html'
+    success_url = reverse_lazy('inicio')
+
+
+class ExercicioUpdate(UpdateView):
+    model = Exercicio
+    fields = ['nome', 'categoria', 'descricao']
+    template_name = 'form.html'
+    success_url = reverse_lazy('inicio')
+
+class ExercicioTreinoUpdate(UpdateView):
+    model = ExercicioTreino
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'cadastraoEm', 'pesoAtual']
+    template_name = 'form.html'
+    success_url = reverse_lazy('inicio')
+
+############################## DELETE #########################################
+
+class CategoriaDelete(DeleteView):
+    model = Categoria
+    fields = ['nome']
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('inicio')
+
+
+class TreinoDelete(DeleteView):
+    model = Treino
+    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('inicio')
+
+
+class ExercicioDelete(DeleteView):
+    model = Exercicio
+    fields = ['nome', 'categoria', 'descricao']
+    template_name = 'form-excluir.html'
+    success_url = reverse_lazy('inicio')
+
+class ExercicioTreinoDelete(DeleteView):
+    model = ExercicioTreino
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'cadastraoEm', 'pesoAtual']
+    template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')

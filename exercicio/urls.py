@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import CategoriaCreate, ExercicioCreate, TreinoCreate, ExercicioTreinoCreate
+from .views import CategoriaCreate, CategoriaDelete, CategoriaUpdate, ExercicioCreate, ExercicioDelete, ExercicioTreinoDelete, ExercicioTreinoUpdate, ExercicioUpdate, TreinoCreate, ExercicioTreinoCreate, TreinoDelete, TreinoUpdate
 
 
 
@@ -9,5 +9,19 @@ urlpatterns = [
     path('cadastrar/categoria/', CategoriaCreate.as_view(), name="cadastrar-categoria"),
     path('cadastrar/treino/', TreinoCreate.as_view(), name="cadastrar-treino"),
     path('cadastrar/exercicio/', ExercicioCreate.as_view(), name="cadastrar-exercicio"),
-    path('cadastrar/exercicioTreino/', ExercicioTreinoCreate.as_view(), name="cadatrar-exercicioTreino")
+    path('cadastrar/exercicioTreino/', ExercicioTreinoCreate.as_view(), name="cadatrar-exercicioTreino"),
+
+
+    path('editar/categoria/<int:pk>', CategoriaUpdate.as_view(), name="editar-categoria"),
+    path('editar/treino/<int:pk>', TreinoUpdate.as_view(), name="editar-treino"),
+    path('editar/exercicio/<int:pk>', ExercicioUpdate.as_view(), name="editar-exercicio"),
+    path('editar/exercicioTreino/<int:pk>', ExercicioTreinoUpdate.as_view(), name="editar-exercicioTreino"),
+
+
+    path('excluir/categoria/<int:pk>', CategoriaDelete.as_view(), name="excluir-categoria"),
+    path('excluir/treino/<int:pk>', TreinoDelete.as_view(), name="excluir-treino"),
+    path('excluir/exercicio/<int:pk>', ExercicioDelete.as_view(), name="excluir-exercicio"),
+    path('excluir/exercicioTreino/<int:pk>', ExercicioTreinoDelete.as_view(), name="excluir-exercicioTreino"),
+
+
 ]
