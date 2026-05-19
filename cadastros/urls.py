@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import EstadoCreate, CidadeCreate, AlunoCreate, ProfessorCreate
+from .views import AlunoList, CidadeList, EstadoCreate, CidadeCreate, AlunoCreate, EstadoList, ProfessorCreate, ProfessorList
 from .views import EstadoUpdate, CidadeUpdate, AlunoUpdate, ProfessorUpdate
 from .views import EstadoDelete, CidadeDelete, AlunoDelete, ProfessorDelete
 
@@ -20,4 +20,12 @@ urlpatterns = [
     path('excluir/cidade/<int:pk>/', CidadeDelete.as_view(), name="excluir-cidade"),
     path('excluir/professor/<int:pk>/', ProfessorDelete.as_view(), name="excluir-professor"),
     path('excluir/aluno/<int:pk>/', AlunoDelete.as_view(), name="excluir-aluno"),
+
+    path('listar/estado/', EstadoList.as_view(), name="listar-estado"),
+    path('listar/cidade/', CidadeList.as_view(), name="listar-cidade"),
+    path('listar/professor/', ProfessorList.as_view(), name="listar-professor"),
+    path('listar/aluno/', AlunoList.as_view(), name="listar-aluno"),
+
+
+
 ]

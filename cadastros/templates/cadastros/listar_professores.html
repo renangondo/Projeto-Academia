@@ -1,0 +1,62 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/listar_professores.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <div class="list-header">
+        <div>
+            <h2>Professores</h2>
+            <p>Lista de professores cadastrados no sistema</p>
+        </div>
+
+        <a href="{% url 'cadastrar-professor' %}" class="btn-novo">
+            + Novo Professor
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for professor in object_list %}
+                <tr>
+                    <td>{{ professor.id }}</td>
+                    <td>{{ professor.nome }}</td>
+                    <td>{{ professor.cpf }}</td>
+                    <td>{{ professor.telefone }}</td>
+                    <td><span class="badge">{{ professor.cidade }}</span></td>
+
+                    <td class="acoes">
+                        <a href="{% url 'editar-professor' professor.id %}" class="btn-editar">Editar</a>
+                        <a href="{% url 'excluir-professor' professor.id %}" class="btn-deletar">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="sem-registro">Nenhum professor cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

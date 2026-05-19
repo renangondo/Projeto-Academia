@@ -1,0 +1,58 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/listar_cidades.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">  
+{% endblock %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <div class="list-header">
+        <div>
+            <h2>Cidades</h2>
+            <p>Lista de cidades cadastradas no sistema</p>
+        </div>
+
+        <a href="{% url 'cadastrar-cidade' %}" class="btn-novo">
+            + Nova Cidade
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for cidade in object_list %}
+                <tr>
+                    <td>{{ cidade.id }}</td>
+                    <td>{{ cidade.nome }}</td>
+                    <td><span class="badge">{{ cidade.estado }}</span></td>
+
+                    <td class="acoes">
+                        <a href="{% url 'editar-cidade' cidade.id %}" class="btn-editar">Editar</a>
+                        <a href="{% url 'excluir-cidade' cidade.id %}" class="btn-deletar">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="sem-registro">Nenhuma cidade cadastrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

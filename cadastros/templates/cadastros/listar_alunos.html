@@ -1,0 +1,68 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/listar_alunos.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <div class="list-header">
+        <div>
+            <h2>Alunos</h2>
+            <p>Lista de alunos cadastrados no sistema</p>
+        </div>
+
+        <a href="{% url 'cadastrar-aluno' %}" class="btn-novo">
+            + Novo Aluno
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Objetivo</th>
+                    <th>Nível</th>
+                    <th>Professor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for aluno in object_list %}
+                <tr>
+                    <td>{{ aluno.id }}</td>
+                    <td>{{ aluno.nome }}</td>
+                    <td>{{ aluno.idade }}</td>
+                    <td>{{ aluno.cpf }}</td>
+                    <td>{{ aluno.telefone }}</td>
+                    <td>{{ aluno.objetivo }}</td>
+                    <td><span class="badge">{{ aluno.nivel }}</span></td>
+                    <td>{{ aluno.professor }}</td>
+
+                    <td class="acoes">
+                        <a href="{% url 'editar-aluno' aluno.id %}" class="btn-editar">Editar</a>
+                        <a href="{% url 'deletar-aluno' aluno.id %}" class="btn-deletar">Excluir</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="sem-registro">Nenhum aluno cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

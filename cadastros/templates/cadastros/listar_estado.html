@@ -1,0 +1,89 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/listar_estado.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">            
+{% endblock %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <!-- TOPO -->
+    <div class="list-header">
+
+        <div>
+            <h2>Estados</h2>
+            <p>Lista de estados cadastrados no sistema</p>
+        </div>
+
+        <a href="{% url 'cadastrar-estado' %}" class="btn-novo">
+            + Novo Estado
+        </a>
+
+    </div>
+
+    <!-- TABELA -->
+    <div class="table-container">
+
+        <table class="table-list">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Sigla</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for estado in object_list %}
+
+                <tr>
+
+                    <td>{{ estado.id }}</td>
+
+                    <td>{{ estado.nome }}</td>
+
+                    <td>
+                        <span class="badge">
+                            {{ estado.sigla }}
+                        </span>
+                    </td>
+
+                    <td class="acoes">
+
+                        <a href="{% url 'editar-estado' estado.id %}" class="btn-editar">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'excluir-estado' estado.id %}" class="btn-deletar">
+                            Excluir
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="4" class="sem-registro">
+                        Nenhum estado cadastrado.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

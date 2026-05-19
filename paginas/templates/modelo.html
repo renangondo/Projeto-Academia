@@ -11,7 +11,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/modelo.css' %}">
+    {% block css %}
+    <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+    {% endblock %}
     <title>Pagina modelo Padrão</title>
 </head>
 
@@ -46,8 +48,8 @@
                 <div class="itens-menu">
                     <h4>Configurações</h4>
                     <ul>
-                        <li><i class="fas fa-map"></i>Estados</li>
-                        <li><i class="fas fa-city"></i>Cidades</li>
+                        <li><i class="fas fa-map"></i>Listar Estados</li>
+                        <li><i class="fas fa-city"></i>LIstar Cidades</li>
                     </ul>
                 </div>
 
@@ -75,14 +77,81 @@
             {% endblock %}
 
 
-            
+
             <!-- Container para conteúdo principal -->
-            {%block main%}
+            {% block main %}
             <div class="container-main">
+
                 <main class="main-content">
-                        <h3>teste</h3>
-                        <p>Este é o conteúdo principal da página</p>
+
+                    {% block content %}
+
+                    <div class="dashboard">
+
+                        <div class="dashboard-title">
+                            <h2>Dashboard</h2>
+                            <p>Resumo geral do sistema</p>
+                        </div>
+
+                        <!-- CARDS -->
+                        <div class="cards-dashboard">
+
+                            <div class="card-dashboard">
+                                <span>Total de alunos</span>
+                                <h3>{{ total_alunos }}</h3>
+                            </div>
+
+                            <div class="card-dashboard">
+                                <span>Total de professores</span>
+                                <h3>{{ total_professores }}</h3>
+                            </div>
+
+                            <div class="card-dashboard">
+                                <span>Total de cidades</span>
+                                <h3>{{ total_cidades }}</h3>
+                            </div>
+
+                            <div class="card-dashboard">
+                                <span>Total de estados</span>
+                                <h3>{{ total_estados }}</h3>
+                            </div>
+
+                        </div>
+
+                        <div class="dashboard-grid">
+
+                            <section class="dashboard-box">
+                                <h3>Últimos alunos cadastrados</h3>
+
+                                {% for aluno in ultimos_alunos %}
+                                <div class="item-lista">
+                                    <strong>{{ aluno.nome }}</strong>
+                                    <span>{{ aluno.data_criacao }}</span>
+                                </div>
+                                {% empty %}
+                                <p>Nenhum aluno cadastrado ainda.</p>
+                                {% endfor %}
+                            </section>
+
+                            <section class="dashboard-box">
+                                <h3>Ações rápidas</h3>
+
+                                <div class="acoes-rapidas">
+                                    <a href="#">Cadastrar aluno</a>
+                                    <a href="#">Cadastrar professor</a>
+                                    <a href="#">Cadastrar cidade</a>
+                                    <a href="#">Cadastrar estado</a>
+                                </div>
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                    {% endblock %}
+
                 </main>
+
             </div>
             {% endblock %}
         </div>

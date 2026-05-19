@@ -1,4 +1,5 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 from .models import Cidade, Estado, Professor, Aluno
 from django.urls import reverse_lazy
 
@@ -62,8 +63,6 @@ class AlunoUpdate(UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-
-
 ############################## DELETE #########################################
 
 class EstadoDelete(DeleteView):
@@ -88,3 +87,25 @@ class AlunoDelete(DeleteView):
     model = Aluno
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
+
+
+############################## LISTAR #########################################
+
+class EstadoList(ListView):
+    model = Estado
+    template_name = 'cadastros/listar_estado.html'
+
+
+class CidadeList(ListView):
+    model = Cidade
+    template_name = 'cadastros/listar_cidades.html'
+
+
+class ProfessorList(ListView):
+    model = Professor
+    template_name = 'cadastros/listar_professores.html'
+
+
+class AlunoList(ListView):
+    model = Aluno
+    template_name = 'cadastros/listar_alunos.html'
