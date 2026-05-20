@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'paginas.apps.PaginasConfig',
     'cadastros.apps.CadastrosConfig',
     'exercicio.apps.ExercicioConfig',
+    'medidas.apps.MedidasConfig',
 
 
 ]

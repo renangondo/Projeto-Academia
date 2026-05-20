@@ -97,6 +97,11 @@ header {
     gap: 10px;
     cursor: pointer;
     transition: 0.2s;
+    
+}
+
+.itens-menu a {
+    text-decoration: none;
 }
 
 .itens-menu ul li:hover {

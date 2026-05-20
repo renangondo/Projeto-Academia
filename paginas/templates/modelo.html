@@ -32,8 +32,15 @@
                 <div class="itens-menu">
                     <h4>Principal</h4>
                     <ul>
-                        <li><i class="fas fa-home"></i>Dashboard</li>
-                        <li><i class="fas fa-users"></i>Alunos</li>
+                        <a href="{% url 'inicio' %}">
+                            <li><i class="fas fa-home"></i>Dashboard</li>
+                        </a>
+                        
+
+                        <a href="{% url 'listar-aluno' %}">
+                            <li><i class="fas fa-users"></i>Alunos</li>
+                        </a>
+                        
                     </ul>
                 </div>
 
@@ -48,16 +55,28 @@
                 <div class="itens-menu">
                     <h4>Configurações</h4>
                     <ul>
-                        <li><i class="fas fa-map"></i>Listar Estados</li>
-                        <li><i class="fas fa-city"></i>LIstar Cidades</li>
+
+                        <a href="{% url 'listar-estado' %}">
+                            <li><i class="fas fa-map"></i>Listar Estados</li>
+                        </a>
+                        
+                        <a href="{% url 'listar-cidade' %}">
+                            <li><i class="fas fa-city"></i>LIstar Cidades</li>
+                        </a>
+
                     </ul>
                 </div>
 
                 <div class="itens-menu">
                     <h4>Registros de Usuários</h4>
                     <ul>
+                        
                         <li><i class="fas fa-user-graduate"></i>Novo Usuario</li>
-                        <li><i class="fas fa-user-shield"></i>Novo Professor</li>
+                        
+                        <a href="{% url 'listar-professor' %}">
+                            <li><i class="fas fa-user-shield"></i>Novo Professor</li>
+                        </a>
+                        
                     </ul>
                 </div>
             </nav>

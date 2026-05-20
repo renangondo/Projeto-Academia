@@ -1,20 +1,29 @@
 {% extends 'modelo.html' %}
 {% load static %}
 
-{%block main%}
-<h4 class="lead">Excluir Registros</h4>
 
-<p class="lead">Confirme para excluir o registro definitivamente</p>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/form-excluir.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+{% endblock %}
 
-<form action="" method="POST">
+{% block main %}
+<div class="delete-page">
+    <div class="delete-card">
 
-    <p>Deseja excluir: <b>{{ object }}</b>?</p>
-    {% csrf_token %}
+        <h2>Confirmar exclusão</h2>
 
-    {{ form.as_p }}
+        <p>Tem certeza que deseja excluir este registro?</p>
 
-    <button type="submit" class="btn btn-danger">Excluir</button>
-{%endblock%}
+        <form method="POST">
+            {% csrf_token %}
 
-    
-</form>
+            <div class="delete-actions">
+                <a href="javascript:history.back()" class="btn-cancelar">Cancelar</a>
+                <button type="submit" class="btn-excluir">Excluir</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,16 +1,26 @@
 {% extends 'modelo.html' %}
 {% load static %}
 
-{%block main%}
-<h4 class="lead">Preencha todos os campos obrigatorios</h4>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+{% endblock %}
 
-<form action="" method="POST">
-    {% csrf_token %}
+{% block main %}
+<div class="form-page">
+    <div class="form-card">
 
-    {{ form.as_p }}
+        <h2>Cadastrar</h2>
+        <p>Preencha todos os campos obrigatórios</p>
 
-    <button type="submit" class="btn btn-primary">Cadastrar</button>
-{%endblock%}
+        <form action="" method="POST">
+            {% csrf_token %}
 
-    
-</form>
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-salvar">Cadastrar</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

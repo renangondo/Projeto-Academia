@@ -27,5 +27,4 @@ urlpatterns = [
     path('listar/aluno/', AlunoList.as_view(), name="listar-aluno"),
 
 
-
 ]
