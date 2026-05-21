@@ -1,5 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.views.generic import DetailView
 from .models import Cidade, Estado, Professor, Aluno
 from django.urls import reverse_lazy
 
@@ -109,3 +110,22 @@ class ProfessorList(ListView):
 class AlunoList(ListView):
     model = Aluno
     template_name = 'cadastros/listar_alunos.html'
+
+
+############################## DETAIL #########################################
+
+class AlunoDetail(DetailView):
+    model = Aluno
+    template_name = 'cadastros/detalhe_aluno.html'
+    context_object_name = 'aluno'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Depois você ajusta conforme o nome real do model Treino
+        # context['treinos'] = Treino.objects.filter(aluno=self.object)
+
+        # Depois você ajusta conforme o nome real do model Medida
+        # context['medidas'] = Medida.objects.filter(aluno=self.object).order_by('-data')[:3]
+
+        return context

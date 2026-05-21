@@ -43,6 +43,20 @@
     min-width: 850px;
 }
 
+.link-aluno {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.link-aluno:visited {
+    color: #2563eb;
+}
+
+.link-aluno:hover {
+    color: #1d4ed8;
+}
+
 .table-list thead {
     background: #f9fafb;
 }

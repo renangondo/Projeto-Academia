@@ -50,8 +50,8 @@ class Aluno(models.Model):
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
     objetivo = models.CharField(max_length=255, verbose_name="Objetivo do Aluno")
     data_criacao = models.DateField(verbose_name="Data de criação")
-    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES, verbose_name="Sexo")
-    nivel = models.CharField(max_length=1, choices=NIVEL_CHOICES, verbose_name="Nivel do Aluno")
+    sexo = models.CharField(max_length=20, choices=SEXO_CHOICES, verbose_name="Sexo")
+    nivel = models.IntegerField(max_length=1, choices=NIVEL_CHOICES, verbose_name="Nivel do Aluno")
     cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT)
     professor = models.ForeignKey(Professor, on_delete=models.PROTECT)
 

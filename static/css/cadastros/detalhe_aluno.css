@@ -1,0 +1,159 @@
+.aluno-detalhe {
+    padding: 30px;
+}
+
+.aluno-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.aluno-header h2 {
+    font-size: 28px;
+    color: #111827;
+    margin-bottom: 5px;
+}
+
+.aluno-header p {
+    color: #6b7280;
+}
+
+.aluno-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary,
+.btn-secondary {
+    text-decoration: none;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.info-card {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.info-card span {
+    display: block;
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.info-card strong {
+    color: #111827;
+    font-size: 18px;
+}
+
+.section-title {
+    margin: 30px 0 18px;
+}
+
+.section-title h3 {
+    color: #111827;
+    font-size: 22px;
+    margin-bottom: 4px;
+}
+
+.section-title p {
+    color: #6b7280;
+}
+
+.treino-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.treino-card,
+.empty-card,
+.medidas-box {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.treino-card h4 {
+    color: #111827;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.treino-card p,
+.empty-card p,
+.medidas-box p {
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.treino-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.treino-footer span {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.treino-footer a,
+.empty-card a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+    .info-grid,
+    .treino-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .aluno-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 700px) {
+    .info-grid,
+    .treino-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .aluno-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+}

@@ -41,7 +41,11 @@
                 {% for aluno in object_list %}
                 <tr>
                     <td>{{ aluno.id }}</td>
-                    <td>{{ aluno.nome }}</td>
+                    <td>
+                        <a href="{% url 'detalhe-aluno' aluno.id %}" class="link-aluno">
+                            {{ aluno.nome }}
+                        </a>
+                    </td>
                     <td>{{ aluno.idade }}</td>
                     <td>{{ aluno.cpf }}</td>
                     <td>{{ aluno.telefone }}</td>
@@ -51,7 +55,7 @@
 
                     <td class="acoes">
                         <a href="{% url 'editar-aluno' aluno.id %}" class="btn-editar">Editar</a>
-                        <a href="{% url 'deletar-aluno' aluno.id %}" class="btn-deletar">Excluir</a>
+                        <a href="{% url 'excluir-aluno' aluno.id %}" class="btn-deletar">Excluir</a>
                     </td>
                 </tr>
                 {% empty %}

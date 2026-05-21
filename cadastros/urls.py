@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AlunoList, CidadeList, EstadoCreate, CidadeCreate, AlunoCreate, EstadoList, ProfessorCreate, ProfessorList
+from .views import AlunoDetail, AlunoList, CidadeList, EstadoCreate, CidadeCreate, AlunoCreate, EstadoList, ProfessorCreate, ProfessorList
 from .views import EstadoUpdate, CidadeUpdate, AlunoUpdate, ProfessorUpdate
 from .views import EstadoDelete, CidadeDelete, AlunoDelete, ProfessorDelete
 
@@ -25,6 +25,8 @@ urlpatterns = [
     path('listar/cidade/', CidadeList.as_view(), name="listar-cidade"),
     path('listar/professor/', ProfessorList.as_view(), name="listar-professor"),
     path('listar/aluno/', AlunoList.as_view(), name="listar-aluno"),
+
+    path('detalhe/aluno/<int:pk>/', AlunoDetail.as_view(), name='detalhe-aluno'),
 
 
 ]

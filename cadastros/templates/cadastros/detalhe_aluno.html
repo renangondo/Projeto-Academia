@@ -1,0 +1,87 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/cadastros/detalhe_aluno.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="aluno-detalhe">
+
+    <div class="aluno-header">
+        <div>
+            <h2>{{ aluno.nome }}</h2>
+            <p>Detalhes do aluno, treinos e medidas corporais</p>
+        </div>
+
+        <div class="aluno-actions">
+            <a href="{% url 'editar-aluno' aluno.id %}" class="btn-secondary">Editar aluno</a>
+            <a href="#" class="btn-primary">Cadastrar medida</a>
+            <a href="#" class="btn-primary">Cadastrar treino</a>
+        </div>
+    </div>
+
+    <div class="info-grid">
+
+        <div class="info-card">
+            <span>Idade</span>
+            <strong>{{ aluno.idade }} anos</strong>
+        </div>
+
+        <div class="info-card">
+            <span>Objetivo</span>
+            <strong>{{ aluno.objetivo }}</strong>
+        </div>
+
+        <div class="info-card">
+            <span>Nível</span>
+            <strong>{{ aluno.get_nivel_display }}</strong>
+        </div>
+
+        <div class="info-card">
+            <span>Professor</span>
+            <strong>{{ aluno.professor }}</strong>
+        </div>
+
+    </div>
+
+    <div class="section-title">
+        <h3>Treinos do aluno</h3>
+        <p>Fichas de treino vinculadas a este aluno</p>
+    </div>
+
+    <div class="treino-grid">
+
+        {% for treino in treinos %}
+        <div class="treino-card">
+            <h4>{{ treino.nome }}</h4>
+            <p>{{ treino.descricao }}</p>
+
+            <div class="treino-footer">
+                <span>{{ treino.data_criacao }}</span>
+                <a href="#">Ver treino</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-card">
+            <p>Nenhum treino cadastrado para este aluno.</p>
+            <a href="#">Cadastrar primeiro treino</a>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="section-title">
+        <h3>Medidas recentes</h3>
+        <p>Últimos registros de evolução física</p>
+    </div>
+
+    <div class="medidas-box">
+        <p>Área reservada para listar ou editar as medidas do aluno.</p>
+    </div>
+
+</div>
+
+{% endblock %}

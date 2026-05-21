@@ -47,8 +47,15 @@
                 <div class="itens-menu">
                     <h4>Cadastros</h4>
                     <ul>
-                        <li><i class="fas fa-user-plus"></i>Novo Aluno</li>
-                        <li><i class="fas fa-ruler"></i>Medidas</li>
+                        <a href="{% url 'cadastrar-aluno' %}">
+                            <li><i class="fas fa-user-plus"></i>Novo Aluno</li>
+                        </a>
+                        
+
+                        <a href="{% url 'cadastrar-medidas' %}">
+                            <li><i class="fas fa-ruler"></i>Medidas</li>
+                        </a>
+                        
                     </ul>
                 </div>
 
