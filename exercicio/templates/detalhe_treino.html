@@ -1,0 +1,55 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="list-container">
+
+    <div class="list-header">
+        <div>
+            <h2>{{ treino.nomeTreino }}</h2>
+            <p>{{ treino.descricao }}</p>
+        </div>
+
+        <a href="{% url 'cadastrar-exercicioTreino' treino.id %}" class="btn-novo">
+            + Adicionar Exercício
+        </a>
+    </div>
+
+    <div class="table-container">
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th>Exercício</th>
+                    <th>Categoria</th>
+                    <th>Séries</th>
+                    <th>Repetições</th>
+                    <th>Descanso</th>
+                    <th>Peso Atual</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in exercicios_treino %}
+                <tr>
+                    <td>{{ item.exercicio.nome }}</td>
+                    <td>{{ item.exercicio.categoria.nome }}</td>
+                    <td>{{ item.series }}</td>
+                    <td>{{ item.repeticoes }}</td>
+                    <td>{{ item.descanso }} Minutos</td>
+                    <td>{{ item.pesoAtual }} KG</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="sem-registro">
+                        Nenhum exercício adicionado neste treino.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

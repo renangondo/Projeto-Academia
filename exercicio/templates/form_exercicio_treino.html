@@ -1,0 +1,40 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/exercicio/form_exercicio_treino.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+
+    <div class="form-card">
+
+        <div class="form-header">
+            <h2>Adicionar exercício ao treino</h2>
+            <p>Preencha as informações do exercício que fará parte da ficha.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    Salvar exercício
+                </button>
+
+                <a href="javascript:history.back()" class="btn-cancel">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

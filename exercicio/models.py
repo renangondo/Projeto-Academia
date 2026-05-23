@@ -12,7 +12,7 @@ class Categoria(models.Model):
 
 ###########################################################################################
 class Treino(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
+    aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT, related_name="Treinos")
     nomeTreino = models.CharField(max_length=20, verbose_name="Nome do Treino")
     dataInicio = models.DateField(verbose_name="Data de Inicio")
     dataFim = models.DateField(verbose_name="Data de Encerramento")
@@ -37,12 +37,12 @@ class Exercicio(models.Model):
 ###########################################################################################
 
 class ExercicioTreino(models.Model):
-    treino = models.ForeignKey(Treino, on_delete=models.PROTECT)
+    treino = models.ForeignKey(Treino, on_delete=models.PROTECT, related_name="exercicio_do_treino")
     exercicio = models.ForeignKey(Exercicio, on_delete=models.PROTECT)
     series = models.IntegerField(verbose_name="Séries")
     repeticoes = models.IntegerField(verbose_name="Repetições")
     descanso = models.IntegerField(verbose_name="Descanso")
-    cadastraoEm = models.DateField(verbose_name="Cadastrado em")
+    cadatradoEm = models.DateField(verbose_name="Cadastrado em")
     pesoAtual = models.FloatField(verbose_name="Peso Atual")
 
     def __str__(self):

@@ -18,8 +18,8 @@
 
         <div class="aluno-actions">
             <a href="{% url 'editar-aluno' aluno.id %}" class="btn-secondary">Editar aluno</a>
-            <a href="#" class="btn-primary">Cadastrar medida</a>
-            <a href="#" class="btn-primary">Cadastrar treino</a>
+            <a href="{% url 'cadastrar-medidas' aluno.id %}" class="btn-primary">Cadastrar medida</a>
+            <a href="{% url 'cadastrar-treino'  %}" class="btn-primary">Cadastrar treino</a>
         </div>
     </div>
 
@@ -56,23 +56,25 @@
 
         {% for treino in treinos %}
         <div class="treino-card">
-            <h4>{{ treino.nome }}</h4>
+            <h4>{{ treino.nomeTreino }}</h4>
             <p>{{ treino.descricao }}</p>
 
-            <div class="treino-footer">
-                <span>{{ treino.data_criacao }}</span>
-                <a href="#">Ver treino</a>
+            <div class="treino-info">
+                <span>Início: {{ treino.dataInicio }}</span>
+                <span>Fim: {{ treino.dataFim }}</span>
             </div>
+
+            <a href="{% url 'detalhe-treino' treino.id %}" class="btn-ver-treino">
+                Ver treino
+            </a>
         </div>
         {% empty %}
         <div class="empty-card">
-            <p>Nenhum treino cadastrado para este aluno.</p>
-            <a href="#">Cadastrar primeiro treino</a>
+            <p>Este aluno ainda não possui treinos cadastrados.</p>
         </div>
         {% endfor %}
 
     </div>
-
     <div class="section-title">
         <h3>Medidas recentes</h3>
         <p>Últimos registros de evolução física</p>
