@@ -11,6 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     {% block css %}
     <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
     {% endblock %}
@@ -107,7 +108,7 @@
         <!-- MAIN AREA  -->
         <div class="main-area">
             {%block header%}
-            <header>
+            <header class="area-pesquisar">
                 <div class="pesquisar">
                     <input type="text" placeholder="Pesquisar Aluno...">
                     <button><i class="fas fa-search"></i></button>
