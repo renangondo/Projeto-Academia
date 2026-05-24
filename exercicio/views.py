@@ -1,4 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+from cadastros.models import Aluno
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView
 from django.urls import reverse_lazy
@@ -15,8 +17,16 @@ class CategoriaCreate(CreateView):
 
 class TreinoCreate(CreateView):
     model = Treino
-    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    fields = ['nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
     template_name = 'form.html'
+    
+    def form_valid(self, form):
+        aluno = Aluno.objects.get(pk=self.kwargs['pk'])
+        form.instance.aluno = aluno
+        return super().form_valid(form)
+    def get_success_url(self):
+
+        return reverse_lazy('detalhe-aluno', kwargs={'pk': self.kwargs['pk']})
     success_url = reverse_lazy('inicio')
 
 

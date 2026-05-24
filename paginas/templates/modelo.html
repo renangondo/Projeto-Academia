@@ -23,70 +23,83 @@
 
         {%block menu%}
         <aside class="aside-menu">
+
             <div class="logo">
-                <i class="fas fa-dumbbell"></i>
-                <span>RGN Academia</span>
+                <div class="logo-icon">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <div>
+                    <span>RGN Academia</span>
+                    <small>Gestão de Treinos</small>
+                </div>
             </div>
 
             <nav class="menu">
+
                 <div class="itens-menu">
                     <h4>Principal</h4>
                     <ul>
-                        <a href="{% url 'inicio' %}">
-                            <li><i class="fas fa-home"></i>Dashboard</li>
-                        </a>
-                        
+                        <li>
+                            <a href="{% url 'inicio' %}">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
 
-                        <a href="{% url 'listar-aluno' %}">
-                            <li><i class="fas fa-users"></i>Alunos</li>
-                        </a>
-                        
+                        <li>
+                            <a href="{% url 'listar-aluno' %}">
+                                <i class="fas fa-users"></i>
+                                <span>Alunos</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="itens-menu">
                     <h4>Cadastros</h4>
                     <ul>
-                        <a href="{% url 'cadastrar-aluno' %}">
-                            <li><i class="fas fa-user-plus"></i>Novo Aluno</li>
-                        </a>
-                        
-
-<!--                    <a href="{% url 'cadastrar-medidas' aluno.id %}">
-                            <li><i class="fas fa-ruler"></i>Medidas</li>
-                        </a> -->
-                        
+                        <li>
+                            <a href="{% url 'cadastrar-aluno' %}">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Novo Aluno</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="itens-menu">
                     <h4>Configurações</h4>
                     <ul>
+                        <li>
+                            <a href="{% url 'listar-estado' %}">
+                                <i class="fas fa-map"></i>
+                                <span>Listar Estados</span>
+                            </a>
+                        </li>
 
-                        <a href="{% url 'listar-estado' %}">
-                            <li><i class="fas fa-map"></i>Listar Estados</li>
-                        </a>
-                        
-                        <a href="{% url 'listar-cidade' %}">
-                            <li><i class="fas fa-city"></i>LIstar Cidades</li>
-                        </a>
-
+                        <li>
+                            <a href="{% url 'listar-cidade' %}">
+                                <i class="fas fa-city"></i>
+                                <span>Listar Cidades</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="itens-menu">
-                    <h4>Registros de Usuários</h4>
+                    <h4>Usuários</h4>
                     <ul>
-                        
-                        <li><i class="fas fa-user-graduate"></i>Novo Usuario</li>
-                        
-                        <a href="{% url 'listar-professor' %}">
-                            <li><i class="fas fa-user-shield"></i>Novo Professor</li>
-                        </a>
-                        
+                        <li>
+                            <a href="{% url 'listar-professor' %}">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Professores</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
+
             </nav>
+
         </aside>
         {%endblock%}
 

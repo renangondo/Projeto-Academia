@@ -11,6 +11,4 @@ urlpatterns = [
 
     path('excluir/medidas/<int:pk>', MedidasDelete.as_view(), name="excluir-medidas"),
 
-
-
 ]

@@ -1,0 +1,117 @@
+.list-container {
+    padding: 35px;
+}
+
+.list-header {
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.25);
+}
+
+.list-header h2 {
+    font-size: 32px;
+    margin-bottom: 6px;
+}
+
+.list-header p {
+    color: #e0f2fe;
+}
+
+.btn-novo {
+    text-decoration: none;
+    background: #ffffff;
+    color: #2563eb;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.25s;
+}
+
+.btn-novo:hover {
+    background: #dbeafe;
+    transform: translateY(-3px);
+}
+
+.table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.table-list {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+.table-list thead {
+    background: #eff6ff;
+}
+
+.table-list th {
+    color: #1e3a8a;
+    font-size: 14px;
+    text-align: left;
+    padding: 18px;
+    border-bottom: 1px solid #bfdbfe;
+}
+
+.table-list td {
+    color: #334155;
+    font-size: 14px;
+    padding: 18px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table-list tbody tr {
+    transition: 0.2s;
+}
+
+.table-list tbody tr:hover {
+    background: #f8fafc;
+}
+
+.table-list td:nth-child(3),
+.table-list td:nth-child(4),
+.table-list td:nth-child(5),
+.table-list td:nth-child(6) {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.table-list td:first-child {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.sem-registro {
+    text-align: center;
+    padding: 35px;
+    color: #64748b;
+}
+
+@media (max-width: 800px) {
+    .list-container {
+        padding: 20px;
+    }
+
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .btn-novo {
+        width: 100%;
+        text-align: center;
+    }
+}

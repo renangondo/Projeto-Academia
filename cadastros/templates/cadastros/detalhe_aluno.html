@@ -19,7 +19,7 @@
         <div class="aluno-actions">
             <a href="{% url 'editar-aluno' aluno.id %}" class="btn-secondary">Editar aluno</a>
             <a href="{% url 'cadastrar-medidas' aluno.id %}" class="btn-primary">Cadastrar medida</a>
-            <a href="{% url 'cadastrar-treino'  %}" class="btn-primary">Cadastrar treino</a>
+            <a href="{% url 'cadastrar-treino' aluno.id  %}" class="btn-primary">Cadastrar treino</a>
         </div>
     </div>
 

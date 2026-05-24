@@ -1,47 +1,63 @@
 .aluno-detalhe {
-    padding: 30px;
+    padding: 35px;
 }
 
 .aluno-header {
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    border-radius: 18px;
+    padding: 30px;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.25);
 }
 
 .aluno-header h2 {
-    font-size: 28px;
-    color: #111827;
-    margin-bottom: 5px;
+    font-size: 32px;
+    margin-bottom: 6px;
 }
 
 .aluno-header p {
-    color: #6b7280;
+    color: #e0f2fe;
 }
 
 .aluno-actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .btn-primary,
 .btn-secondary {
     text-decoration: none;
-    padding: 11px 16px;
-    border-radius: 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
+    transition: 0.25s;
 }
 
 .btn-primary {
-    background-color: #2563eb;
-    color: #fff;
+    background: #ffffff;
+    color: #2563eb;
+}
+
+.btn-primary:hover {
+    background: #dbeafe;
+    transform: translateY(-3px);
 }
 
 .btn-secondary {
-    background-color: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.35);
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.28);
+    transform: translateY(-3px);
 }
 
 .info-grid {
@@ -52,85 +68,137 @@
 }
 
 .info-card {
-    background-color: #fff;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    transition: 0.25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card::before {
+    content: "";
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, #2563eb, #38bdf8);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.info-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.18);
 }
 
 .info-card span {
     display: block;
-    color: #6b7280;
+    color: #64748b;
     font-size: 13px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .info-card strong {
-    color: #111827;
+    color: #0f172a;
     font-size: 18px;
 }
 
 .section-title {
-    margin: 30px 0 18px;
+    margin: 35px 0 18px;
 }
 
 .section-title h3 {
-    color: #111827;
-    font-size: 22px;
-    margin-bottom: 4px;
+    font-size: 24px;
+    color: #0f172a;
+    margin-bottom: 5px;
 }
 
 .section-title p {
-    color: #6b7280;
+    color: #64748b;
 }
 
 .treino-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 22px;
 }
 
-.treino-card,
-.empty-card,
-.medidas-box {
-    background-color: #fff;
+.treino-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    transition: 0.25s;
+}
+
+.treino-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 35px rgba(37, 99, 235, 0.18);
+    border-color: #bfdbfe;
 }
 
 .treino-card h4 {
-    color: #111827;
-    font-size: 18px;
+    font-size: 20px;
+    color: #2563eb;
     margin-bottom: 10px;
 }
 
-.treino-card p,
-.empty-card p,
-.medidas-box p {
-    color: #6b7280;
+.treino-card p {
+    color: #64748b;
     line-height: 1.5;
+    margin-bottom: 18px;
 }
 
-.treino-footer {
-    margin-top: 20px;
+.treino-info {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 18px;
 }
 
-.treino-footer span {
-    color: #9ca3af;
-    font-size: 13px;
-}
-
-.treino-footer a,
-.empty-card a {
+.treino-info span {
+    background: #eff6ff;
     color: #2563eb;
-    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 600;
+}
+
+.btn-ver-treino {
+    display: inline-block;
+    text-decoration: none;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.25s;
+}
+
+.btn-ver-treino:hover {
+    background: #1d4ed8;
+    transform: translateY(-3px);
+}
+
+.empty-card,
+.medidas-box {
+    background: #ffffff;
+    border: 1px dashed #93c5fd;
+    border-radius: 16px;
+    padding: 24px;
+    color: #64748b;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.medidas-box {
+    border-style: solid;
+    border-left: 5px solid #2563eb;
 }
 
 @media (max-width: 1100px) {
@@ -142,11 +210,15 @@
     .aluno-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: 18px;
     }
 }
 
 @media (max-width: 700px) {
+    .aluno-detalhe {
+        padding: 20px;
+    }
+
     .info-grid,
     .treino-grid {
         grid-template-columns: 1fr;
@@ -155,5 +227,10 @@
     .aluno-actions {
         flex-direction: column;
         width: 100%;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        text-align: center;
     }
 }
