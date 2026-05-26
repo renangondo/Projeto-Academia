@@ -3,6 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic import DetailView
 
 from exercicio.models import Treino
+from medidas.models import Medidas
 from .models import Cidade, Estado, Professor, Aluno
 from django.urls import reverse_lazy
 
@@ -54,14 +55,14 @@ class CidadeUpdate(UpdateView):
 
 class ProfessorUpdate(UpdateView):
     model = Professor
-    fields = ['nome', 'estado']
+    fields = ['nome', 'cpf', 'telefone', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
 
 class AlunoUpdate(UpdateView):
     model = Aluno
-    fields = ['nome', 'estado']
+    fields = ['nome', 'idade', 'cpf', 'telefone', 'objetivo', 'data_criacao', 'sexo', 'nivel', 'cidade', 'professor']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
@@ -124,8 +125,10 @@ class AlunoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['treinos'] = Treino.objects.filter(
+        context['treinos'] = Treino.objects.filter(aluno=self.object)
+
+        context['medidas'] = Medidas.objects.filter(
             aluno=self.object
-        ).order_by('-dataInicio')
+        ).order_by('-dataMedida')
 
         return context
