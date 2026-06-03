@@ -5,7 +5,7 @@ from django.views.generic import DetailView
 from exercicio.models import Treino
 from medidas.models import Medidas
 from django.contrib.auth.models import User
-from .models import Cidade, Estado, Professor, Aluno
+from .models import Cidade, Estado, Pessoa
 from django.urls import reverse_lazy
 
 # Importar o mixin de login e grupo
@@ -31,62 +31,34 @@ class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Administrador"]
 
 
-class ProfessorCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
-    model = Professor
-    fields = ['nome', 'cpf', 'telefone', 'cidade']
-    template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
-    group_required = ["Administrador"]
-
-
-class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
-    model = Aluno
+class PessoaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = Pessoa
     fields = ['nome', 'idade', 'cpf', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade', 'professor']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
     group_required = ["Administrador", "Professor"]
 
-    # Ao cadastrar o aluno, cria um usuário para ele
+    # Ao cadastrar a pessoa, cria um usuário para ela
     def form_valid(self, form):
-        
         try:
             usuario = User.objects.create_user(
                 username=form.cleaned_data['cpf'],
                 password=form.cleaned_data['cpf']
             )
             form.instance.usuario = usuario
-            form.instance.professor = self.request.user
+            if self.request.user.is_authenticated:
+                form.instance.professor = self.request.user
             # Tenta criar o objeto no banco de dados
             url = super().form_valid(form)
         except Exception as e:
             #Adiciona um erro no formulário
             form.add_error(None, "Houve um problema na criação do usuário, tente novamente.")
-            usuario.delete()
+            if 'usuario' in locals():
+                usuario.delete()
             # Retorna None para que o form seja renderizado novamente
             return None
         
         return url
-        
-
-class CidadeCreate(CreateView):
-    model = Cidade
-    fields = ['nome', 'estado']
-    template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
-
-
-class ProfessorCreate(CreateView):
-    model = Professor
-    fields = ['nome', 'cpf', 'telefone', 'cidade']
-    template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
-
-
-class AlunoCreate(CreateView):
-    model = Aluno
-    fields = ['nome', 'idade', 'cpf', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade', 'professor']
-    template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
 
 
 ############################## UPDATE #########################################
@@ -104,15 +76,8 @@ class CidadeUpdate(UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorUpdate(UpdateView):
-    model = Professor
-    fields = ['nome', 'cpf', 'telefone', 'cidade']
-    template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
-
-
-class AlunoUpdate(UpdateView):
-    model = Aluno
+class PessoaUpdate(UpdateView):
+    model = Pessoa
     fields = ['nome', 'idade', 'cpf', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade', 'professor']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
@@ -132,14 +97,8 @@ class CidadeDelete(DeleteView):
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorDelete(DeleteView):
-    model = Professor
-    template_name = 'cadastros/form-excluir.html'
-    success_url = reverse_lazy('inicio')
-
-
-class AlunoDelete(DeleteView):
-    model = Aluno
+class PessoaDelete(DeleteView):
+    model = Pessoa
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
@@ -156,13 +115,8 @@ class CidadeList(ListView):
     template_name = 'cadastros/listar_cidades.html'
 
 
-class ProfessorList(ListView):
-    model = Professor
-    template_name = 'cadastros/listar_professores.html'
-
-
-class AlunoList(ListView):
-    model = Aluno
+class PessoaList(ListView):
+    model = Pessoa
     template_name = 'cadastros/listar_alunos.html'
 
     # Sobrescrever o método get_queryset para personalizar a consulta
@@ -172,25 +126,25 @@ class AlunoList(ListView):
         # Se o usuário for do grupo "Administrador", liste tudo
         if self.request.user.groups.filter(name='Administrador').exists():
             return queryset
-        # Se não, liste apenas os alunos do professor
+        # Se não, liste apenas as pessoas associadas ao professor
         else:
             return queryset.filter(professor=self.request.user)
 
 
 ############################## DETAIL #########################################
 
-class AlunoDetail(DetailView):
-    model = Aluno
+class PessoaDetail(DetailView):
+    model = Pessoa
     template_name = 'cadastros/detalhe_aluno.html'
     context_object_name = 'aluno'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['treinos'] = Treino.objects.filter(aluno=self.object)
+        context['treinos'] = Treino.objects.filter(aluno=self.object.usuario)
 
         context['medidas'] = Medidas.objects.filter(
-            aluno=self.object
-        ).order_by('-dataMedida')
+            aluno=self.object.usuario
+        ).order_by('-data_medida')
 
         return context

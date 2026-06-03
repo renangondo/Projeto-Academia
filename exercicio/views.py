@@ -1,6 +1,5 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from cadastros.models import Aluno
+from django.contrib.auth.models import User
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView
 from django.urls import reverse_lazy
@@ -17,12 +16,22 @@ class CategoriaCreate(CreateView):
 
 class TreinoCreate(CreateView):
     model = Treino
-    fields = ['nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
+    fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if 'aluno' in self.kwargs:
+            try:
+                aluno = User.objects.get(pk=self.kwargs['aluno'])
+                initial['aluno'] = aluno
+            except User.DoesNotExist:
+                initial['aluno'] = None
+                        
+        return initial
     
     def form_valid(self, form):
-        aluno = Aluno.objects.get(pk=self.kwargs['pk'])
-        form.instance.aluno = aluno
+        form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)
     def get_success_url(self):
 
@@ -36,14 +45,19 @@ class ExercicioCreate(CreateView):
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
+    def form_valid(self, form):
+        form.instance.cadastrado_por = self.request.user
+        return super().form_valid(form)
+
 class ExercicioTreinoCreate(CreateView):
     model = ExercicioTreino
-    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
+    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form_exercicio_treino.html'
 
     def form_valid(self, form):
         treino = Treino.objects.get(pk=self.kwargs['pk'])
         form.instance.treino = treino
+        form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -61,7 +75,7 @@ class CategoriaUpdate(UpdateView):
 
 class TreinoUpdate(UpdateView):
     model = Treino
-    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
+    fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
@@ -74,7 +88,7 @@ class ExercicioUpdate(UpdateView):
 
 class ExercicioTreinoUpdate(UpdateView):
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
@@ -89,7 +103,7 @@ class CategoriaDelete(DeleteView):
 
 class TreinoDelete(DeleteView):
     model = Treino
-    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
+    fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
@@ -102,7 +116,7 @@ class ExercicioDelete(DeleteView):
 
 class ExercicioTreinoDelete(DeleteView):
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 

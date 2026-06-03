@@ -56,12 +56,12 @@
 
         {% for treino in treinos %}
         <div class="treino-card">
-            <h4>{{ treino.nomeTreino }}</h4>
+            <h4>{{ treino.nome_treino }}</h4>
             <p>{{ treino.descricao }}</p>
 
             <div class="treino-info">
-                <span>Início: {{ treino.dataInicio }}</span>
-                <span>Fim: {{ treino.dataFim }}</span>
+                <span>Início: {{ treino.data_inicio }}</span>
+                <span>Fim: {{ treino.data_fim }}</span>
             </div>
 
             <a href="{% url 'detalhe-treino' treino.id %}" class="btn-ver-treino">
@@ -88,7 +88,7 @@
         <div class="medida-card-header">
             <div>
                 <h4>Medida Corporal</h4>
-                <span>{{ medida.dataMedida }}</span>
+                <span>{{ medida.data_medida }}</span>
             </div>
 
             <a href="{% url 'editar-medidas' medida.id %}" class="btn-editar-medida">
@@ -122,32 +122,32 @@
 
             <div class="medida-item">
                 <span>Braço Direito</span>
-                <strong>{{ medida.bracoDireito }} cm</strong>
+                <strong>{{ medida.braco_direito }} cm</strong>
             </div>
 
             <div class="medida-item">
                 <span>Braço Esquerdo</span>
-                <strong>{{ medida.bracoEsquerdo }} cm</strong>
+                <strong>{{ medida.braco_esquerdo }} cm</strong>
             </div>
 
             <div class="medida-item">
                 <span>Coxa Direita</span>
-                <strong>{{ medida.coxaDireita }} cm</strong>
+                <strong>{{ medida.coxa_direita }} cm</strong>
             </div>
 
             <div class="medida-item">
                 <span>Coxa Esquerda</span>
-                <strong>{{ medida.coxaEsquerda }} cm</strong>
+                <strong>{{ medida.coxa_esquerda }} cm</strong>
             </div>
 
             <div class="medida-item">
                 <span>Panturrilha Direita</span>
-                <strong>{{ medida.panturrilhaDireita }} cm</strong>
+                <strong>{{ medida.panturrilha_direita }} cm</strong>
             </div>
 
             <div class="medida-item">
                 <span>Panturrilha Esquerda</span>
-                <strong>{{ medida.panturrilhaEsquerda }} cm</strong>
+                <strong>{{ medida.panturrilha_esquerda }} cm</strong>
             </div>
 
             <div class="medida-item">

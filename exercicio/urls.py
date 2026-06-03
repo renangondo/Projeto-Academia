@@ -7,7 +7,7 @@ from .views import CategoriaCreate, CategoriaDelete, CategoriaUpdate, ExercicioC
 urlpatterns = [
     # path('Endereço/', MinhaView.as_view(), name='nome-da-url'),
     path('cadastrar/categoria/', CategoriaCreate.as_view(), name="cadastrar-categoria"),
-    path('cadastrar/treino/<int:pk>', TreinoCreate.as_view(), name="cadastrar-treino"),
+    path('cadastrar/treino/<int:aluno>', TreinoCreate.as_view(), name="cadastrar-treino"),
     path('cadastrar/exercicio/', ExercicioCreate.as_view(), name="cadastrar-exercicio"),
     path('treino/<int:pk>/adicionar-exercicio', ExercicioTreinoCreate.as_view(), name="cadastrar-exercicioTreino"),
 
