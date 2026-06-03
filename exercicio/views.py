@@ -17,7 +17,7 @@ class CategoriaCreate(CreateView):
 
 class TreinoCreate(CreateView):
     model = Treino
-    fields = ['nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    fields = ['nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
     template_name = 'form.html'
     
     def form_valid(self, form):
@@ -38,7 +38,7 @@ class ExercicioCreate(CreateView):
 
 class ExercicioTreinoCreate(CreateView):
     model = ExercicioTreino
-    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'cadatradoEm', 'pesoAtual']
+    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
     template_name = 'form_exercicio_treino.html'
 
     def form_valid(self, form):
@@ -61,7 +61,7 @@ class CategoriaUpdate(UpdateView):
 
 class TreinoUpdate(UpdateView):
     model = Treino
-    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
@@ -74,7 +74,7 @@ class ExercicioUpdate(UpdateView):
 
 class ExercicioTreinoUpdate(UpdateView):
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'cadastraoEm', 'pesoAtual']
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
@@ -89,7 +89,7 @@ class CategoriaDelete(DeleteView):
 
 class TreinoDelete(DeleteView):
     model = Treino
-    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoEm', 'cadastradoPor']
+    fields = ['aluno', 'nomeTreino', 'dataInicio', 'dataFim', 'descricao', 'cadastradoPor']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
@@ -102,7 +102,7 @@ class ExercicioDelete(DeleteView):
 
 class ExercicioTreinoDelete(DeleteView):
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'cadastraoEm', 'pesoAtual']
+    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'pesoAtual']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
