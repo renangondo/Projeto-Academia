@@ -1,0 +1,15 @@
+# Ambiente virtual
+.venv/
+
+# Arquivos estáticos
+static_gcloud/
+
+# Arquivos pyc e a pasta de cache
+*.pyc
+**/__pycache__/
+
+# Outros arquivos
+.DS_Store
+
+# Outros arquivos e pastas
+.antigravitycli/
