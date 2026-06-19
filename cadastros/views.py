@@ -15,7 +15,7 @@ from braces.views import GroupRequiredMixin
 # Create your views here.
 
 ####CREATE VIEW#####
-class EstadoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class EstadoCreate(CreateView):
     model = Estado  # Qual modelo que será cadastrado
     fields = ['nome', 'sigla'] # Quais campos que irá aparecer para cadastrar
     template_name = 'cadastros/form.html' # Qual template será usado
@@ -23,7 +23,7 @@ class EstadoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Administrador"]
 
 
-class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class CidadeCreate(CreateView):
     model = Cidade
     fields = ['nome', 'estado']
     template_name = 'cadastros/form.html'
@@ -31,7 +31,7 @@ class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Administrador"]
 
 
-class PessoaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class PessoaCreate(CreateView):
     model = Pessoa
     fields = ['nome', 'idade', 'cpf', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade', 'professor']
     template_name = 'cadastros/form.html'
