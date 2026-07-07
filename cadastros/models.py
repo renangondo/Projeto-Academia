@@ -29,6 +29,11 @@ class Cidade(Auditoria):
 ###########################################################################################
 #Models Pessoa
 class Pessoa(Auditoria):
+    TIPO_CHOICES = [
+        ('ALUNO', 'Aluno'),
+        ('PROFESSOR', 'Professor')
+    ]
+
     SEXO_CHOICES = [
         ('M', 'Masculino'),
         ('F', 'Feminino'),
@@ -41,6 +46,7 @@ class Pessoa(Auditoria):
         (3, 'Avançado'),
     ]
     
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, verbose_name="Tipo de Pessoa")
     nome = models.CharField(max_length=50, verbose_name="Nome")
     idade = models.IntegerField(verbose_name="Idade", null=True, blank=True)
     cpf = models.CharField(max_length=11, verbose_name="CPF")
@@ -50,12 +56,11 @@ class Pessoa(Auditoria):
     nivel = models.IntegerField(choices=NIVEL_CHOICES, verbose_name="Nível", null=True, blank=True)
     cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT)
     professor = models.ForeignKey("auth.User", on_delete=models.PROTECT, related_name="alunos_professor", null=True, blank=True)
-    
     # Usando para referenciar o model User do próprio Django.
     usuario = models.ForeignKey("auth.User", on_delete=models.PROTECT, related_name="pessoa_usuario")
     
     def __str__(self):
-        return self.nome
+        return f"{self.nome} - {self.get_tipo_display()}"
 
 
 
