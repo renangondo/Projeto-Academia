@@ -49,15 +49,15 @@ class Pessoa(Auditoria):
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, verbose_name="Tipo de Pessoa")
     nome = models.CharField(max_length=50, verbose_name="Nome")
     idade = models.IntegerField(verbose_name="Idade", null=True, blank=True)
-    cpf = models.CharField(max_length=11, verbose_name="CPF")
+    cpf = models.CharField(max_length=11, unique=True, verbose_name="CPF")
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
-    objetivo = models.CharField(max_length=255, verbose_name="Objetivo", null=True, blank=True)
+    objetivo = models.TextField(verbose_name="Objetivo", null=True, blank=True)
     sexo = models.CharField(max_length=20, choices=SEXO_CHOICES, verbose_name="Sexo", null=True, blank=True)
     nivel = models.IntegerField(choices=NIVEL_CHOICES, verbose_name="Nível", null=True, blank=True)
     cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT)
-    professor = models.ForeignKey("auth.User", on_delete=models.PROTECT, related_name="alunos_professor", null=True, blank=True)
+    professor = models.ForeignKey("self", on_delete=models.PROTECT, related_name="alunos", limit_choices_to={"tipo": "PROFESSOR"}, null=True, blank=True)
     # Usando para referenciar o model User do próprio Django.
-    usuario = models.ForeignKey("auth.User", on_delete=models.PROTECT, related_name="pessoa_usuario")
+    usuario = models.OneToOneField("auth.User", on_delete=models.CASCADE, related_name="pessoa_usuario")
     
     def __str__(self):
         return f"{self.nome} - {self.get_tipo_display()}"

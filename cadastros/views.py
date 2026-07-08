@@ -4,7 +4,7 @@ from django.views.generic import DetailView
 
 from exercicio.models import Treino
 from medidas.models import Medidas
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from .models import Cidade, Estado, Pessoa
 from django.urls import reverse_lazy
 
@@ -35,7 +35,7 @@ class ProfessorCreate(CreateView):
     model = Pessoa
     fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy = ("listar-professor")
+    success_url = reverse_lazy = ("login")
 
     def form_valid(self, form):
         usuario = User.objects.create_user(
@@ -73,8 +73,7 @@ class AlunoCreate(CreateView):
         form.instance.usuario = usuario
         form.instance.tipo = "ALUNO"
 
-        if self.request.user.is_authenticated:
-            form.instance.professor = self.request.user
+        form.instance.professor = self.request.user
 
         return super().form_valid(form)
 

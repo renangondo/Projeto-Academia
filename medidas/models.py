@@ -1,11 +1,11 @@
 from django.db import models
 
-from cadastros.models import Auditoria
+from cadastros.models import Auditoria, Pessoa
 
 # Create your models here.
 
 class Medidas(Auditoria):
-    aluno = models.ForeignKey("auth.User", on_delete=models.PROTECT, related_name="medidas_aluno")
+    aluno = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="medidas_aluno")
     altura = models.FloatField(verbose_name="Altura")
     peso = models.FloatField(verbose_name="Peso")
     cintura = models.FloatField(verbose_name="Cintura")
