@@ -1,0 +1,217 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:linear-gradient(135deg,#1976d2,#42a5f5);
+
+}
+
+.background{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+.login-card{
+
+    width:430px;
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:45px;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+
+    text-align:center;
+
+    animation:fade .5s;
+}
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+.logo{
+
+    width:90px;
+    height:90px;
+
+    background:#1976d2;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:40px;
+
+    margin-bottom:25px;
+
+}
+
+h1{
+
+    color:#222;
+
+    margin-bottom:10px;
+
+}
+
+p{
+
+    color:#666;
+
+    margin-bottom:35px;
+
+}
+
+.input-group{
+
+    display:flex;
+
+    align-items:center;
+
+    border:1px solid #dcdcdc;
+
+    border-radius:10px;
+
+    padding:0 15px;
+
+    margin-bottom:18px;
+
+    transition:.3s;
+
+}
+
+.input-group:focus-within{
+
+    border-color:#1976d2;
+
+    box-shadow:0 0 8px rgba(25,118,210,.2);
+
+}
+
+.input-group i{
+
+    color:#1976d2;
+
+    width:25px;
+
+}
+
+.input-group input{
+
+    border:none;
+
+    outline:none;
+
+    width:100%;
+
+    padding:15px;
+
+    font-size:15px;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#1976d2;
+
+    color:white;
+
+    font-size:17px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    margin-top:10px;
+
+}
+
+button:hover{
+
+    background:#1565c0;
+
+    transform:translateY(-2px);
+
+}
+
+.links{
+
+    margin-top:30px;
+
+}
+
+.links a{
+
+    color:#1976d2;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.links a:hover{
+
+    text-decoration:underline;
+
+}
+
+.erro{
+
+    color:#d32f2f;
+
+    margin-bottom:15px;
+
+    font-size:14px;
+
+}

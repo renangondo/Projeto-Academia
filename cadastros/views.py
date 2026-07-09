@@ -15,24 +15,27 @@ from braces.views import GroupRequiredMixin
 # Create your views here.
 
 ####CREATE VIEW#####
-class EstadoCreate(CreateView):
+class EstadoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     model = Estado  # Qual modelo que será cadastrado
+    group_required = "Administrador"
     fields = ['nome', 'sigla'] # Quais campos que irá aparecer para cadastrar
     template_name = 'cadastros/form.html' # Qual template será usado
     success_url = reverse_lazy('inicio') # Onde será redirecionado
     group_required = ["Administrador"]
 
 
-class CidadeCreate(CreateView):
+class CidadeCreate(GroupRequiredMixin, LoginRequiredMixin,CreateView):
     model = Cidade
+    group_required = "Administrador"
     fields = ['nome', 'estado']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
     group_required = ["Administrador"]
 
 
-class ProfessorCreate(CreateView):
+class ProfessorCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     model = Pessoa
+    group_required = ["Administrador", "Professor"]
     fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy = ("login")
@@ -52,10 +55,9 @@ class ProfessorCreate(CreateView):
         return super().form_valid(form)
 
 
-class AlunoCreate(CreateView):
-
+class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     model = Pessoa
-
+    group_required = ["Administrador", "Professor"]
     fields = ["nome", "idade", "cpf", "telefone", "objetivo", "sexo", "nivel", "cidade"]
     template_name = "cadastros/form.html"
     success_url = reverse_lazy("listar-aluno")

@@ -1,30 +1,94 @@
-{% extends 'modelo.html' %}
 {% load static %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/cadastros/form.css' %}">
-<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
-{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-br">
 
-{% block menu%}
+<head>
 
-{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block main %}
-<div class="form-page">
-    <div class="form-card">
+    <title>RGA - Login</title>
 
-        <h2>Cadastrar</h2>
-        <p>Preencha todos os campos obrigatórios</p>
+    <link rel="stylesheet" href="{% static 'css/usuarios/login.css' %}">
 
-        <form action="" method="POST">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="background">
+
+    <div class="login-card">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-dumbbell"></i>
+
+        </div>
+
+        <h1>Bem-vindo ao RGA</h1>
+
+        <p>
+            Sistema de gerenciamento para Personal Trainers
+        </p>
+
+        <form method="POST">
+
             {% csrf_token %}
 
-            {{ form.as_p }}
+            <div class="input-group">
 
-            <button type="submit" class="btn-salvar">Cadastrar</button>
+                <i class="fa-solid fa-user"></i>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="CPF">
+
+            </div>
+
+            <div class="input-group">
+
+                <i class="fa-solid fa-lock"></i>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Senha">
+
+            </div>
+
+            {% if form.errors %}
+                <div class="erro">
+                    CPF ou senha inválidos.
+                </div>
+            {% endif %}
+
+            <button type="submit">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                Entrar
+
+            </button>
+
         </form>
 
+        <div class="links">
+
+            <a href="{% url 'cadastrar-professor' %}">
+                Criar uma conta
+            </a>
+
+        </div>
+
     </div>
+
 </div>
-{% endblock %}
+
+</body>
+
+</html>
