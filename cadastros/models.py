@@ -34,6 +34,7 @@ class Pessoa(Auditoria):
         ('PROFESSOR', 'Professor')
     ]
 
+        
     SEXO_CHOICES = [
         ('M', 'Masculino'),
         ('F', 'Feminino'),

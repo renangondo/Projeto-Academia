@@ -33,20 +33,27 @@ class CidadeCreate(GroupRequiredMixin, LoginRequiredMixin,CreateView):
     group_required = ["Administrador"]
 
 
-class ProfessorCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
+class CadastroProfessorCreate(CreateView):
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy = ("login")
+    success_url = reverse_lazy = ('login')
 
     def form_valid(self, form):
+
+        cpf = form.cleaned_data["cpf"]
+
+        if User.objects.filter(username=cpf).exists():
+            form.add.error("cpf", "Já existe um usuario com este CPF")
+            return self.form_invalid(form)
+
         usuario = User.objects.create_user(
             username=form.cleaned_data["cpf"],
             password=form.cleaned_data["cpf"]
         )
 
-        grupo = Group.objects.get(name="Professor")
+        grupo, created = Group.objects.get_or_create(name="Professor")
         usuario.groups.add(grupo)
 
         form.instance.usuario = usuario
@@ -69,65 +76,73 @@ class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
             password=form.cleaned_data["cpf"]
         )
 
-        grupo = Group.objects.get(name="Aluno")
+        grupo, created = Group.objects.get_or_create(name="Aluno")
         usuario.groups.add(grupo)
 
         form.instance.usuario = usuario
         form.instance.tipo = "ALUNO"
 
-        form.instance.professor = self.request.user
+        form.instance.professor = self.request.user.pessoa_usuario
 
         return super().form_valid(form)
 
 ############################## UPDATE #########################################
 
-class EstadoUpdate(UpdateView):
+class EstadoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Estado
+    group_required = "Administrador"
     fields= ['nome', 'sigla']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
-class CidadeUpdate(UpdateView):
+class CidadeUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Cidade
+    group_required = "Administrador"
     fields = ['nome', 'estado']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorUpdate(UpdateView):
+class ProfessorUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Pessoa
-    fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo','cidade']
+    group_required = ["Administrador", "Professor"]
+    fields = ['nome', 'idade','telefone', 'sexo','cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
 
-class AlunoUpdate(UpdateView):
+class AlunoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Pessoa
+    group_required = ["Administrador", "Professor", "Aluno"]
     fields = ['nome', 'idade', 'telefone', 'objetivo', 'sexo', 'nivel','cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
 ############################## DELETE #########################################
 
-class EstadoDelete(DeleteView):
+class EstadoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Estado
+    group_required = "Admistrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class CidadeDelete(DeleteView):
+class CidadeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Cidade
+    group_required = "Admistrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorDelete(DeleteView):
+class ProfessorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Pessoa
+    group_required = ["Administrador", "Professor"]
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('listar-professor')
 
-class AlunoDelete(DeleteView):
+class AlunoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Pessoa
+    group_required = ["Administrador", "Professor"]
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('listar-aluno')
 
@@ -167,14 +182,11 @@ class AlunoList(ListView):
 
         queryset = Pessoa.objects.filter(tipo="ALUNO")
 
-        if self.request.user.groups.filter(
-            name="Administrador"
-        ).exists():
-
+        if self.request.user.is_superuser:
             return queryset
 
         return queryset.filter(
-            professor=self.request.user
+            professor=self.request.user.pessoa_usuario
         )
 
 
@@ -183,6 +195,7 @@ class ProfessorList(ListView):
     template_name = "cadastros/listar_professores.html"
 
     def get_queryset(self):
+
 
         return Pessoa.objects.filter(
             tipo="PROFESSOR"
