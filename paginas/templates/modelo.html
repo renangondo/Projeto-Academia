@@ -23,6 +23,7 @@
     <div class="layout">
 
         {%block menu%}
+        {% if request.user.is_authenticated %}
         <aside class="aside-menu">
 
             <div class="logo">
@@ -35,6 +36,7 @@
                 </div>
             </div>
 
+            
             <nav class="menu">
 
                 <div class="itens-menu">
@@ -100,9 +102,12 @@
                 </div>
 
             </nav>
+            
 
         </aside>
-        {%endblock%}
+        {% endif %}
+        {% endblock %}
+       
 
 
         <!-- MAIN AREA  -->

@@ -1,0 +1,322 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:linear-gradient(135deg,#0f4c81,#1976d2,#2196f3);
+
+    overflow:hidden;
+
+}
+
+/* Bolhas do fundo */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    top:-120px;
+    left:-120px;
+
+}
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:450px;
+    height:450px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    right:-100px;
+    bottom:-100px;
+
+}
+
+/* CARD */
+
+.card{
+
+    position:relative;
+
+    width:700px;
+
+    padding:50px;
+
+    background:rgba(255,255,255,.95);
+
+    backdrop-filter:blur(10px);
+
+    border-radius:20px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+
+    animation:aparecer .8s ease;
+
+    z-index:10;
+
+}
+
+/* Animação */
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* Logo */
+
+.logo{
+
+    width:85px;
+
+    height:85px;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    border-radius:20px;
+
+    background:linear-gradient(135deg,#1976d2,#42a5f5);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    box-shadow:0 10px 25px rgba(25,118,210,.35);
+
+}
+
+.logo i{
+
+    color:white;
+
+    font-size:38px;
+
+}
+
+/* Titulo */
+
+h1{
+
+    text-align:center;
+
+    color:#0f4c81;
+
+    margin-bottom:8px;
+
+}
+
+.subtitulo{
+
+    text-align:center;
+
+    color:#6b7280;
+
+    margin-bottom:35px;
+
+    font-size:15px;
+
+}
+
+/* FORM */
+
+form{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+
+}
+
+form p{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+label{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    margin-bottom:6px;
+
+    color:#374151;
+
+}
+
+input,
+select,
+textarea{
+
+    padding:13px 15px;
+
+    border-radius:10px;
+
+    border:1px solid #d1d5db;
+
+    font-size:15px;
+
+    transition:.25s;
+
+}
+
+input:hover,
+select:hover,
+textarea:hover{
+
+    border-color:#1976d2;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    outline:none;
+
+    border-color:#1976d2;
+
+    box-shadow:0 0 0 4px rgba(25,118,210,.15);
+
+}
+
+/* Botão ocupa toda largura */
+
+button{
+
+    grid-column:span 2;
+
+    margin-top:15px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#1976d2,#2196f3);
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 30px rgba(25,118,210,.35);
+
+}
+
+/* Rodapé */
+
+.rodape{
+
+    margin-top:30px;
+
+    text-align:center;
+
+}
+
+.rodape span{
+
+    color:#666;
+
+}
+
+.rodape a{
+
+    color:#1976d2;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+}
+
+.rodape a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* Responsivo */
+
+@media(max-width:800px){
+
+    .card{
+
+        width:95%;
+
+        padding:35px;
+
+    }
+
+    form{
+
+        grid-template-columns:1fr;
+
+    }
+
+    button{
+
+        grid-column:span 1;
+
+    }
+
+}

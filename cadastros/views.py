@@ -2,6 +2,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
 
+from django.contrib import messages
+
 from exercicio.models import Treino
 from medidas.models import Medidas
 from django.contrib.auth.models import Group, User
@@ -37,7 +39,7 @@ class CadastroProfessorCreate(CreateView):
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
-    template_name = 'cadastros/form.html'
+    template_name = 'cadastros/cadastro_professor.html'
     success_url = reverse_lazy = ('login')
 
     def form_valid(self, form):
@@ -69,11 +71,18 @@ class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     template_name = "cadastros/form.html"
     success_url = reverse_lazy("listar-aluno")
 
+
     def form_valid(self, form):
 
+        cpf = form.cleaned_data["cpf"]
+
+        if User.objects.filter(username=cpf).exists():
+            form.add_error("cpf", "Já existe um usuário cadastrado com esse CPF.")
+            return self.form_invalid(form)
+
         usuario = User.objects.create_user(
-            username=form.cleaned_data["cpf"],
-            password=form.cleaned_data["cpf"]
+            username=cpf,
+            password=cpf
         )
 
         grupo, created = Group.objects.get_or_create(name="Aluno")
@@ -81,7 +90,6 @@ class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 
         form.instance.usuario = usuario
         form.instance.tipo = "ALUNO"
-
         form.instance.professor = self.request.user.pessoa_usuario
 
         return super().form_valid(form)
