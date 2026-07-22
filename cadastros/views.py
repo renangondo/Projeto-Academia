@@ -17,22 +17,23 @@ from braces.views import GroupRequiredMixin
 # Create your views here.
 
 ####CREATE VIEW#####
-class EstadoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
+class EstadoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Estado  # Qual modelo que será cadastrado
     group_required = "Administrador"
     fields = ['nome', 'sigla'] # Quais campos que irá aparecer para cadastrar
     template_name = 'cadastros/form.html' # Qual template será usado
     success_url = reverse_lazy('inicio') # Onde será redirecionado
-    group_required = ["Administrador"]
 
 
-class CidadeCreate(GroupRequiredMixin, LoginRequiredMixin,CreateView):
+class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Cidade
     group_required = "Administrador"
     fields = ['nome', 'estado']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
-    group_required = ["Administrador"]
+
 
 
 class CadastroProfessorCreate(CreateView):
@@ -64,7 +65,8 @@ class CadastroProfessorCreate(CreateView):
         return super().form_valid(form)
 
 
-class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
+class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     fields = ["nome", "idade", "cpf", "telefone", "objetivo", "sexo", "nivel", "cidade"]
@@ -96,14 +98,16 @@ class AlunoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 
 ############################## UPDATE #########################################
 
-class EstadoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+class EstadoUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Estado
     group_required = "Administrador"
     fields= ['nome', 'sigla']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
-class CidadeUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+class CidadeUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Cidade
     group_required = "Administrador"
     fields = ['nome', 'estado']
@@ -111,7 +115,8 @@ class CidadeUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+class ProfessorUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     fields = ['nome', 'idade','telefone', 'sexo','cidade']
@@ -119,7 +124,8 @@ class ProfessorUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class AlunoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+class AlunoUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor", "Aluno"]
     fields = ['nome', 'idade', 'telefone', 'objetivo', 'sexo', 'nivel','cidade']
@@ -128,27 +134,31 @@ class AlunoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 
 ############################## DELETE #########################################
 
-class EstadoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class EstadoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Estado
     group_required = "Admistrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class CidadeDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class CidadeDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Cidade
     group_required = "Admistrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class ProfessorDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('listar-professor')
 
-class AlunoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+class AlunoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     template_name = 'cadastros/form-excluir.html'
@@ -157,17 +167,20 @@ class AlunoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 
 ############################## LISTAR #########################################
 
-class EstadoList(ListView):
+class EstadoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Estado
     template_name = 'cadastros/listar_estado.html'
 
 
-class CidadeList(ListView):
+class CidadeList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Cidade
     template_name = 'cadastros/listar_cidades.html'
 
 
-class PessoaList(ListView):
+class PessoaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     template_name = 'cadastros/listar_alunos.html'
 
@@ -182,7 +195,8 @@ class PessoaList(ListView):
         else:
             return queryset.filter(professor=self.request.user)
 
-class AlunoList(ListView):
+class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     template_name = "cadastros/listar_alunos.html"
 
@@ -198,7 +212,8 @@ class AlunoList(ListView):
         )
 
 
-class ProfessorList(ListView):
+class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     template_name = "cadastros/listar_professores.html"
 
@@ -212,7 +227,8 @@ class ProfessorList(ListView):
 
 ############################## DETAIL #########################################
 
-class PessoaDetail(DetailView):
+class PessoaDetail(LoginRequiredMixin, GroupRequiredMixin,DetailView):
+    login_url = reverse_lazy('login')
     model = Pessoa
     context_object_name = "aluno"
     template_name = "cadastros/detalhe_aluno.html"

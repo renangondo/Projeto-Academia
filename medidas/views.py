@@ -4,10 +4,14 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from medidas.models import Medidas
 
+# Importar o mixin de login e grupo
+from django.contrib.auth.mixins import LoginRequiredMixin
+from braces.views import GroupRequiredMixin
+
 # Create your views here.
 
 
-class MedidasCreate(CreateView):
+class MedidasCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Medidas
     fields = ['altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form.html'
@@ -25,7 +29,7 @@ class MedidasCreate(CreateView):
 
 ############################## UPDATE #########################################
 
-class MedidasUpdate(UpdateView):
+class MedidasUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Medidas
     fields = ['aluno', 'altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form.html'
@@ -34,7 +38,7 @@ class MedidasUpdate(UpdateView):
 
 ############################## DELETE #########################################
 
-class MedidasDelete(DeleteView):
+class MedidasDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Medidas
     fields = ['aluno', 'altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form-excluir.html'

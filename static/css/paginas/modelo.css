@@ -390,6 +390,29 @@ CARDS DASHBOARD
 }
 
 /* =========================================
+LOGOUT
+========================================= */
+
+.logout-button {
+    color: #cbd5e1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+/* =========================================
 GRID DASHBOARD
 ========================================= */
 

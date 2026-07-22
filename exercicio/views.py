@@ -4,17 +4,20 @@ from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView
 from django.urls import reverse_lazy
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from braces.views import GroupRequiredMixin
+
 
 # Create your views here.
 
-class CategoriaCreate(CreateView):
+class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Categoria
     fields = ['nome']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
 
-class TreinoCreate(CreateView):
+class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
@@ -39,7 +42,7 @@ class TreinoCreate(CreateView):
     success_url = reverse_lazy('inicio')
 
 
-class ExercicioCreate(CreateView):
+class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
     template_name = 'form.html'
@@ -49,7 +52,7 @@ class ExercicioCreate(CreateView):
         form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)
 
-class ExercicioTreinoCreate(CreateView):
+class ExercicioTreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = ExercicioTreino
     fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form_exercicio_treino.html'
@@ -66,27 +69,27 @@ class ExercicioTreinoCreate(CreateView):
 ############################## UPDATE #########################################
 
 
-class CategoriaUpdate(UpdateView):
+class CategoriaUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Categoria
     fields = ['nome']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
 
-class TreinoUpdate(UpdateView):
+class TreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
 
-class ExercicioUpdate(UpdateView):
+class ExercicioUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
 
-class ExercicioTreinoUpdate(UpdateView):
+class ExercicioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = ExercicioTreino
     fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form.html'
@@ -94,27 +97,27 @@ class ExercicioTreinoUpdate(UpdateView):
 
 ############################## DELETE #########################################
 
-class CategoriaDelete(DeleteView):
+class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Categoria
     fields = ['nome']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class TreinoDelete(DeleteView):
+class TreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
 
-class ExercicioDelete(DeleteView):
+class ExercicioDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
 
-class ExercicioTreinoDelete(DeleteView):
+class ExercicioTreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = ExercicioTreino
     fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form-excluir.html'
@@ -123,7 +126,7 @@ class ExercicioTreinoDelete(DeleteView):
 
 ############################## DETAIL #########################################
 
-class TreinoDetail(DetailView):
+class TreinoDetail(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Treino
     template_name = 'detalhe_treino.html'
     context_object_name = 'treino'
