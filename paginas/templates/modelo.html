@@ -1,338 +1,126 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>RGA - Gerenciamento de Treinos</title>
+    <title>
+        {% block title %}
+        RGA - Gerenciamento de Treinos
+        {% endblock %}
+    </title>
 
-    <link rel="stylesheet"
-          href="{% static 'css/paginas/modelo.css' %}">
+    <!-- CSS GLOBAL -->
+    <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/paginas/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/paginas/dashboard/dashboard_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/paginas/dashboard/dashboard_aluno.css' %}">
+    <link rel="stylesheet" href="{% static 'css/paginas/dashboard/dashboard_professor.css' %}">
 
+    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
+    <!-- CSS ESPECÍFICO -->
     {% block css %}
     {% endblock %}
+
 </head>
 
 <body>
 
 <div class="layout">
 
-{% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
 
-<aside class="aside-menu">
+        {% if is_admin %}
+            {% include 'menus/menu_admin.html' %}
 
-    <div class="logo">
+        {% elif is_professor %}
+            {% include 'menus/menu_professor.html' %}
 
-        <div class="logo-icon">
-            <i class="fas fa-dumbbell"></i>
-        </div>
+        {% elif is_aluno %}
+            {% include 'menus/menu_aluno.html' %}
 
-        <div>
+        {% endif %}
 
-            <span>RGA</span>
-            <small>Gestão de Treinos</small>
+    {% endif %}
 
-        </div>
+    <div class="main-area">
 
-    </div>
+        <!-- TOPO -->
+        <header class="topbar">
 
-    <nav class="menu">
+            <div class="titulo">
 
-        <!-- PRINCIPAL -->
+                <h2>
 
-        <div class="itens-menu">
+                    {% block titulo %}
+                        RG - Sistema de Gerenciamento de Treino
+                    {% endblock %}
 
-            <h4>Principal</h4>
+                </h2>
 
-            <ul>
-
-                <li>
-
-                    <a href="{% url 'inicio' %}">
-
-                        <i class="fas fa-chart-line"></i>
-
-                        Dashboard
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- ALUNOS -->
-
-        <div class="itens-menu">
-
-            <h4>Alunos</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="{% url 'listar-aluno' %}">
-
-                        <i class="fas fa-users"></i>
-
-                        Listar Alunos
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="{% url 'cadastrar-aluno' %}">
-
-                        <i class="fas fa-user-plus"></i>
-
-                        Novo Aluno
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- TREINOS -->
-
-        <div class="itens-menu">
-
-            <h4>Treinos</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-dumbbell"></i>
-
-                        Exercícios
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-list-check"></i>
-
-                        Categorias
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-clipboard-list"></i>
-
-                        Treinos
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- MEDIDAS -->
-
-        <div class="itens-menu">
-
-            <h4>Acompanhamento</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-ruler"></i>
-
-                        Medidas
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-chart-column"></i>
-
-                        Evolução Física
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- PROFESSORES -->
-
-        <div class="itens-menu">
-
-            <h4>Professores</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="{% url 'listar-professor' %}">
-
-                        <i class="fas fa-user-tie"></i>
-
-                        Professores
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- CONFIGURAÇÕES -->
-
-        <div class="itens-menu">
-
-            <h4>Configurações</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="{% url 'listar-cidade' %}">
-
-                        <i class="fas fa-city"></i>
-
-                        Cidades
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="{% url 'listar-estado' %}">
-
-                        <i class="fas fa-map-location-dot"></i>
-
-                        Estados
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- CONTA -->
-
-        <div class="itens-menu">
-
-            <h4>Conta</h4>
-
-            <ul>
-
-                <li>
-
-                    <a href="#">
-
-                        <i class="fas fa-user-circle"></i>
-
-                        Meu Perfil
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <form method="POST"
-                          action="{% url 'logout' %}">
-
-                        {% csrf_token %}
-
-                        <button
-                            class="logout-button"
-                            type="submit">
-
-                            <i class="fas fa-right-from-bracket"></i>
-
-                            Sair
-
-                        </button>
-
-                    </form>
-
-                </li>
-
-            </ul>
-
-        </div>
-
-    </nav>
-
-</aside>
-
-{% endif %}
-
-<div class="main-area">
-
-    <header class="topbar">
-
-        <div class="titulo">
-
-            <h2>RGA - Sistema de Gerenciamento</h2>
-
-        </div>
-
-        <div class="usuario">
+            </div>
 
             {% if request.user.is_authenticated %}
 
+            <div class="usuario">
+
                 <i class="fas fa-circle-user"></i>
 
-                {{ request.user }}
+                <div>
+
+                    <strong>
+
+                        {{ request.user.pessoa_usuario.nome }}
+
+                    </strong>
+
+                    <small>
+
+                        {% if is_admin %}
+
+                            Administrador
+
+                        {% elif is_professor %}
+
+                            Professor
+
+                        {% elif is_aluno %}
+
+                            Aluno
+
+                        {% endif %}
+
+                    </small>
+
+                </div>
+
+            </div>
 
             {% endif %}
 
-        </div>
+        </header>
 
-    </header>
+        <!-- CONTEÚDO -->
 
-    <main class="conteudo">
+        <main class="conteudo">
 
-        {% block main %}
+            {% block main %}
 
-        {% endblock %}
+            {% endblock %}
 
-    </main>
+        </main>
 
-</div>
+    </div>
 
 </div>
 
 </body>
+
 </html>

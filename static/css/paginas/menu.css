@@ -1,22 +1,30 @@
+/* ==========================================
+   MENU LATERAL
+========================================== */
+
 .aside-menu{
 
     width:270px;
     min-height:100vh;
 
-    background:#1e3a8a;
+    background:linear-gradient(180deg,#0B5ED7,#0A53BE);
 
-    color:white;
+    color:#fff;
 
     display:flex;
     flex-direction:column;
 
-    box-shadow:5px 0 15px rgba(0,0,0,.15);
+    box-shadow:6px 0 18px rgba(0,0,0,.12);
 
 }
 
+/* ==========================================
+   LOGO
+========================================== */
+
 .logo{
 
-    padding:30px 20px;
+    padding:28px 22px;
 
     display:flex;
 
@@ -30,45 +38,51 @@
 
 .logo-icon{
 
-    width:60px;
-    height:60px;
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
 
     background:white;
 
-    color:#1e3a8a;
-
-    border-radius:50%;
+    color:#0B5ED7;
 
     display:flex;
 
     justify-content:center;
     align-items:center;
 
-    font-size:26px;
+    font-size:24px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.18);
 
 }
 
 .logo-text h2{
 
-    margin:0;
+    font-size:23px;
 
-    font-size:24px;
+    font-weight:700;
 
 }
 
 .logo-text span{
 
+    color:#d7e7ff;
+
     font-size:13px;
 
-    color:#dbeafe;
-
 }
+
+/* ==========================================
+   MENU
+========================================== */
 
 nav{
 
     flex:1;
 
-    padding:20px;
+    padding:22px 18px;
 
 }
 
@@ -80,17 +94,23 @@ nav{
 
 .menu-section h4{
 
-    color:#93c5fd;
+    color:#d2e3ff;
 
-    margin-bottom:12px;
-
-    font-size:13px;
+    font-size:12px;
 
     text-transform:uppercase;
 
     letter-spacing:1px;
 
+    margin-bottom:12px;
+
+    padding-left:10px;
+
 }
+
+/* ==========================================
+   LINKS
+========================================== */
 
 .menu-section a{
 
@@ -98,15 +118,15 @@ nav{
 
     align-items:center;
 
-    gap:12px;
+    gap:14px;
 
     text-decoration:none;
 
     color:white;
 
-    padding:12px;
+    padding:13px 16px;
 
-    border-radius:10px;
+    border-radius:12px;
 
     transition:.25s;
 
@@ -116,37 +136,55 @@ nav{
 
 .menu-section a:hover{
 
-    background:#2563eb;
+    background:rgba(255,255,255,.18);
 
-    transform:translateX(5px);
+    transform:translateX(6px);
 
 }
 
-.menu-section i{
+.menu-section a i{
 
-    width:20px;
+    width:22px;
 
     text-align:center;
 
+    font-size:16px;
+
 }
+
+/* Link ativo */
+
+.menu-section a.active{
+
+    background:white;
+
+    color:#0B5ED7;
+
+    font-weight:600;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+
+}
+
+/* ==========================================
+   BOTÃO SAIR
+========================================== */
 
 .logout-button{
 
     width:100%;
 
-    background:#dc2626;
+    background:rgba(255,255,255,.12);
 
     color:white;
 
     border:none;
 
-    border-radius:10px;
+    border-radius:12px;
 
-    padding:12px;
+    padding:13px;
 
     cursor:pointer;
-
-    font-size:15px;
 
     display:flex;
 
@@ -158,10 +196,76 @@ nav{
 
     transition:.3s;
 
+    font-size:15px;
+
+    margin-top:15px;
+
 }
 
 .logout-button:hover{
 
-    background:#b91c1c;
+    background:#dc3545;
+
+}
+
+/* ==========================================
+   SCROLL
+========================================== */
+
+.aside-menu::-webkit-scrollbar{
+
+    width:7px;
+
+}
+
+.aside-menu::-webkit-scrollbar-thumb{
+
+    background:rgba(255,255,255,.25);
+
+    border-radius:20px;
+
+}
+
+/* ==========================================
+   RESPONSIVO
+========================================== */
+
+@media(max-width:900px){
+
+    .aside-menu{
+
+        width:85px;
+
+    }
+
+    .logo-text{
+
+        display:none;
+
+    }
+
+    .menu-section h4{
+
+        display:none;
+
+    }
+
+    .menu-section a span{
+
+        display:none;
+
+    }
+
+    .menu-section a{
+
+        justify-content:center;
+
+    }
+
+    .logout-button span{
+
+        display:none;
+
+    }
 
 }

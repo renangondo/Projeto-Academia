@@ -1,0 +1,19 @@
+
+
+{% block main %}
+
+    {% if is_admin %}
+
+        {% include "dashboards/dashboards_admin.html" %}
+
+    {% elif is_professor %}
+
+        {% include "dashboards/dashboards_professor.html" %}
+
+    {% elif is_aluno %}
+
+        {% include "dashboards/dashboards_aluno.html" %}
+
+    {% endif %}
+
+{% endblock %}

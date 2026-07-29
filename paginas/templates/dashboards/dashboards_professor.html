@@ -1,0 +1,62 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/dashboard_professor.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="dashboard">
+
+<h1>Bem-vindo, Professor {{ request.user.pessoa_usuario.nome }}</h1>
+
+<p>Resumo dos seus alunos.</p>
+
+<div class="cards">
+
+    <div class="card">
+
+        <i class="fas fa-users"></i>
+
+        <span>Meus alunos</span>
+
+        <h2>{{ total_alunos }}</h2>
+
+    </div>
+
+    <div class="card">
+
+        <i class="fas fa-dumbbell"></i>
+
+        <span>Treinos Criados</span>
+
+        <h2>{{ total_treinos }}</h2>
+
+    </div>
+
+</div>
+
+<div class="box">
+
+<h3>Últimos alunos cadastrados</h3>
+
+{% for aluno in alunos %}
+
+<div class="linha">
+
+{{ aluno.nome }}
+
+</div>
+
+{% empty %}
+
+Nenhum aluno.
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

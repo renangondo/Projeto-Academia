@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import PaginaModelo
+from .views import InicioView
 
 urlpatterns = [
     # path('Endereço/', MinhaView.as_view(), name='nome-da-url'), 
-    path('', PaginaModelo.as_view(), name='inicio'),  
+    path('', InicioView.as_view(), name='inicio'),  
 ]

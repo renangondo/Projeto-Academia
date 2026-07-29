@@ -1,0 +1,91 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/dashboard_admin.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="dashboard">
+
+    <div class="titulo-dashboard">
+        <h1>Painel Administrativo</h1>
+        <p>Resumo geral do sistema</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <i class="fas fa-users"></i>
+            <span>Alunos</span>
+            <h2>{{ total_alunos }}</h2>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-user-tie"></i>
+            <span>Professores</span>
+            <h2>{{ total_professores }}</h2>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-dumbbell"></i>
+            <span>Treinos</span>
+            <h2>{{ total_treinos }}</h2>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-ruler"></i>
+            <span>Medidas</span>
+            <h2>{{ total_medidas }}</h2>
+        </div>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="box">
+
+            <h3>Últimos Professores</h3>
+
+            {% for professor in ultimos_professores %}
+
+            <div class="linha">
+
+                {{ professor.nome }}
+
+            </div>
+
+            {% empty %}
+
+            Nenhum professor.
+
+            {% endfor %}
+
+        </div>
+
+        <div class="box">
+
+            <h3>Últimos Alunos</h3>
+
+            {% for aluno in ultimos_alunos %}
+
+            <div class="linha">
+
+                {{ aluno.nome }}
+
+            </div>
+
+            {% empty %}
+
+            Nenhum aluno.
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
