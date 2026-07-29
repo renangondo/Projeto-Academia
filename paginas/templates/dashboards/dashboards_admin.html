@@ -15,29 +15,33 @@
     </div>
 
     <div class="cards">
+        <a href="{% url 'listar-aluno' %}">
+            <div class="card">
+                <i class="fas fa-users"></i>
+                <span>Alunos</span>
+                <h2>{{ total_alunos }}</h2>
+            </div>
+        </a>
 
         <div class="card">
-            <i class="fas fa-users"></i>
-            <span>Alunos</span>
-            <h2>{{ total_alunos }}</h2>
+            <a href="{% url 'listar-professor' %}">
+                <i class="fas fa-user-tie"></i>
+                <span>Professores</span>
+                <h2>{{ total_professores }}</h2>
+            </a>
+        </div>
+         
+
+        <div class="card">    
+            <i class="fas fa-map-location-dot"></i>
+            <span>Estados</span>
+            <h2>{{ total_estado }}</h2>
         </div>
 
         <div class="card">
-            <i class="fas fa-user-tie"></i>
-            <span>Professores</span>
-            <h2>{{ total_professores }}</h2>
-        </div>
-
-        <div class="card">
-            <i class="fas fa-dumbbell"></i>
-            <span>Treinos</span>
-            <h2>{{ total_treinos }}</h2>
-        </div>
-
-        <div class="card">
-            <i class="fas fa-ruler"></i>
-            <span>Medidas</span>
-            <h2>{{ total_medidas }}</h2>
+            <i class="fas fa-city"></i>
+            <span>Cidades</span>
+            <h2>{{ total_cidades }}</h2>
         </div>
 
     </div>

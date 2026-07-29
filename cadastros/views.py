@@ -172,11 +172,15 @@ class EstadoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Estado
     template_name = 'cadastros/listar_estado.html'
 
+    group_required = ["Administrador"]
+
 
 class CidadeList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Cidade
     template_name = 'cadastros/listar_cidades.html'
+
+    group_required = ["Administrador"]
 
 
 class PessoaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -200,6 +204,8 @@ class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pessoa
     template_name = "cadastros/listar_alunos.html"
 
+    group_required = ["Professor", "Administrador"]
+
     def get_queryset(self):
 
         queryset = Pessoa.objects.filter(tipo="ALUNO")
@@ -217,7 +223,7 @@ class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pessoa
     template_name = "cadastros/listar_professores.html"
 
-    group_required = ["Professor"]
+    group_required = ["Professor", "Administrador"]
 
     def get_queryset(self):
 

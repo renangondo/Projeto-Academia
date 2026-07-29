@@ -1,87 +1,98 @@
-.dashboard{
+{% extends 'modelo.html' %}
+{% load static %}
 
-    padding:35px;
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard/dashboard_aluno.css' %}">
+{% endblock %}
 
-}
+{% block main %}
 
-.titulo-dashboard{
+<div class="perfil">
 
-    margin-bottom:30px;
+    <div class="foto">
 
-}
+        <i class="fas fa-circle-user"></i>
 
-.titulo-dashboard h1{
+    </div>
 
-    color:#1E88E5;
+    <h1>{{ request.user.pessoa_usuario.nome }}</h1>
 
-}
+    <p>{{ request.user.username }}</p>
 
-.cards{
+</div>
 
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+<div class="cards">
 
-}
+    <div class="card">
 
-.card{
+        <i class="fas fa-weight-scale"></i>
 
-    background:white;
-    border-radius:15px;
-    padding:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.3s;
+        <h2>{{ peso }} kg</h2>
 
-}
+        <span>Peso Atual</span>
 
-.card:hover{
+    </div>
 
-    transform:translateY(-6px);
+    <div class="card">
 
-}
+        <i class="fas fa-ruler"></i>
 
-.card i{
+        <h2>{{ altura }} m</h2>
 
-    font-size:35px;
-    color:#1E88E5;
+        <span>Altura</span>
 
-}
+    </div>
 
-.card span{
+    <div class="card">
 
-    display:block;
-    margin-top:15px;
-    color:#888;
+        <i class="fas fa-chart-line"></i>
 
-}
+        <h2>{{ percentual }}</h2>
 
-.card h2{
+        <span>Evolução</span>
 
-    margin-top:10px;
+    </div>
 
-}
+</div>
 
-.grid{
+<div class="box">
 
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-top:35px;
+    <h2>Meu treino</h2>
 
-}
+    {% for treino in treinos %}
 
-.box{
+    <div class="linha">
 
-    background:white;
-    border-radius:15px;
-    padding:25px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+        {{ treino.nome }}
 
-}
+    </div>
 
-.linha{
+    {% empty %}
 
-    padding:12px 0;
-    border-bottom:1px solid #eee;
+    Nenhum treino cadastrado.
 
-}
+    {% endfor %}
+
+</div>
+
+<div class="box">
+
+    <h2>Últimas Medidas</h2>
+
+    {% for medida in medidas %}
+
+    <div class="linha">
+
+        {{ medida.data_medida }}
+
+    </div>
+
+    {% empty %}
+
+    Sem medidas.
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
