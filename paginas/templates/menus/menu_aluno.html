@@ -1,0 +1,68 @@
+{% load static %}
+
+<aside class="aside-menu">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+
+        <div class="logo-text">
+            <h2>RGN</h2>
+            <span>Aluno</span>
+        </div>
+
+    </div>
+
+    <nav>
+
+        <div class="menu-section">
+
+            <h4>Minha Área</h4>
+
+            <a href="{% url 'inicio' %}">
+                <i class="fas fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="#">
+                <i class="fas fa-dumbbell"></i>
+                Meu Treino
+            </a>
+
+            <a href="#">
+                <i class="fas fa-ruler"></i>
+                Minhas Medidas
+            </a>
+
+            <a href="#">
+                <i class="fas fa-user"></i>
+                Meu Perfil
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
+            <h4>Conta</h4>
+
+            <form action="{% url 'logout' %}" method="POST">
+
+                {% csrf_token %}
+
+                <button class="logout-button">
+
+                    <i class="fas fa-right-from-bracket"></i>
+
+                    Sair
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </nav>
+
+</aside>

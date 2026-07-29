@@ -217,6 +217,8 @@ class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pessoa
     template_name = "cadastros/listar_professores.html"
 
+    group_required = ["Professor"]
+
     def get_queryset(self):
 
 

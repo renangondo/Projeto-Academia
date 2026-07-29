@@ -1,0 +1,85 @@
+{% load static %}
+
+<aside class="aside-menu">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+
+        <div class="logo-text">
+            <h2>RGN</h2>
+            <span>Professor</span>
+        </div>
+
+    </div>
+
+    <nav>
+
+        <div class="menu-section">
+
+            <h4>Painel</h4>
+
+            <a href="{% url 'inicio' %}">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
+            <h4>Alunos</h4>
+
+            <a href="{% url 'listar-aluno' %}">
+                <i class="fas fa-users"></i>
+                Meus Alunos
+            </a>
+
+            <a href="{% url 'cadastrar-aluno' %}">
+                <i class="fas fa-user-plus"></i>
+                Cadastrar Aluno
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
+            <h4>Treinos</h4>
+
+            <a href="#">
+                <i class="fas fa-dumbbell"></i>
+                Treinos
+            </a>
+
+            <a href="#">
+                <i class="fas fa-list-check"></i>
+                Exercícios
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
+            <h4>Conta</h4>
+
+            <form action="{% url 'logout' %}" method="POST">
+
+                {% csrf_token %}
+
+                <button class="logout-button">
+
+                    <i class="fas fa-right-from-bracket"></i>
+
+                    Sair
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </nav>
+
+</aside>

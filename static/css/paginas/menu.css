@@ -1,0 +1,167 @@
+.aside-menu{
+
+    width:270px;
+    min-height:100vh;
+
+    background:#1e3a8a;
+
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+
+    box-shadow:5px 0 15px rgba(0,0,0,.15);
+
+}
+
+.logo{
+
+    padding:30px 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    border-bottom:1px solid rgba(255,255,255,.15);
+
+}
+
+.logo-icon{
+
+    width:60px;
+    height:60px;
+
+    background:white;
+
+    color:#1e3a8a;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:26px;
+
+}
+
+.logo-text h2{
+
+    margin:0;
+
+    font-size:24px;
+
+}
+
+.logo-text span{
+
+    font-size:13px;
+
+    color:#dbeafe;
+
+}
+
+nav{
+
+    flex:1;
+
+    padding:20px;
+
+}
+
+.menu-section{
+
+    margin-bottom:30px;
+
+}
+
+.menu-section h4{
+
+    color:#93c5fd;
+
+    margin-bottom:12px;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.menu-section a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    text-decoration:none;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    transition:.25s;
+
+    margin-bottom:6px;
+
+}
+
+.menu-section a:hover{
+
+    background:#2563eb;
+
+    transform:translateX(5px);
+
+}
+
+.menu-section i{
+
+    width:20px;
+
+    text-align:center;
+
+}
+
+.logout-button{
+
+    width:100%;
+
+    background:#dc2626;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    transition:.3s;
+
+}
+
+.logout-button:hover{
+
+    background:#b91c1c;
+
+}

@@ -1,0 +1,93 @@
+{% load static %}
+
+<aside class="aside-menu">
+
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+
+        <div class="logo-text">
+            <h2>RGN</h2>
+            <span>Administrador</span>
+        </div>
+    </div>
+
+    <nav>
+
+        <div class="menu-section">
+            <h4>Dashboard</h4>
+
+            <a href="{% url 'inicio' %}">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </a>
+        </div>
+
+        <div class="menu-section">
+            <h4>Cadastros</h4>
+
+            <a href="{% url 'cadastrar-professor' %}">
+                <i class="fas fa-user-tie"></i>
+                Novo Professor
+            </a>
+
+            <a href="{% url 'cadastrar-aluno' %}">
+                <i class="fas fa-user-plus"></i>
+                Novo Aluno
+            </a>
+
+            <a href="{% url 'cadastrar-cidade' %}">
+                <i class="fas fa-city"></i>
+                Nova Cidade
+            </a>
+
+            <a href="{% url 'cadastrar-estado' %}">
+                <i class="fas fa-map"></i>
+                Novo Estado
+            </a>
+        </div>
+
+        <div class="menu-section">
+            <h4>Listagens</h4>
+
+            <a href="{% url 'listar-professor' %}">
+                <i class="fas fa-users"></i>
+                Professores
+            </a>
+
+            <a href="{% url 'listar-aluno' %}">
+                <i class="fas fa-users"></i>
+                Alunos
+            </a>
+
+            <a href="{% url 'listar-cidade' %}">
+                <i class="fas fa-city"></i>
+                Cidades
+            </a>
+
+            <a href="{% url 'listar-estado' %}">
+                <i class="fas fa-map"></i>
+                Estados
+            </a>
+        </div>
+
+        <div class="menu-section">
+            <h4>Conta</h4>
+
+            <form action="{% url 'logout' %}" method="POST">
+
+                {% csrf_token %}
+
+                <button type="submit" class="logout-button">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Sair
+                </button>
+
+            </form>
+
+        </div>
+
+    </nav>
+
+</aside>
