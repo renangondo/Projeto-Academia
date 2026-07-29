@@ -1,217 +1,338 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <title>RGA - Gerenciamento de Treinos</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/paginas/modelo.css' %}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
     {% block css %}
-    <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
     {% endblock %}
-    <title>Pagina modelo Padrão</title>
 </head>
 
 <body>
 
-    <div class="layout">
+<div class="layout">
 
-        {%block menu%}
-        {% if request.user.is_authenticated %}
-        <aside class="aside-menu">
+{% if request.user.is_authenticated %}
 
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-dumbbell"></i>
-                </div>
-                <div>
-                    <span>RGN Academia</span>
-                    <small>Gestão de Treinos</small>
-                </div>
-            </div>
+<aside class="aside-menu">
 
+    <div class="logo">
 
-            <nav class="menu">
-
-                <div class="itens-menu">
-                    <h4>Principal</h4>
-                    <ul>
-                        <li>
-                            <a href="{% url 'inicio' %}">
-                                <i class="fas fa-home"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'listar-aluno' %}">
-                                <i class="fas fa-users"></i>
-                                <span>Alunos</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="itens-menu">
-                    <h4>Cadastros</h4>
-                    <ul>
-                        <li>
-                            <a href="{% url 'cadastrar-aluno' %}">
-                                <i class="fas fa-user-plus"></i>
-                                <span>Novo Aluno</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'listar-professor' %}">
-                                <i class="fas fa-user-shield"></i>
-                                <span>Novo professor</span>
-                            </a>
-                    </ul>
-                </div>
-
-                <div class="itens-menu">
-                    <h4>Configurações</h4>
-                    <ul>
-                        <li>
-                            <a href="{% url 'listar-estado' %}">
-                                <i class="fas fa-map"></i>
-                                <span>Listar Estados</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'listar-cidade' %}">
-                                <i class="fas fa-city"></i>
-                                <span>Listar Cidades</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="itens-menu">
-                    <h4>Conta</h4>
-
-                    <ul>
-                        <li>
-                            <form method="POST" action="{% url 'logout' %}">
-                                {% csrf_token %}
-
-                                <button type="submit" class="logout-button">
-                                    <i class="fas fa-right-from-bracket"></i>
-                                    <span>Sair</span>
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-        </aside>
-        {% endif %}
-        {% endblock %}
-
-
-
-        <!-- MAIN AREA  -->
-        <div class="main-area">
-            {%block header%}
-            <header class="area-pesquisar">
-                <div class="pesquisar">
-                    <input type="text" placeholder="Pesquisar Aluno...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-            </header>
-            {% endblock %}
-
-
-
-            <!-- Container para conteúdo principal -->
-            {% block main %}
-            <div class="container-main">
-
-                <main class="main-content">
-
-                    {% block content %}
-
-                    <div class="dashboard">
-
-                        <div class="dashboard-title">
-                            <h2>Dashboard</h2>
-                            <p>Resumo geral do sistema</p>
-                        </div>
-
-                        <!-- CARDS -->
-                        <div class="cards-dashboard">
-
-                            <div class="card-dashboard">
-                                <span>Total de alunos</span>
-                                <h3>{{ total_alunos }}</h3>
-                            </div>
-
-                            <div class="card-dashboard">
-                                <span>Total de professores</span>
-                                <h3>{{ total_professores }}</h3>
-                            </div>
-
-                            <div class="card-dashboard">
-                                <span>Total de cidades</span>
-                                <h3>{{ total_cidades }}</h3>
-                            </div>
-
-                            <div class="card-dashboard">
-                                <span>Total de estados</span>
-                                <h3>{{ total_estados }}</h3>
-                            </div>
-
-                        </div>
-
-                        <div class="dashboard-grid">
-
-                            <section class="dashboard-box">
-                                <h3>Últimos alunos cadastrados</h3>
-
-                                {% for aluno in ultimos_alunos %}
-                                <div class="item-lista">
-                                    <strong>{{ aluno.nome }}</strong>
-                                    <span>{{ aluno.cadastrado_em }}</span>
-                                </div>
-                                {% empty %}
-                                <p>Nenhum aluno cadastrado ainda.</p>
-                                {% endfor %}
-                            </section>
-
-                            <section class="dashboard-box">
-                                <h3>Ações rápidas</h3>
-
-                                <div class="acoes-rapidas">
-                                    <a href="{% url 'cadastrar-aluno' %}">Cadastrar aluno</a>
-                                    <a href="{% url 'cadastrar-professor' %}">Cadastrar professor</a>
-                                    <a href="{% url 'cadastrar-cidade' %}">Cadastrar cidade</a>
-                                    <a href="{% url 'cadastrar-estado' %}">Cadastrar estado</a>
-                                </div>
-                            </section>
-
-                        </div>
-
-                    </div>
-
-                    {% endblock %}
-
-                </main>
-
-            </div>
-            {% endblock %}
+        <div class="logo-icon">
+            <i class="fas fa-dumbbell"></i>
         </div>
 
+        <div>
+
+            <span>RGA</span>
+            <small>Gestão de Treinos</small>
+
+        </div>
 
     </div>
-    <!-- Menu lateral fixo -->
 
+    <nav class="menu">
+
+        <!-- PRINCIPAL -->
+
+        <div class="itens-menu">
+
+            <h4>Principal</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="{% url 'inicio' %}">
+
+                        <i class="fas fa-chart-line"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- ALUNOS -->
+
+        <div class="itens-menu">
+
+            <h4>Alunos</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="{% url 'listar-aluno' %}">
+
+                        <i class="fas fa-users"></i>
+
+                        Listar Alunos
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{% url 'cadastrar-aluno' %}">
+
+                        <i class="fas fa-user-plus"></i>
+
+                        Novo Aluno
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- TREINOS -->
+
+        <div class="itens-menu">
+
+            <h4>Treinos</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-dumbbell"></i>
+
+                        Exercícios
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-list-check"></i>
+
+                        Categorias
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-clipboard-list"></i>
+
+                        Treinos
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- MEDIDAS -->
+
+        <div class="itens-menu">
+
+            <h4>Acompanhamento</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-ruler"></i>
+
+                        Medidas
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-chart-column"></i>
+
+                        Evolução Física
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- PROFESSORES -->
+
+        <div class="itens-menu">
+
+            <h4>Professores</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="{% url 'listar-professor' %}">
+
+                        <i class="fas fa-user-tie"></i>
+
+                        Professores
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- CONFIGURAÇÕES -->
+
+        <div class="itens-menu">
+
+            <h4>Configurações</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="{% url 'listar-cidade' %}">
+
+                        <i class="fas fa-city"></i>
+
+                        Cidades
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{% url 'listar-estado' %}">
+
+                        <i class="fas fa-map-location-dot"></i>
+
+                        Estados
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- CONTA -->
+
+        <div class="itens-menu">
+
+            <h4>Conta</h4>
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        <i class="fas fa-user-circle"></i>
+
+                        Meu Perfil
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <form method="POST"
+                          action="{% url 'logout' %}">
+
+                        {% csrf_token %}
+
+                        <button
+                            class="logout-button"
+                            type="submit">
+
+                            <i class="fas fa-right-from-bracket"></i>
+
+                            Sair
+
+                        </button>
+
+                    </form>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </nav>
+
+</aside>
+
+{% endif %}
+
+<div class="main-area">
+
+    <header class="topbar">
+
+        <div class="titulo">
+
+            <h2>RGA - Sistema de Gerenciamento</h2>
+
+        </div>
+
+        <div class="usuario">
+
+            {% if request.user.is_authenticated %}
+
+                <i class="fas fa-circle-user"></i>
+
+                {{ request.user }}
+
+            {% endif %}
+
+        </div>
+
+    </header>
+
+    <main class="conteudo">
+
+        {% block main %}
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+</div>
 
 </body>
-
 </html>

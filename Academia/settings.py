@@ -72,7 +72,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        
     },
+
+
 ]
 
 WSGI_APPLICATION = 'Academia.wsgi.application'
