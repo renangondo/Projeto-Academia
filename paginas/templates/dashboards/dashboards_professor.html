@@ -11,27 +11,25 @@
 
 <h1>Bem-vindo, Professor {{ request.user.pessoa_usuario.nome }}</h1>
 
-<p>Resumo dos seus alunos.</p>
+<p class="paragrafo-subtitulo">Resumo dos seus alunos.</p>
 
 <div class="cards">
 
     <div class="card">
-
-        <i class="fas fa-users"></i>
-
-        <span>Meus alunos</span>
-
-        <h2>{{ total_alunos }}</h2>
+        <a href="{% url 'listar-aluno' %}">
+            <i class="fas fa-users"></i>
+            <span>Meus alunos</span>
+            <h2>{{ total_alunos }}</h2>
+        </a>
 
     </div>
 
     <div class="card">
-
-        <i class="fas fa-dumbbell"></i>
-
-        <span>Treinos Criados</span>
-
-        <h2>{{ total_treinos }}</h2>
+        <a href="">
+            <i class="fas fa-dumbbell"></i>
+            <span>Treinos Criados</span>
+            <h2>{{ total_treinos }}</h2>
+        </a>
 
     </div>
 

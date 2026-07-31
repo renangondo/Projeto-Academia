@@ -223,7 +223,7 @@ class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Pessoa
     template_name = "cadastros/listar_professores.html"
 
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Administrador"]
 
     def get_queryset(self):
 
@@ -240,17 +240,18 @@ class PessoaDetail(LoginRequiredMixin, GroupRequiredMixin,DetailView):
     model = Pessoa
     context_object_name = "aluno"
     template_name = "cadastros/detalhe_aluno.html"
+    group_required = ["Professor", "Administrador"]
 
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
 
         context["treinos"] = Treino.objects.filter(
-            aluno=self.object.usuario
-        )
+            aluno=self.object
+)
 
         context["medidas"] = Medidas.objects.filter(
-            aluno=self.object.usuario
+            aluno=self.object
         ).order_by("-data_medida")
 
         return context

@@ -15,6 +15,7 @@ class MedidasCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Medidas
     fields = ['altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form.html'
+    group_required = ["Professor", "Administrador", "Aluno"]
 
     def form_valid(self, form):
         aluno = User.objects.get(pk=self.kwargs['pk'])
@@ -34,6 +35,7 @@ class MedidasUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     fields = ['aluno', 'altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
+    group_required = ["Professor", "Administrador", "Aluno"]
 
 
 ############################## DELETE #########################################
@@ -43,3 +45,4 @@ class MedidasDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     fields = ['aluno', 'altura', 'peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo', 'coxa_direita', 'coxa_esquerda', 'panturrilha_direita', 'panturrilha_esquerda', 'peito', 'data_medida']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
+    group_required = ["Professor", "Administrador", "Aluno"]

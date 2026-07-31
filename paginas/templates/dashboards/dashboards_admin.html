@@ -32,16 +32,20 @@
         </div>
          
 
-        <div class="card">    
-            <i class="fas fa-map-location-dot"></i>
-            <span>Estados</span>
-            <h2>{{ total_estado }}</h2>
+        <div class="card">
+            <a href="{% url 'listar-estado' %}">  
+                <i class="fas fa-map-location-dot"></i>
+                <span>Estados</span>
+                <h2>{{ total_estado }}</h2>
+            </a>
         </div>
 
         <div class="card">
-            <i class="fas fa-city"></i>
-            <span>Cidades</span>
-            <h2>{{ total_cidades }}</h2>
+            <a href="{% url 'listar-cidade' %}">
+                <i class="fas fa-city"></i>
+                <span>Cidades</span>
+                <h2>{{ total_cidades }}</h2>
+            </a>
         </div>
 
     </div>

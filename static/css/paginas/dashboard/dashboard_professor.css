@@ -5,3 +5,7 @@
 grid-template-columns:repeat(2,1fr);
 
 }
+
+.paragrafo-subtitulo{
+    margin-bottom: 30px;
+}

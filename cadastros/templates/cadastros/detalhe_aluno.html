@@ -2,17 +2,16 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
 <link rel="stylesheet" href="{% static 'css/cadastros/detalhe_aluno.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block main %}
 
 <div class="aluno-detalhe">
 
     <div class="aluno-header">
         <div>
-            <h2>{{ aluno.nome }}</h2>
+            <h2>{{ aluno.nome  }}</h2>
             <p>Detalhes do aluno, treinos e medidas corporais</p>
         </div>
 
