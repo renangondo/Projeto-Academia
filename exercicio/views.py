@@ -55,7 +55,7 @@ class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Professor", "Administrador"]
 
     def form_valid(self, form):
-        form.instance.cadastrado_por = self.request.user
+        form.instance.cadastrado_por = self.request.user.pessoa_usuario
         return super().form_valid(form)
 
 class ExercicioTreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -67,7 +67,7 @@ class ExercicioTreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     def form_valid(self, form):
         treino = Treino.objects.get(pk=self.kwargs['pk'])
         form.instance.treino = treino
-        form.instance.cadastrado_por = self.request.user
+        form.instance.cadastrado_por = self.request.user.pessoa_usuario
         return super().form_valid(form)
 
     def get_success_url(self):
