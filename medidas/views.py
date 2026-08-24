@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from cadastros.models import Pessoa
 from medidas.models import Medidas
 
 # Importar o mixin de login e grupo
@@ -18,7 +19,7 @@ class MedidasCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Professor", "Administrador", "Aluno"]
 
     def form_valid(self, form):
-        aluno = User.objects.get(pk=self.kwargs['pk'])
+        aluno = Pessoa.objects.get(pk=self.kwargs['pk'])
         form.instance.aluno = aluno
         form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)

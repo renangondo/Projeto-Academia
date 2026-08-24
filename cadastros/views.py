@@ -38,10 +38,9 @@ class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
 class CadastroProfessorCreate(CreateView):
     model = Pessoa
-    group_required = ["Administrador", "Professor"]
     fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/cadastro_professor.html'
-    success_url = reverse_lazy = ('login')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
 
@@ -137,7 +136,7 @@ class AlunoUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
 class EstadoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     model = Estado
-    group_required = "Admistrador"
+    group_required = "Administrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
@@ -145,7 +144,7 @@ class EstadoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
 class CidadeDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     model = Cidade
-    group_required = "Admistrador"
+    group_required = "Administrador"
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('inicio')
 
@@ -197,7 +196,7 @@ class PessoaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
             return queryset
         # Se não, liste apenas as pessoas associadas ao professor
         else:
-            return queryset.filter(professor=self.request.user)
+            return queryset.filter(professor=self.request.user.pessoa_usuario)
 
 class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
