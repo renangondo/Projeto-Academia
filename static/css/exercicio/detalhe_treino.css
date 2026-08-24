@@ -93,6 +93,45 @@
     color: #0f172a;
 }
 
+.acoes{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+.btn-editar,
+.btn-excluir{
+    width:34px;
+    height:34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:8px;
+
+    color:#fff;
+    text-decoration:none;
+
+    transition:.25s;
+}
+
+.btn-editar{
+    background:#0B5ED7;
+}
+
+.btn-editar:hover{
+    background:#084298;
+}
+
+.btn-excluir{
+    background:#dc3545;
+}
+
+.btn-excluir:hover{
+    background:#bb2d3b;
+}
+
 .sem-registro {
     text-align: center;
     padding: 35px;

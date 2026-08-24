@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/exercicio/detalhe_treino.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block main %}
 
 <div class="list-container">
 
@@ -31,6 +31,7 @@
                     <th>Repetições</th>
                     <th>Descanso</th>
                     <th>Peso Atual</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
 
@@ -43,6 +44,21 @@
                     <td>{{ item.repeticoes }}</td>
                     <td>{{ item.descanso }} Minutos</td>
                     <td>{{ item.peso_atual }} KG</td>
+
+                    <td class="acoes">
+
+                        <a href="{% url 'editar-exercicioTreino' item.id %}"
+                            class="btn-editar">
+                            <i class="fas fa-pen"></i>
+                        </a>
+
+                        <a href="{% url 'excluir-exercicioTreino' item.id %}"
+                            class="btn-excluir">
+                            <i class="fas fa-trash"></i>
+                        </a>
+
+                    </td>
+
                 </tr>
                 {% empty %}
                 <tr>
