@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AlunoCreate, AlunoDelete, AlunoList, AlunoUpdate, CadastroProfessorCreate, MinhasTransferenciasList, PessoaDetail, CidadeList, EstadoCreate, CidadeCreate, EstadoList, ProfessorDelete, ProfessorList, ProfessorUpdate, TransferenciaCreate, TransferenciaResponder
+from .views import AlunoCreate, AlunoDelete, AlunoList, AlunoUpdate, CadastroProfessorCreate, MinhasSolicitacoesAlunoList, MinhasTransferenciasList, PessoaDetail, CidadeList, EstadoCreate, CidadeCreate, EstadoList, ProfessorDelete, ProfessorList, ProfessorUpdate, TransferenciaCreate, TransferenciaResponder, TransferenciaSolicitarAluno
 from .views import EstadoUpdate, CidadeUpdate
 from .views import EstadoDelete, CidadeDelete
 
@@ -11,6 +11,8 @@ urlpatterns = [
     path('cadastrar/professor/', CadastroProfessorCreate.as_view(), name = "cadastrar-professor"),
     path('cadastrar/aluno/', AlunoCreate.as_view(), name = "cadastrar-aluno"),
     path('transferencia/solicitar/', TransferenciaCreate.as_view(), name="solicitar-transferencia"),
+    path('transferencia/solicitar-aluno/', TransferenciaSolicitarAluno.as_view(), name="solicitar-transferencia-aluno"),
+
 
     path('editar/estado/<int:pk>/', EstadoUpdate.as_view(), name="editar-estado"),
     path('editar/cidade/<int:pk>/', CidadeUpdate.as_view(), name="editar-cidade"),
@@ -27,6 +29,10 @@ urlpatterns = [
     path('listar/professor/', ProfessorList.as_view(), name="listar-professor"),
     path('listar/aluno/', AlunoList.as_view(), name="listar-aluno"),
     path('transferencia/minhas/', MinhasTransferenciasList.as_view(), name="minhas-transferencias"),
+    path('transferencia/minhas-solicitacoes/', MinhasSolicitacoesAlunoList.as_view(), name="minhas-solicitacoes"),
+    path('transferencia/<int:pk>/responder/', TransferenciaResponder.as_view(), name="responder-transferencia"),
+
+
 
     path('detalhe/aluno/<int:pk>/', PessoaDetail.as_view(), name='detalhe-aluno'),
 

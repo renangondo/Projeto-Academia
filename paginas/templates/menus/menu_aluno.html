@@ -45,6 +45,22 @@
 
         <div class="menu-section">
 
+            <h4>Professor</h4>
+
+            <a href="{% url 'solicitar-transferencia-aluno' %}">
+                <i class="fas fa-right-left"></i>
+                Solicitar Novo Professor
+            </a>
+
+            <a href="{% url 'minhas-solicitacoes' %}">
+                <i class="fas fa-arrows-rotate"></i>
+                Minhas Solicitações
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
             <h4>Conta</h4>
 
             <form action="{% url 'logout' %}" method="POST">

@@ -4,7 +4,14 @@
 
 {% for t in transferencias %}
 <div class="card">
-    <p><strong>{{ t.aluno.nome }}</strong> — {{ t.professor_atual.nome }} → {{ t.professor_novo.nome }}</p>
+    <p>
+        <strong>{{ t.aluno.nome }}</strong>
+        {% if t.origem == 'ALUNO' %}
+            solicitou transferência para <strong>{{ t.professor_novo.nome }}</strong>
+        {% else %}
+            — {{ t.professor_atual.nome }} → {{ t.professor_novo.nome }}
+        {% endif %}
+    </p>
     <p>Status: {{ t.get_status_display }}</p>
 
     {% if t.status == 'PENDENTE' and t.professor_novo.usuario == request.user %}

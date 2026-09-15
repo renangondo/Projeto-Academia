@@ -65,6 +65,10 @@ class Pessoa(Auditoria):
 
 
 class TransferenciaAluno(Auditoria):
+    ORIGEM_CHOICES = [
+        ('PROFESSOR', 'Professor'),
+        ('ALUNO', 'Aluno'),
+    ]
     STATUS_CHOICES = [
         ('PENDENTE', 'Pendente'),
         ('ACEITA', 'Aceita'),
@@ -72,8 +76,9 @@ class TransferenciaAluno(Auditoria):
     ]
 
     aluno = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias")
-    professor_atual = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_enviadas")
+    professor_atual = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_enviadas", null=True, blank=True)
     professor_novo = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_recebidas")
+    origem = models.CharField(max_length=10, choices=ORIGEM_CHOICES, default='PROFESSOR', verbose_name="Solicitado por")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDENTE')
     observacao = models.CharField(max_length=200, blank=True, null=True, verbose_name="Observação")
 

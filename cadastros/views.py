@@ -117,11 +117,41 @@ class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.professor_atual = self.request.user.pessoa_usuario
+        form.instance.origem = 'PROFESSOR'
         form.instance.status = 'PENDENTE'
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('minhas-transferencias')
+
+
+class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = TransferenciaAluno
+    fields = ['professor_novo', 'observacao']
+    template_name = 'cadastros/form.html'
+    group_required = ["Aluno"]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        pessoa = self.request.user.pessoa_usuario
+
+        qs = Pessoa.objects.filter(tipo="PROFESSOR")
+        if pessoa.professor:
+            qs = qs.exclude(pk=pessoa.professor.pk)  # não faz sentido "trocar" pro mesmo professor
+
+        form.fields['professor_novo'].queryset = qs
+        return form
+
+    def form_valid(self, form):
+        pessoa = self.request.user.pessoa_usuario
+        form.instance.aluno = pessoa
+        form.instance.professor_atual = pessoa.professor  # pode ficar None, sem problema
+        form.instance.origem = 'ALUNO'
+        form.instance.status = 'PENDENTE'
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('minhas-solicitacoes')
 
 ############################## UPDATE #########################################
 
@@ -273,6 +303,16 @@ class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView)
             Q(professor_atual=pessoa) | Q(professor_novo=pessoa)
         ).order_by('-cadastrado_em')
 
+
+class MinhasSolicitacoesAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = TransferenciaAluno
+    template_name = 'cadastros/listar_transferencias.html'
+    context_object_name = 'transferencias'
+    group_required = ["Aluno"]
+
+    def get_queryset(self):
+        pessoa = self.request.user.pessoa_usuario
+        return TransferenciaAluno.objects.filter(aluno=pessoa).order_by('-cadastrado_em')
 
 
 
