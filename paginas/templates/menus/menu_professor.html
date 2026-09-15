@@ -62,6 +62,41 @@
 
         <div class="menu-section">
 
+            <h4>Treinos</h4>
+
+            <a href="{% url 'cadastrar-exercicio' %}">
+                <i class="fas fa-dumbbell"></i>
+                Exercicios
+            </a>
+
+            <a href="{% url 'cadastrar-categoria' %}">
+                <i class="fas fa-list-check"></i>
+                Categoria
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
+            <h4>Transferências</h4>
+
+            <a href="{% url 'solicitar-transferencia' %}">
+                <i class="fas fa-right-left"></i>
+                Transferir Aluno
+            </a>
+
+            <a href="{% url 'minhas-transferencias' %}">
+                <i class="fas fa-arrows-rotate"></i>
+                Minhas Transferências
+                {% if qtd_transferencias_pendentes %}
+                <span class="badge">{{ qtd_transferencias_pendentes }}</span>
+                {% endif %}
+            </a>
+
+        </div>
+
+        <div class="menu-section">
+
             <h4>Conta</h4>
 
             <form action="{% url 'logout' %}" method="POST">

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from cadastros.models import Pessoa
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +12,19 @@ from braces.views import GroupRequiredMixin
 
 # Create your views here.
 
+from django.db.models import Q
+
+def exercicios_visiveis(user):
+    """Retorna os exercícios que esse usuário pode ver/usar."""
+    if user.is_superuser:
+        return Exercicio.objects.all()
+
+    pessoa = user.pessoa_usuario
+    return Exercicio.objects.filter(
+        Q(cadastrado_por=pessoa) | Q(cadastrado_por__usuario__is_superuser=True)
+
+    )
+############################## CREATE #########################################
 class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Categoria
     fields = ['nome']
@@ -64,10 +77,15 @@ class ExercicioTreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     template_name = 'form_exercicio_treino.html'
     group_required = ["Professor", "Administrador"]
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['exercicio'].queryset = exercicios_visiveis(self.request.user)
+        return form
+
     def form_valid(self, form):
         treino = Treino.objects.get(pk=self.kwargs['pk'])
         form.instance.treino = treino
-        form.instance.cadastrado_por = self.request.user.pessoa_usuario
+        form.instance.cadastrado_por = self.request.user.pessoa_usuario  # lembrando: já corrigimos isso antes
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -104,6 +122,11 @@ class ExercicioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['exercicio'].queryset = exercicios_visiveis(self.request.user)
+        return form
 ############################## DELETE #########################################
 
 class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
@@ -154,5 +177,14 @@ class TreinoDetail(LoginRequiredMixin, GroupRequiredMixin, DetailView):
         ).select_related('exercicio', 'exercicio__categoria')
 
         return context
-    
+
+############################## LIST #########################################
+
+class ExercicioList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Exercicio
+    template_name = "exercicio/listar_exercicio.html"
+    group_required = ["Professor", "Administrador"]
+
+    def get_queryset(self):
+        return exercicios_visiveis(self.request.user)
 

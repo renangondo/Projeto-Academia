@@ -1,0 +1,21 @@
+{% extends 'modelo.html' %}
+{% block main %}
+<h2>Minhas transferências</h2>
+
+{% for t in transferencias %}
+<div class="card">
+    <p><strong>{{ t.aluno.nome }}</strong> — {{ t.professor_atual.nome }} → {{ t.professor_novo.nome }}</p>
+    <p>Status: {{ t.get_status_display }}</p>
+
+    {% if t.status == 'PENDENTE' and t.professor_novo.usuario == request.user %}
+    <form method="POST" action="{% url 'responder-transferencia' t.pk %}">
+        {% csrf_token %}
+        <button type="submit" name="acao" value="aceitar">Aceitar</button>
+        <button type="submit" name="acao" value="recusar">Recusar</button>
+    </form>
+    {% endif %}
+</div>
+{% empty %}
+<p>Nenhuma transferência no momento.</p>
+{% endfor %}
+{% endblock %}

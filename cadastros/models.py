@@ -64,6 +64,23 @@ class Pessoa(Auditoria):
         return f"{self.nome} - {self.get_tipo_display()}"
 
 
+class TransferenciaAluno(Auditoria):
+    STATUS_CHOICES = [
+        ('PENDENTE', 'Pendente'),
+        ('ACEITA', 'Aceita'),
+        ('RECUSADA', 'Recusada'),
+    ]
+
+    aluno = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias")
+    professor_atual = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_enviadas")
+    professor_novo = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_recebidas")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDENTE')
+    observacao = models.CharField(max_length=200, blank=True, null=True, verbose_name="Observação")
+
+    def __str__(self):
+        return f"{self.aluno} de {self.professor_atual} para {self.professor_novo} ({self.status})"
+
+
 
 
 

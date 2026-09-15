@@ -1,6 +1,9 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseForbidden
+from .models import TransferenciaAluno
 
 from django.contrib import messages
 
@@ -94,6 +97,31 @@ class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         form.instance.professor = self.request.user.pessoa_usuario
 
         return super().form_valid(form)
+
+
+class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = TransferenciaAluno
+    fields = ['aluno', 'professor_novo', 'observacao']
+    template_name = 'cadastros/form.html'
+    group_required = ["Professor"]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        pessoa = self.request.user.pessoa_usuario
+
+        # só pode transferir aluno que é dele mesmo
+        form.fields['aluno'].queryset = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
+        # não pode "transferir" pra si mesmo
+        form.fields['professor_novo'].queryset = Pessoa.objects.filter(tipo="PROFESSOR").exclude(pk=pessoa.pk)
+        return form
+
+    def form_valid(self, form):
+        form.instance.professor_atual = self.request.user.pessoa_usuario
+        form.instance.status = 'PENDENTE'
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('minhas-transferencias')
 
 ############################## UPDATE #########################################
 
@@ -232,6 +260,22 @@ class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         )
 
 
+class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = TransferenciaAluno
+    template_name = 'cadastros/listar_transferencias.html'
+    context_object_name = 'transferencias'
+    group_required = ["Professor"]
+
+    def get_queryset(self):
+        pessoa = self.request.user.pessoa_usuario
+        # mostra tanto as que ele enviou quanto as que ele recebeu
+        return TransferenciaAluno.objects.filter(
+            Q(professor_atual=pessoa) | Q(professor_novo=pessoa)
+        ).order_by('-cadastrado_em')
+
+
+
+
 ############################## DETAIL #########################################
 
 class PessoaDetail(LoginRequiredMixin, GroupRequiredMixin,DetailView):
@@ -254,3 +298,29 @@ class PessoaDetail(LoginRequiredMixin, GroupRequiredMixin,DetailView):
         ).order_by("-data_medida")
 
         return context
+
+############################## RESPOSTA #########################################
+class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
+    group_required = ["Professor"]
+
+    def post(self, request, pk):
+        transferencia = get_object_or_404(TransferenciaAluno, pk=pk)
+        pessoa = request.user.pessoa_usuario
+
+        if transferencia.professor_novo != pessoa:
+            return HttpResponseForbidden("Você não pode responder essa transferência.")
+
+        if transferencia.status != 'PENDENTE':
+            return redirect('minhas-transferencias')
+
+        acao = request.POST.get('acao')
+
+        if acao == 'aceitar':
+            transferencia.status = 'ACEITA'
+            transferencia.aluno.professor = pessoa
+            transferencia.aluno.save()
+        elif acao == 'recusar':
+            transferencia.status = 'RECUSADA'
+
+        transferencia.save()
+        return redirect('minhas-transferencias')
