@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'exercicio.apps.ExercicioConfig',
     'medidas.apps.MedidasConfig',
     'usuarios.apps.UsuariosConfig',
+    'agenda.apps.AgendaConfig',
 
 
 ]

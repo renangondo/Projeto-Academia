@@ -1,0 +1,16 @@
+{% extends 'modelo.html' %}
+{% block main %}
+
+<h2>Minhas Aulas</h2>
+
+{% for h in horarios %}
+<div class="linha">
+    <strong>{{ h.get_dia_semana_display }}</strong>
+    às {{ h.horario|time:"H:i" }}
+    com {{ h.professor.nome }}
+</div>
+{% empty %}
+<p>Você ainda não tem aulas agendadas. Fale com seu professor.</p>
+{% endfor %}
+
+{% endblock %}
