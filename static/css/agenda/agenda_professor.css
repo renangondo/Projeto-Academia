@@ -1,0 +1,188 @@
+/* ===========================================
+   CABEÇALHO DA AGENDA
+=========================================== */
+
+.agenda-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.agenda-header h2{
+
+    color:#0d6efd;
+    font-size:26px;
+
+}
+
+/* ===========================================
+   BOTÃO AGENDAR (reaproveita cor do btn-salvar,
+   mas ajustado pra ficar como link)
+=========================================== */
+
+.btn-agendar{
+
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    background:#0d6efd;
+    color:white;
+
+    text-decoration:none;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.btn-agendar:hover{
+
+    background:#0b5ed7;
+
+}
+
+/* ===========================================
+   CARD DE CADA DIA DA SEMANA
+=========================================== */
+
+.box{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:25px 30px;
+
+    margin-bottom:22px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+}
+
+.box h3{
+
+    color:#0d6efd;
+
+    font-size:18px;
+
+    margin-bottom:15px;
+
+    padding-bottom:12px;
+
+    border-bottom:2px solid #eef3fb;
+
+}
+
+/* ===========================================
+   LINHA DE HORÁRIO
+=========================================== */
+
+.linha{
+
+    display:flex;
+    align-items:center;
+
+    gap:20px;
+
+    padding:14px 12px;
+
+    border-bottom:1px solid #eee;
+
+    transition:.2s;
+
+}
+
+.linha:last-child{
+
+    border-bottom:none;
+
+}
+
+.linha:hover{
+
+    background:#f8fafd;
+
+    border-radius:8px;
+
+}
+
+.linha span{
+
+    background:#eaf2ff;
+    color:#0d6efd;
+
+    font-weight:700;
+    font-size:13px;
+
+    padding:6px 12px;
+
+    border-radius:8px;
+
+    min-width:70px;
+
+    text-align:center;
+
+}
+
+.linha strong{
+
+    flex:1;
+
+    color:#2c3e50;
+    font-size:15px;
+
+}
+
+.linha a{
+
+    color:#dc3545;
+
+    text-decoration:none;
+
+    font-size:13px;
+    font-weight:600;
+
+    padding:6px 10px;
+
+    border-radius:6px;
+
+    transition:.2s;
+
+}
+
+.linha a:hover{
+
+    background:#fdecea;
+
+}
+
+/* ===========================================
+   ESTADO VAZIO
+=========================================== */
+
+.agenda-vazia{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:40px;
+
+    text-align:center;
+
+    color:#888;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+}

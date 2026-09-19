@@ -2,25 +2,38 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/cadastros/form.css' %}">
 <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/agenda/agenda_professor.css' %}">
 {% endblock %}
 
 {% block main %}
-<div class="form-page">
-    <div class="form-card">
 
-        <h2>Vamos Agendar</h2>
-        <p>Preencha todos os campos obrigatórios</p>
-
-        <form action="" method="POST">
-            {% csrf_token %}
-
-            {{ form.as_p }}
-
-            <button type="submit" class="btn-salvar">Agendar</button>
-        </form>
-
-    </div>
+<div class="agenda-header">
+    <h2>Minha Agenda</h2>
+    <a href="{% url 'agendar-aula' %}" class="btn-agendar">
+        <i class="fas fa-plus"></i>
+        Agendar aula
+    </a>
 </div>
+
+{% regroup horarios by get_dia_semana_display as dias_agrupados %}
+
+{% for dia in dias_agrupados %}
+<div class="box">
+    <h3>{{ dia.grouper }}</h3>
+
+    {% for h in dia.list %}
+    <div class="linha">
+        <span>{{ h.horario|time:"H:i" }}</span>
+        <strong>{{ h.aluno.nome }}</strong>
+        <a href="{% url 'excluir-horario' h.pk %}">Remover</a>
+    </div>
+    {% endfor %}
+</div>
+{% empty %}
+<div class="agenda-vazia">
+    <p>Nenhuma aula agendada ainda.</p>
+</div>
+{% endfor %}
+
 {% endblock %}

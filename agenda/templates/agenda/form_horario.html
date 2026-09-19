@@ -1,0 +1,67 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/agenda/form_horario.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="form-page">
+    <div class="form-card">
+
+        <a href="{% url 'minha-agenda' %}" class="voltar-link">
+            <i class="fas fa-arrow-left"></i>
+            Voltar para a agenda
+        </a>
+
+        <h2>Vamos Agendar</h2>
+        <p>Escolha o aluno, o dia da semana e o horário da aula</p>
+
+        {% if form.non_field_errors %}
+        <div class="form-erros">
+            {% for erro in form.non_field_errors %}
+            <p><i class="fas fa-triangle-exclamation"></i> {{ erro }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="{{ form.aluno.id_for_label }}">Aluno</label>
+                {{ form.aluno }}
+                {% if form.aluno.errors %}
+                <span class="campo-erro">{{ form.aluno.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.dia_semana.id_for_label }}">Dia da semana</label>
+                {{ form.dia_semana }}
+                {% if form.dia_semana.errors %}
+                <span class="campo-erro">{{ form.dia_semana.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.horario.id_for_label }}">Horário</label>
+                {{ form.horario }}
+                {% if form.horario.errors %}
+                <span class="campo-erro">{{ form.horario.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-salvar">
+                <i class="fas fa-calendar-check"></i>
+                Agendar
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
