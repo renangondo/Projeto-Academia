@@ -30,9 +30,14 @@
         <form action="" method="POST">
             {% csrf_token %}
 
-            <div class="campo">
-                <label for="{{ form.aluno.id_for_label }}">Aluno</label>
-                {{ form.aluno }}
+            <div class="campo campo-autocomplete">
+                <label for="aluno-busca">Aluno</label>
+
+                <input type="text" id="aluno-busca" placeholder="Digite o nome do aluno..." autocomplete="off">
+                <input type="hidden" name="aluno" id="aluno-id" required>
+
+                <div id="aluno-lista" class="autocomplete-lista"></div>
+
                 {% if form.aluno.errors %}
                 <span class="campo-erro">{{ form.aluno.errors.0 }}</span>
                 {% endif %}
@@ -63,5 +68,15 @@
 
     </div>
 </div>
+
+<script id="dados-alunos" type="application/json">
+[
+    {% for aluno in form.fields.aluno.queryset %}
+    {"id": {{ aluno.pk }}, "nome": "{{ aluno.nome|escapejs }}"}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+
+<script src="{% static 'js/agenda/form_horario.js' %}"></script>
 
 {% endblock %}
