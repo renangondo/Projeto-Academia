@@ -1,0 +1,124 @@
+.form-page{
+    display:flex;
+    justify-content:center;
+    padding:40px 20px;
+}
+
+.form-card{
+    background:white;
+    width:100%;
+    max-width:480px;
+    padding:35px 40px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.voltar-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:#0d6efd;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:22px;
+    padding:8px 14px;
+    background:#eaf2ff;
+    border-radius:20px;
+    transition:.2s;
+}
+
+.voltar-link:hover{
+    background:#0d6efd;
+    color:white;
+    transform:translateX(-3px);
+}
+
+.form-card h2{
+    color:#0d6efd;
+    font-size:24px;
+    margin-bottom:6px;
+}
+
+.form-card > p{
+    color:#888;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.form-erros{
+    background:#fdecea;
+    border-left:4px solid #dc3545;
+    color:#a71d2a;
+    padding:14px 18px;
+    border-radius:8px;
+    margin-bottom:22px;
+    font-size:14px;
+}
+
+.form-erros p{
+    margin:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.campo{
+    margin-bottom:20px;
+}
+
+.campo label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#2c3e50;
+    margin-bottom:8px;
+}
+
+.campo input:not(.autocomplete-input),
+.campo textarea{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #dde3ec;
+    border-radius:10px;
+    font-size:14px;
+    color:#2c3e50;
+    background:#f8fafd;
+    transition:.2s;
+}
+
+.campo input:focus,
+.campo textarea:focus{
+    outline:none;
+    border-color:#0d6efd;
+    background:white;
+    box-shadow:0 0 0 3px rgba(13,110,253,.12);
+}
+
+.campo-erro{
+    display:block;
+    color:#dc3545;
+    font-size:12px;
+    margin-top:6px;
+}
+
+.btn-salvar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    background:#0d6efd;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-salvar:hover{
+    background:#0b5ed7;
+}

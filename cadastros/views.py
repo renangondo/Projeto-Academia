@@ -102,7 +102,7 @@ class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = TransferenciaAluno
     fields = ['aluno', 'professor_novo', 'observacao']
-    template_name = 'cadastros/form.html'
+    template_name = 'cadastros/form_transferencia_professor.html'
     group_required = ["Professor"]
 
     def get_form(self, form_class=None):
@@ -128,7 +128,7 @@ class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = TransferenciaAluno
     fields = ['professor_novo', 'observacao']
-    template_name = 'cadastros/form.html'
+    template_name = 'cadastros/form_transferencia_aluno.html'
     group_required = ["Aluno"]
 
     def get_form(self, form_class=None):

@@ -1,0 +1,87 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/global/autocomplete.css' %}">
+<link rel="stylesheet" href="{% static 'css/cadastros/form_transferencia.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="form-page">
+    <div class="form-card">
+
+        <a href="{% url 'minhas-transferencias' %}" class="voltar-link">
+            <i class="fas fa-arrow-left"></i>
+            Voltar para transferências
+        </a>
+
+        <h2>Transferir Aluno</h2>
+        <p>Escolha o aluno e o professor que vai assumir a responsabilidade</p>
+
+        {% if form.non_field_errors %}
+        <div class="form-erros">
+            {% for erro in form.non_field_errors %}
+            <p><i class="fas fa-triangle-exclamation"></i> {{ erro }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <div class="campo campo-autocomplete">
+                <label for="aluno-busca">Aluno</label>
+                <input type="text" id="aluno-busca" class="autocomplete-input" placeholder="Digite o nome do aluno..." autocomplete="off">
+                <input type="hidden" name="aluno" id="aluno-id" required>
+                <div id="aluno-lista" class="autocomplete-lista"></div>
+                {% if form.aluno.errors %}
+                <span class="campo-erro">{{ form.aluno.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="campo campo-autocomplete">
+                <label for="professor-busca">Novo professor</label>
+                <input type="text" id="professor-busca" class="autocomplete-input" placeholder="Digite o nome do professor..." autocomplete="off">
+                <input type="hidden" name="professor_novo" id="professor-id" required>
+                <div id="professor-lista" class="autocomplete-lista"></div>
+                {% if form.professor_novo.errors %}
+                <span class="campo-erro">{{ form.professor_novo.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="campo">
+                <label for="{{ form.observacao.id_for_label }}">Observação (opcional)</label>
+                {{ form.observacao }}
+            </div>
+
+            <button type="submit" class="btn-salvar">
+                <i class="fas fa-right-left"></i>
+                Solicitar transferência
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<script id="dados-alunos" type="application/json">
+[
+    {% for aluno in form.fields.aluno.queryset %}
+    {"id": {{ aluno.pk }}, "nome": "{{ aluno.nome|escapejs }}"}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+
+<script id="dados-professores" type="application/json">
+[
+    {% for professor in form.fields.professor_novo.queryset %}
+    {"id": {{ professor.pk }}, "nome": "{{ professor.nome|escapejs }}"}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+
+<script src="{% static 'js/global/autocomplete.js' %}"></script>
+<script src="{% static 'js/cadastros/form_transferencia_professor.js' %}"></script>
+
+{% endblock %}
