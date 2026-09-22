@@ -4,6 +4,7 @@ from django.views.generic import DetailView, View
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from .models import TransferenciaAluno
+from django.db.models import Q
 
 from django.contrib import messages
 
