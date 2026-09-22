@@ -14,6 +14,10 @@
     </p>
     <p>Status: {{ t.get_status_display }}</p>
 
+    {% if t.status == 'PENDENTE' %}
+    <p class="prazo-info">Prazo para resposta: {{ t.prazo_limite|date:"d/m/Y H:i" }}</p>
+    {% endif %}
+
     {% if t.status == 'PENDENTE' and t.professor_novo.usuario == request.user %}
     <form method="POST" action="{% url 'responder-transferencia' t.pk %}">
         {% csrf_token %}

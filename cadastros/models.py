@@ -1,3 +1,6 @@
+from datetime import timedelta, timezone
+from django.core.exceptions import ValidationError
+
 from django.db import models
 
 # Classe de auditoria usada para todos
@@ -73,18 +76,49 @@ class TransferenciaAluno(Auditoria):
         ('PENDENTE', 'Pendente'),
         ('ACEITA', 'Aceita'),
         ('RECUSADA', 'Recusada'),
+        ('EXPIRADA', 'Expirada (sem resposta)'),
     ]
+
+    PRAZO_HORAS = 48
 
     aluno = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias")
     professor_atual = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_enviadas", null=True, blank=True)
     professor_novo = models.ForeignKey(Pessoa, on_delete=models.PROTECT, related_name="transferencias_recebidas")
-    origem = models.CharField(max_length=10, choices=ORIGEM_CHOICES, default='PROFESSOR', verbose_name="Solicitado por")
+    origem = models.CharField(max_length=10, choices=ORIGEM_CHOICES, default='PROFESSOR')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDENTE')
     observacao = models.CharField(max_length=200, blank=True, null=True, verbose_name="Observação")
 
     def __str__(self):
         return f"{self.aluno} de {self.professor_atual} para {self.professor_novo} ({self.status})"
 
+    @property
+    def prazo_limite(self):
+        return self.cadastrado_em + timedelta(hours=self.PRAZO_HORAS)
+
+    @property
+    def esta_vencida(self):
+        return self.status == 'PENDENTE' and timezone.now() > self.prazo_limite
+
+    def clean(self):
+        conflito = TransferenciaAluno.objects.filter(
+            aluno=self.aluno,
+            status='PENDENTE',
+        ).exclude(pk=self.pk)
+
+        if conflito.exists():
+            raise ValidationError(
+                "Já existe uma solicitação de transferência pendente para esse aluno. "
+                "Aguarde a resposta ou o prazo de 48h expirar."
+            )
+
+
+
+def expirar_transferencias_vencidas():
+    limite = timezone.now() - timedelta(hours=TransferenciaAluno.PRAZO_HORAS)
+    TransferenciaAluno.objects.filter(
+        status='PENDENTE',
+        cadastrado_em__lt=limite,
+    ).update(status='EXPIRADA')
 
 
 

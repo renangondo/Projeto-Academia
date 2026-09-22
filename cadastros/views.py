@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from .models import TransferenciaAluno
 from django.db.models import Q
-
+from .models import TransferenciaAluno, expirar_transferencias_vencidas
 from django.contrib import messages
 
 from exercicio.models import Treino
@@ -107,12 +107,12 @@ class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Professor"]
 
     def get_form(self, form_class=None):
+        expirar_transferencias_vencidas()
         form = super().get_form(form_class)
         pessoa = self.request.user.pessoa_usuario
 
-        # só pode transferir aluno que é dele mesmo
-        form.fields['aluno'].queryset = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
-        # não pode "transferir" pra si mesmo
+        qs = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
+        form.fields['aluno'].queryset = qs
         form.fields['professor_novo'].queryset = Pessoa.objects.filter(tipo="PROFESSOR").exclude(pk=pessoa.pk)
         return form
 
@@ -133,20 +133,20 @@ class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, Create
     group_required = ["Aluno"]
 
     def get_form(self, form_class=None):
+        expirar_transferencias_vencidas()
         form = super().get_form(form_class)
         pessoa = self.request.user.pessoa_usuario
 
         qs = Pessoa.objects.filter(tipo="PROFESSOR")
         if pessoa.professor:
-            qs = qs.exclude(pk=pessoa.professor.pk)  # não faz sentido "trocar" pro mesmo professor
-
+            qs = qs.exclude(pk=pessoa.professor.pk)
         form.fields['professor_novo'].queryset = qs
         return form
 
     def form_valid(self, form):
         pessoa = self.request.user.pessoa_usuario
         form.instance.aluno = pessoa
-        form.instance.professor_atual = pessoa.professor  # pode ficar None, sem problema
+        form.instance.professor_atual = pessoa.professor
         form.instance.origem = 'ALUNO'
         form.instance.status = 'PENDENTE'
         return super().form_valid(form)
@@ -298,8 +298,8 @@ class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView)
     group_required = ["Professor"]
 
     def get_queryset(self):
+        expirar_transferencias_vencidas()
         pessoa = self.request.user.pessoa_usuario
-        # mostra tanto as que ele enviou quanto as que ele recebeu
         return TransferenciaAluno.objects.filter(
             Q(professor_atual=pessoa) | Q(professor_novo=pessoa)
         ).order_by('-cadastrado_em')
@@ -312,8 +312,120 @@ class MinhasSolicitacoesAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListVi
     group_required = ["Aluno"]
 
     def get_queryset(self):
+        expirar_transferencias_vencidas()
         pessoa = self.request.user.pessoa_usuario
         return TransferenciaAluno.objects.filter(aluno=pessoa).order_by('-cadastrado_em')
+
+
+from .models import TransferenciaAluno, expirar_transferencias_vencidas
+
+
+class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = TransferenciaAluno
+    fields = ['aluno', 'professor_novo', 'observacao']
+    template_name = 'cadastros/form_transferencia_professor.html'
+    group_required = ["Professor"]
+
+    def get_form(self, form_class=None):
+        expirar_transferencias_vencidas()
+        form = super().get_form(form_class)
+        pessoa = self.request.user.pessoa_usuario
+
+        qs = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
+        form.fields['aluno'].queryset = qs
+        form.fields['professor_novo'].queryset = Pessoa.objects.filter(tipo="PROFESSOR").exclude(pk=pessoa.pk)
+        return form
+
+    def form_valid(self, form):
+        form.instance.professor_atual = self.request.user.pessoa_usuario
+        form.instance.origem = 'PROFESSOR'
+        form.instance.status = 'PENDENTE'
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('minhas-transferencias')
+
+
+class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+    model = TransferenciaAluno
+    fields = ['professor_novo', 'observacao']
+    template_name = 'cadastros/form_transferencia_aluno.html'
+    group_required = ["Aluno"]
+
+    def get_form(self, form_class=None):
+        expirar_transferencias_vencidas()
+        form = super().get_form(form_class)
+        pessoa = self.request.user.pessoa_usuario
+
+        qs = Pessoa.objects.filter(tipo="PROFESSOR")
+        if pessoa.professor:
+            qs = qs.exclude(pk=pessoa.professor.pk)
+        form.fields['professor_novo'].queryset = qs
+        return form
+
+    def form_valid(self, form):
+        pessoa = self.request.user.pessoa_usuario
+        form.instance.aluno = pessoa
+        form.instance.professor_atual = pessoa.professor
+        form.instance.origem = 'ALUNO'
+        form.instance.status = 'PENDENTE'
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('minhas-solicitacoes')
+
+
+class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = TransferenciaAluno
+    template_name = 'cadastros/listar_transferencias.html'
+    context_object_name = 'transferencias'
+    group_required = ["Professor"]
+
+    def get_queryset(self):
+        expirar_transferencias_vencidas()
+        pessoa = self.request.user.pessoa_usuario
+        return TransferenciaAluno.objects.filter(
+            Q(professor_atual=pessoa) | Q(professor_novo=pessoa)
+        ).order_by('-cadastrado_em')
+
+
+class MinhasSolicitacoesAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = TransferenciaAluno
+    template_name = 'cadastros/listar_transferencias.html'
+    context_object_name = 'transferencias'
+    group_required = ["Aluno"]
+
+    def get_queryset(self):
+        expirar_transferencias_vencidas()
+        pessoa = self.request.user.pessoa_usuario
+        return TransferenciaAluno.objects.filter(aluno=pessoa).order_by('-cadastrado_em')
+
+
+class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
+    group_required = ["Professor"]
+
+    def post(self, request, pk):
+        expirar_transferencias_vencidas()
+        transferencia = get_object_or_404(TransferenciaAluno, pk=pk)
+        pessoa = request.user.pessoa_usuario
+
+        if transferencia.professor_novo != pessoa:
+            return HttpResponseForbidden("Você não pode responder essa transferência.")
+
+        if transferencia.status != 'PENDENTE':
+            return redirect('minhas-transferencias')
+
+        acao = request.POST.get('acao')
+
+        if acao == 'aceitar':
+            transferencia.status = 'ACEITA'
+            transferencia.aluno.professor = pessoa
+            transferencia.aluno.save()
+        elif acao == 'recusar':
+            transferencia.status = 'RECUSADA'
+
+        transferencia.save()
+        return redirect('minhas-transferencias')
 
 
 
