@@ -1,4 +1,5 @@
-from datetime import timedelta, timezone
+from django.utils import timezone
+from datetime import timedelta
 from django.core.exceptions import ValidationError
 
 from django.db import models

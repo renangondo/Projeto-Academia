@@ -1,0 +1,222 @@
+.titulo {
+    margin-bottom: 30px;
+}
+
+/* ===========================================
+   CARD BASE
+=========================================== */
+
+.card-transferencia{
+
+    background:white;
+
+    padding:22px 25px;
+
+    border-radius:15px;
+
+    margin-bottom:18px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+    border-left:5px solid #dde3ec;
+
+    transition:.2s;
+
+}
+
+.card-topo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.card-aluno{
+
+    color:#2c3e50;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+}
+
+/* ===========================================
+   BADGE DE STATUS
+=========================================== */
+
+.badge-status{
+
+    font-size:12px;
+
+    font-weight:700;
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    white-space:nowrap;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+}
+
+/* ===========================================
+   VARIAÇÕES POR STATUS
+=========================================== */
+
+.status-pendente{
+
+    border-left-color:#f0a500;
+
+}
+
+.status-pendente .badge-status{
+
+    background:#fff4e0;
+    color:#b3730a;
+
+}
+
+.status-aceita{
+
+    border-left-color:#28a745;
+
+}
+
+.status-aceita .badge-status{
+
+    background:#e6f7ea;
+    color:#1e7e34;
+
+}
+
+.status-recusada{
+
+    border-left-color:#dc3545;
+
+}
+
+.status-recusada .badge-status{
+
+    background:#fdecea;
+    color:#a71d2a;
+
+}
+
+.status-expirada{
+
+    border-left-color:#999;
+
+    opacity:.75;
+
+}
+
+.status-expirada .badge-status{
+
+    background:#eee;
+    color:#666;
+
+}
+
+/* ===========================================
+   INFO DE PRAZO / EXPIRAÇÃO
+=========================================== */
+
+.prazo-info{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#b3730a;
+
+    font-size:13px;
+
+    margin-top:12px;
+
+}
+
+.expirada-info{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#666;
+
+    font-size:13px;
+
+    font-style:italic;
+
+    margin-top:12px;
+
+}
+
+/* ===========================================
+   BOTÕES DE AÇÃO
+=========================================== */
+
+.card-acoes{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:16px;
+
+}
+
+.btn-aceitar,
+.btn-recusar{
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:10px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.btn-aceitar{
+
+    background:#28a745;
+    color:white;
+
+}
+
+.btn-aceitar:hover{
+
+    background:#218838;
+
+}
+
+.btn-recusar{
+
+    background:#dc3545;
+    color:white;
+
+}
+
+.btn-recusar:hover{
+
+    background:#c82333;
+
+}
