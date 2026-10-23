@@ -4,6 +4,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/exercicio/form_exercicio_treino.css' %}">
 <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/global/autocomplete.css' %}">
 {% endblock %}
 
 {% block main %}
@@ -19,6 +20,19 @@
 
         <form method="POST">
             {% csrf_token %}
+
+            <p class="campo-autocomplete">
+                <label for="categoria-busca">Categoria:</label>
+                <input type="text" id="categoria-busca" placeholder="Selecione ou digite a categoria" autocomplete="off">
+                <input type="hidden" id="categoria-id">
+                <span id="categoria-lista" class="autocomplete-lista"></span>
+            </p>
+
+            <p class="campo-autocomplete">
+                <label for="exercicio-busca">Exercício:</label>
+                <input type="text" id="exercicio-busca" placeholder="Selecione ou digite o exercício" autocomplete="off">
+                <span id="exercicio-lista" class="autocomplete-lista"></span>
+            </p>
 
             {{ form.as_p }}
 
@@ -36,5 +50,10 @@
     </div>
 
 </div>
+
+{{ categorias_json|json_script:"dados-categorias" }}
+{{ exercicios_json|json_script:"dados-exercicios" }}
+<script src="{% static 'js/global/combobox.js' %}"></script>
+<script src="{% static 'js/exercicio/form_exercicio_treino.js' %}"></script>
 
 {% endblock %}

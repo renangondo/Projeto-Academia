@@ -73,6 +73,20 @@
         </div>
 
         <div class="menu-section">
+            <h4>Catálogo de Treinos</h4>
+
+            <a href="{% url 'cadastrar-categoria' %}">
+                <i class="fas fa-list-check"></i>
+                Nova Categoria
+            </a>
+
+            <a href="{% url 'cadastrar-exercicio' %}">
+                <i class="fas fa-dumbbell"></i>
+                Novo Exercício
+            </a>
+        </div>
+
+        <div class="menu-section">
             <h4>Conta</h4>
 
             <form action="{% url 'logout' %}" method="POST">

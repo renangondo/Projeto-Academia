@@ -30,7 +30,7 @@ class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     fields = ['nome']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Administrador"]
 
 
 class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -59,7 +59,6 @@ class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         return reverse_lazy('detalhe-aluno', kwargs={'pk': self.object.aluno.pk})
     
 
-
 class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
@@ -71,7 +70,24 @@ class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         form.instance.cadastrado_por = self.request.user.pessoa_usuario
         return super().form_valid(form)
 
-class ExercicioTreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+
+
+class ExerciciosPorCategoriaMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        exercicios = exercicios_visiveis(self.request.user)
+
+        context['categorias_json'] = [
+            {"id": c.pk, "nome": c.nome}
+            for c in Categoria.objects.order_by('nome')
+        ]
+        context['exercicios_json'] = [
+            {"id": e.pk, "nome": e.nome, "categoria": e.categoria_id}
+            for e in exercicios
+        ]
+        return context
+
+class ExercicioTreinoCreate(ExerciciosPorCategoriaMixin, LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = ExercicioTreino
     fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form_exercicio_treino.html'
@@ -99,7 +115,7 @@ class CategoriaUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     fields = ['nome']
     template_name = 'form.html'
     success_url = reverse_lazy('inicio')
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Administrador"]
 
 
 class TreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
@@ -134,7 +150,7 @@ class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     fields = ['nome']
     template_name = 'form-excluir.html'
     success_url = reverse_lazy('inicio')
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Administrador"]
 
 
 class TreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
