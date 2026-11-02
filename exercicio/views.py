@@ -20,24 +20,25 @@ from braces.views import GroupRequiredMixin
 from django.db.models import Q
 
 def exercicios_visiveis(user):
-    """Retorna os exercícios que esse usuário pode ver/usar."""
-    if user.is_superuser:
+    if user.is_superuser or user.groups.filter(name="Administrador").exists():
         return Exercicio.objects.all()
 
     pessoa = user.pessoa_usuario
     return Exercicio.objects.filter(
-        Q(cadastrado_por=pessoa) | Q(cadastrado_por__usuario__is_superuser=True)
-
-    )
+        Q(cadastrado_por=pessoa)
+        | Q(cadastrado_por__usuario__is_superuser=True)
+        | Q(cadastrado_por__usuario__groups__name="Administrador")
+    ).distinct()
 
 ############################## A MAIS #########################################
 
 class SomenteMeusExerciciosMixin:
     def get_queryset(self):
         qs = super().get_queryset()
-        if self.request.user.is_superuser:
+        user = self.request.user
+        if user.is_superuser or user.groups.filter(name="Administrador").exists():
             return qs
-        return qs.filter(cadastrado_por=self.request.user.pessoa_usuario)
+        return qs.filter(cadastrado_por=user.pessoa_usuario)
 
     
 ############################## CREATE #########################################

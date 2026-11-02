@@ -35,7 +35,8 @@ class Cidade(Auditoria):
 class Pessoa(Auditoria):
     TIPO_CHOICES = [
         ('ALUNO', 'Aluno'),
-        ('PROFESSOR', 'Professor')
+        ('PROFESSOR', 'Professor'),
+        ('ADMINISTRADOR', 'Administrador')
     ]
 
         
