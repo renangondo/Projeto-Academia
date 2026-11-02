@@ -1,0 +1,80 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/listar_categoria.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="lista-page">
+
+    {% if request.user.is_superuser %}
+    <a href="{% url 'listar-categoria' %}" class="voltar-link">
+        <i class="fas fa-arrow-left"></i>
+        Voltar para categorias
+    </a>
+    {% endif %}
+
+    <div class="lista-header">
+        <div>
+            <h2>{{ categoria.nome }}</h2>
+            <p>Exercícios cadastrados nesta categoria</p>
+        </div>
+
+        <a href="{% url 'cadastrar-exercicio' %}?categoria={{ categoria.pk }}" class="btn-nova">
+            <i class="fas fa-plus"></i>
+            Novo exercício
+        </a>
+    </div>
+
+    {% for message in messages %}
+    <div class="alerta alerta-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <div class="lista-card">
+
+        {% for exercicio in exercicios %}
+        <div class="lista-item">
+
+            <div class="item-info">
+                <strong>{{ exercicio.nome }}</strong>
+
+                {% if exercicio.descricao %}
+                <span class="item-descricao">{{ exercicio.descricao }}</span>
+                {% endif %}
+
+                {% if exercicio.cadastrado_por.usuario.is_superuser %}
+                <span class="item-origem catalogo">Catálogo geral</span>
+                {% elif exercicio.cadastrado_por.usuario == request.user %}
+                <span class="item-origem proprio">Criado por você</span>
+                {% else %}
+                <span class="item-origem proprio">Criado por {{ exercicio.cadastrado_por.nome }}</span>
+                {% endif %}
+            </div>
+
+            {% if request.user.is_superuser or exercicio.cadastrado_por.usuario == request.user %}
+            <div class="item-acoes">
+                <a href="{% url 'editar-exercicio' exercicio.pk %}" class="btn-editar">
+                    <i class="fas fa-pen"></i>
+                    Editar
+                </a>
+
+                <a href="{% url 'excluir-exercicio' exercicio.pk %}" class="btn-excluir">
+                    <i class="fas fa-trash"></i>
+                    Excluir
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+        {% empty %}
+        <div class="lista-vazio">Nenhum exercício cadastrado nesta categoria ainda.</div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

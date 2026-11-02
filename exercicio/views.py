@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.db.models import Count, ProtectedError
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -28,6 +29,17 @@ def exercicios_visiveis(user):
         Q(cadastrado_por=pessoa) | Q(cadastrado_por__usuario__is_superuser=True)
 
     )
+
+############################## A MAIS #########################################
+
+class SomenteMeusExerciciosMixin:
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_superuser:
+            return qs
+        return qs.filter(cadastrado_por=self.request.user.pessoa_usuario)
+
+    
 ############################## CREATE #########################################
 class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Categoria
@@ -67,12 +79,21 @@ class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_initial(self):
+        initial = super().get_initial()
+        categoria = self.request.GET.get('categoria')
+        if categoria:
+            initial['categoria'] = categoria   # já vem selecionada ao clicar em "Novo exercício"
+        return initial
 
     def form_valid(self, form):
         form.instance.cadastrado_por = self.request.user.pessoa_usuario
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
 
 
 
@@ -129,12 +150,14 @@ class TreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
 
-class ExercicioUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ExercicioUpdate(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Exercicio
     fields = ['nome', 'categoria', 'descricao']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_success_url(self):
+        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
 
 class ExercicioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = ExercicioTreino
@@ -176,12 +199,23 @@ class TreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
 
 
 
-class ExercicioDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+class ExercicioDelete(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Exercicio
-    fields = ['nome', 'categoria', 'descricao']
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_success_url(self):
+        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except ProtectedError:
+            messages.error(
+                self.request,
+                "Não é possível excluir: esse exercício já está sendo usado em treinos."
+            )
+            return HttpResponseRedirect(self.get_success_url())
 
 class ExercicioTreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = ExercicioTreino
@@ -229,4 +263,22 @@ class CategoriaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         return Categoria.objects.annotate(
             qtd_exercicios=Count('exercicio')
         ).order_by('nome')
+
+
+class ExercicioPorCategoriaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Exercicio
+    template_name = 'listar_exercicio_categoria.html'
+    context_object_name = 'exercicios'
+    group_required = ["Professor", "Administrador"]
+
+    def get_queryset(self):
+        self.categoria = get_object_or_404(Categoria, pk=self.kwargs['pk'])
+        return exercicios_visiveis(self.request.user).filter(
+            categoria=self.categoria
+        ).select_related('cadastrado_por__usuario').order_by('nome')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categoria'] = self.categoria
+        return context
 
