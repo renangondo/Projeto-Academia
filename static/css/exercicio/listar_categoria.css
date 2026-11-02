@@ -1,0 +1,152 @@
+.lista-page{
+    max-width:800px;
+    margin:0 auto;
+}
+
+.lista-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.lista-header h2{
+    color:#0d6efd;
+    font-size:26px;
+}
+
+.lista-header p{
+    color:#888;
+    font-size:14px;
+    margin-top:4px;
+}
+
+.btn-nova{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#0d6efd;
+    color:white;
+    text-decoration:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-nova:hover{
+    background:#0b5ed7;
+}
+
+.lista-card{
+    background:white;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.lista-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:18px 25px;
+    border-bottom:1px solid #eee;
+    transition:.2s;
+}
+
+.lista-item:last-child{
+    border-bottom:none;
+}
+
+.lista-item:hover{
+    background:#f8fafd;
+}
+
+.item-info strong{
+    display:block;
+    color:#2c3e50;
+    font-size:16px;
+}
+
+.item-info span{
+    color:#999;
+    font-size:13px;
+}
+
+.item-acoes{
+    display:flex;
+    gap:10px;
+}
+
+.btn-editar,
+.btn-excluir{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn-editar{
+    background:#eaf2ff;
+    color:#0d6efd;
+}
+
+.btn-editar:hover{
+    background:#0d6efd;
+    color:white;
+}
+
+.btn-excluir{
+    background:#fdecea;
+    color:#dc3545;
+}
+
+.btn-excluir:hover{
+    background:#dc3545;
+    color:white;
+}
+
+.btn-excluir.desativado{
+    background:#f1f1f1;
+    color:#bbb;
+    cursor:not-allowed;
+}
+
+.btn-excluir.desativado:hover{
+    background:#f1f1f1;
+    color:#bbb;
+}
+
+.lista-vazio{
+    padding:40px;
+    text-align:center;
+    color:#999;
+}
+
+.alerta{
+    padding:14px 18px;
+    border-radius:8px;
+    margin-bottom:20px;
+    font-size:14px;
+}
+
+.alerta-error{
+    background:#fdecea;
+    border-left:4px solid #dc3545;
+    color:#a71d2a;
+}
+
+.alerta-success{
+    background:#e6f7ea;
+    border-left:4px solid #28a745;
+    color:#1e7e34;
+}

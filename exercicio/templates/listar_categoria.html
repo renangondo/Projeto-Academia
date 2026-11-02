@@ -1,0 +1,67 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/listar_categoria.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="lista-page">
+
+    <div class="lista-header">
+        <div>
+            <h2>Categorias</h2>
+            <p>Categorias de exercício usadas pelos professores nos treinos</p>
+        </div>
+
+        <a href="{% url 'cadastrar-categoria' %}" class="btn-nova">
+            <i class="fas fa-plus"></i>
+            Nova categoria
+        </a>
+    </div>
+
+    {% for message in messages %}
+    <div class="alerta alerta-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <div class="lista-card">
+
+        {% for categoria in categorias %}
+        <div class="lista-item">
+
+            <div class="item-info">
+                <strong>{{ categoria.nome }}</strong>
+                <span>{{ categoria.qtd_exercicios }} exercício{{ categoria.qtd_exercicios|pluralize }}</span>
+            </div>
+
+            <div class="item-acoes">
+                <a href="{% url 'editar-categoria' categoria.pk %}" class="btn-editar">
+                    <i class="fas fa-pen"></i>
+                    Editar
+                </a>
+
+                {% if categoria.qtd_exercicios == 0 %}
+                <a href="{% url 'excluir-categoria' categoria.pk %}" class="btn-excluir">
+                    <i class="fas fa-trash"></i>
+                    Excluir
+                </a>
+                {% else %}
+                <span class="btn-excluir desativado" title="Não é possível excluir: há exercícios nesta categoria">
+                    <i class="fas fa-trash"></i>
+                    Excluir
+                </span>
+                {% endif %}
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="lista-vazio">Nenhuma categoria cadastrada ainda.</div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

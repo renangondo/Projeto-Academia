@@ -5,6 +5,10 @@ from cadastros.models import Pessoa
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
+from django.db.models import Count, ProtectedError
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
@@ -29,7 +33,7 @@ class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Categoria
     fields = ['nome']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-categoria')
     group_required = ["Administrador"]
 
 
@@ -114,7 +118,7 @@ class CategoriaUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Categoria
     fields = ['nome']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-categoria')
     group_required = ["Administrador"]
 
 
@@ -152,12 +156,22 @@ class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     success_url = reverse_lazy('inicio')
     group_required = ["Administrador"]
 
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except ProtectedError:
+            messages.error(
+                self.request,
+                "Não é possível excluir: existem exercícios cadastrados nessa categoria."
+            )
+            return HttpResponseRedirect(self.get_success_url())
+
 
 class TreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('listar-categoria')
     group_required = ["Professor", "Administrador"]
 
 
@@ -203,4 +217,16 @@ class ExercicioList(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
     def get_queryset(self):
         return exercicios_visiveis(self.request.user)
+
+
+class CategoriaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Categoria
+    template_name = 'listar_categoria.html'
+    context_object_name = 'categorias'
+    group_required = ["Administrador"]
+
+    def get_queryset(self):
+        return Categoria.objects.annotate(
+            qtd_exercicios=Count('exercicio')
+        ).order_by('nome')
 
