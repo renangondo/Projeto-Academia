@@ -31,7 +31,14 @@ def exercicios_visiveis(user):
     ).distinct()
 
 ############################## A MAIS #########################################
-
+class SomenteMeusTreinosMixin:
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        if user.is_superuser or user.groups.filter(name="Administrador").exists():
+            return qs
+        return qs.filter(aluno__professor=user.pessoa_usuario)
+    
 class SomenteMeusExerciciosMixin:
     def get_queryset(self):
         qs = super().get_queryset()
@@ -144,12 +151,14 @@ class CategoriaUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     group_required = ["Administrador"]
 
 
-class TreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class TreinoUpdate(SomenteMeusTreinosMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Treino
-    fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
+    fields = ['nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_success_url(self):
+        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.pk})
 
 class ExercicioUpdate(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Exercicio
@@ -228,7 +237,7 @@ class ExercicioTreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
 
 ############################## DETAIL #########################################
 
-class TreinoDetail(LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class TreinoDetail(SomenteMeusTreinosMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Treino
     template_name = 'detalhe_treino.html'
     context_object_name = 'treino'
