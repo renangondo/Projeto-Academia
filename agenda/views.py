@@ -1,10 +1,9 @@
-from django.shortcuts import render
-
-from django.views.generic import CreateView, ListView, DeleteView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 
+from exercicio.models import Treino
 from .models import HorarioAula
 from .forms import HorarioAulaForm
 
@@ -22,17 +21,17 @@ class HorarioAulaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         kwargs['professor'] = self.request.user.pessoa_usuario
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['treinos_json'] = [
+            {"id": t.pk, "nome": t.nome_treino, "aluno": t.aluno_id}
+            for t in context['form'].fields['treino'].queryset
+        ]
+        return context
+
     def get_success_url(self):
         return reverse_lazy('minha-agenda')
 
-    
-    def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['treinos_json'] = [
-        {"id": t.pk, "nome": t.nome_treino, "aluno": t.aluno_id}
-        for t in context['form'].fields['treino'].queryset
-    ]
-    return context
 
 ############################## LISTAR #########################################
 
@@ -45,7 +44,7 @@ class AgendaProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def get_queryset(self):
         return HorarioAula.objects.filter(
             professor=self.request.user.pessoa_usuario
-        ).select_related('aluno')
+        ).select_related('aluno', 'treino')
 
 
 class AgendaAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -57,19 +56,8 @@ class AgendaAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     def get_queryset(self):
         return HorarioAula.objects.filter(
             aluno=self.request.user.pessoa_usuario
-        ).select_related('professor')
+        ).select_related('professor', 'treino')
 
-############################## DELETAR #########################################
-
-class HorarioAulaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
-    model = HorarioAula
-    template_name = 'agenda/form-excluir.html'
-    success_url = reverse_lazy('minha-agenda')
-    group_required = ["Professor"]
-
-    def get_queryset(self):
-        # garante que um professor só consiga excluir horário dele mesmo
-        return HorarioAula.objects.filter(professor=self.request.user.pessoa_usuario)
 
 ############################## UPDATE #########################################
 
@@ -89,3 +77,16 @@ class HorarioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('minha-agenda')
+
+
+############################## DELETAR ########################################
+
+class HorarioAulaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    model = HorarioAula
+    template_name = 'agenda/form-excluir.html'
+    success_url = reverse_lazy('minha-agenda')
+    group_required = ["Professor"]
+
+    def get_queryset(self):
+        # garante que um professor só consiga excluir horário dele mesmo
+        return HorarioAula.objects.filter(professor=self.request.user.pessoa_usuario)

@@ -1,6 +1,6 @@
 # agenda/urls.py
 from django.urls import path
-from .views import HorarioAulaCreate, AgendaProfessorList, AgendaAlunoList, HorarioAulaDelete
+from .views import HorarioAulaCreate, AgendaProfessorList, AgendaAlunoList, HorarioAulaDelete, HorarioTreinoUpdate
 
 urlpatterns = [
     path('agendar/', HorarioAulaCreate.as_view(), name="agendar-aula"),
