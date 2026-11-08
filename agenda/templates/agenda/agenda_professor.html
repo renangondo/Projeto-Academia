@@ -26,6 +26,9 @@
     <div class="linha">
         <span>{{ h.horario|time:"H:i" }}</span>
         <strong>{{ h.aluno.nome }}</strong>
+        <a href="{% url 'editar-horario-treino' h.pk %}" class="link-treino">
+            {% if h.treino %}{{ h.treino.nome_treino }}{% else %}Definir treino{% endif %}
+        </a>
         <a href="{% url 'excluir-horario' h.pk %}">Remover</a>
     </div>
     {% endfor %}

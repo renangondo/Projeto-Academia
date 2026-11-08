@@ -7,4 +7,6 @@ urlpatterns = [
     path('minha-agenda/', AgendaProfessorList.as_view(), name="minha-agenda"),
     path('minha-agenda/aluno/', AgendaAlunoList.as_view(), name="minha-agenda-aluno"),
     path('excluir/<int:pk>/', HorarioAulaDelete.as_view(), name="excluir-horario"),
+
+    path('editar/<int:pk>/treino/', HorarioTreinoUpdate.as_view(), name="editar-horario-treino"),
 ]

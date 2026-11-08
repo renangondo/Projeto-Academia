@@ -1,0 +1,164 @@
+.semana{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+.semana-abas{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding-bottom:6px;
+    margin-bottom:22px;
+}
+
+.semana-aba{
+    position:relative;
+    flex:1;
+    min-width:70px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    padding:12px 10px;
+    background:#f4f7fb;
+    border:2px solid transparent;
+    border-radius:12px;
+    cursor:pointer;
+    color:#2c3e50;
+    transition:.2s;
+}
+
+.semana-aba:hover{
+    background:#eaf2ff;
+}
+
+.semana-aba .aba-nome{
+    font-size:14px;
+    font-weight:700;
+}
+
+.semana-aba small{
+    font-size:11px;
+    color:#888;
+}
+
+.semana-aba.hoje{
+    border-color:#bfdbfe;
+}
+
+.semana-aba.ativa{
+    background:#0d6efd;
+    border-color:#0d6efd;
+    color:white;
+}
+
+.semana-aba.ativa small{
+    color:#dbeafe;
+}
+
+.aba-contador{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:#dc3545;
+    color:white;
+    font-size:10px;
+    font-weight:700;
+    min-width:18px;
+    height:18px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.semana-painel{
+    display:none;
+}
+
+.semana-painel.ativo{
+    display:block;
+}
+
+.semana-painel h3{
+    color:#0d6efd;
+    font-size:18px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.tag-hoje{
+    background:#e6f7ea;
+    color:#1e7e34;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+}
+
+.aula-card{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:14px 16px;
+    border:1px solid #eef3fb;
+    border-left:4px solid #0d6efd;
+    border-radius:10px;
+    margin-bottom:10px;
+    transition:.2s;
+}
+
+.aula-card:hover{
+    background:#f8fafd;
+}
+
+.aula-hora{
+    background:#eaf2ff;
+    color:#0d6efd;
+    font-weight:700;
+    font-size:14px;
+    padding:8px 14px;
+    border-radius:8px;
+    min-width:72px;
+    text-align:center;
+}
+
+.aula-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.aula-nome{
+    color:#2c3e50;
+    font-weight:700;
+    font-size:15px;
+    text-decoration:none;
+}
+
+a.aula-nome:hover{
+    color:#0d6efd;
+}
+
+.aula-treino{
+    color:#888;
+    font-size:13px;
+}
+
+.semana-vazio{
+    text-align:center;
+    padding:30px 10px;
+    color:#999;
+}
+
+.semana-vazio a{
+    display:inline-block;
+    margin-top:10px;
+    color:#0d6efd;
+    font-weight:600;
+    text-decoration:none;
+}

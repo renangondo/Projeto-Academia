@@ -25,6 +25,14 @@ class HorarioAulaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('minha-agenda')
 
+    
+    def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['treinos_json'] = [
+        {"id": t.pk, "nome": t.nome_treino, "aluno": t.aluno_id}
+        for t in context['form'].fields['treino'].queryset
+    ]
+    return context
 
 ############################## LISTAR #########################################
 
@@ -62,3 +70,22 @@ class HorarioAulaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     def get_queryset(self):
         # garante que um professor só consiga excluir horário dele mesmo
         return HorarioAula.objects.filter(professor=self.request.user.pessoa_usuario)
+
+############################## UPDATE #########################################
+
+class HorarioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    model = HorarioAula
+    fields = ['treino']
+    template_name = 'cadastros/form.html'
+    group_required = ["Professor"]
+
+    def get_queryset(self):
+        return HorarioAula.objects.filter(professor=self.request.user.pessoa_usuario)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['treino'].queryset = Treino.objects.filter(aluno=self.object.aluno)
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy('minha-agenda')

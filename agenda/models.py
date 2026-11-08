@@ -43,3 +43,29 @@ class HorarioAula(Auditoria):
 
     def __str__(self):
         return f"{self.aluno.nome} - {self.get_dia_semana_display()} às {self.horario}"
+
+    
+    
+    treino = models.ForeignKey(
+        "exercicio.Treino",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="horarios",
+        verbose_name="Treino da aula",
+    )
+
+    def clean(self):
+        conflito = HorarioAula.objects.filter(
+            professor=self.professor,
+            dia_semana=self.dia_semana,
+            horario=self.horario,
+        ).exclude(pk=self.pk)
+
+        if conflito.exists():
+            raise ValidationError(
+                "Você já tem uma aula marcada nesse dia e horário. Escolha outro horário."
+            )
+
+        if self.treino_id and self.aluno_id and self.treino.aluno_id != self.aluno_id:
+            raise ValidationError("O treino escolhido não pertence a esse aluno.")

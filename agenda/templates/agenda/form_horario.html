@@ -44,6 +44,14 @@
             </div>
 
             <div class="campo">
+                <label for="{{ form.treino.id_for_label }}">Treino da aula (opcional)</label>
+                {{ form.treino }}
+                {% if form.treino.errors %}
+                <span class="campo-erro">{{ form.treino.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="campo">
                 <label for="{{ form.dia_semana.id_for_label }}">Dia da semana</label>
                 {{ form.dia_semana }}
                 {% if form.dia_semana.errors %}
@@ -75,6 +83,7 @@
     {"id": {{ aluno.pk }}, "nome": "{{ aluno.nome|escapejs }}"}{% if not forloop.last %},{% endif %}
     {% endfor %}
 ]
+{{ treinos_json|json_script:"dados-treinos" }}
 </script>
 
 <script src="{% static 'js/agenda/form_horario.js' %}"></script>

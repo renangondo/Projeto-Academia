@@ -186,3 +186,11 @@
     box-shadow:0 8px 25px rgba(0,0,0,.06);
 
 }
+
+.linha a.link-treino{
+    color:#0d6efd;
+}
+
+.linha a.link-treino:hover{
+    background:#eaf2ff;
+}

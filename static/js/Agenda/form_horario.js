@@ -1,15 +1,36 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const dadosEl = document.getElementById('dados-alunos');
-    const dados = JSON.parse(dadosEl.textContent);
+    const dados = JSON.parse(document.getElementById('dados-alunos').textContent);
+    const treinos = JSON.parse(document.getElementById('dados-treinos').textContent);
 
     const input = document.getElementById('aluno-busca');
     const hidden = document.getElementById('aluno-id');
     const lista = document.getElementById('aluno-lista');
+    const treinoSelect = document.getElementById('id_treino');
+
+    function filtrarTreinos(alunoId) {
+        treinoSelect.innerHTML = '';
+
+        if (!alunoId) {
+            treinoSelect.add(new Option('Escolha o aluno primeiro', ''));
+            treinoSelect.disabled = true;
+            return;
+        }
+
+        treinoSelect.disabled = false;
+        treinoSelect.add(new Option('Definir depois', ''));
+
+        treinos
+            .filter(t => String(t.aluno) === String(alunoId))
+            .forEach(t => treinoSelect.add(new Option(t.nome, t.id)));
+    }
+
+    filtrarTreinos('');
 
     input.addEventListener('input', function () {
         const termo = this.value.toLowerCase().trim();
         lista.innerHTML = '';
         hidden.value = '';
+        filtrarTreinos('');
 
         if (!termo) {
             lista.style.display = 'none';
@@ -37,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 hidden.value = a.id;
                 lista.innerHTML = '';
                 lista.style.display = 'none';
+                filtrarTreinos(a.id);
             });
 
             lista.appendChild(item);

@@ -1,0 +1,65 @@
+<section class="semana" data-semana>
+
+    <div class="semana-abas">
+        {% for dia in semana %}
+        <button type="button"
+                class="semana-aba{% if dia.eh_hoje %} ativa hoje{% endif %}"
+                data-dia="{{ dia.numero }}">
+            <span class="aba-nome">{{ dia.abreviado }}</span>
+            <small>{{ dia.data|date:"d/m" }}</small>
+            {% if dia.horarios %}
+            <span class="aba-contador">{{ dia.horarios|length }}</span>
+            {% endif %}
+        </button>
+        {% endfor %}
+    </div>
+
+    {% for dia in semana %}
+    <div class="semana-painel{% if dia.eh_hoje %} ativo{% endif %}" data-painel="{{ dia.numero }}">
+
+        <h3>
+            {{ dia.nome }}
+            {% if dia.eh_hoje %}<span class="tag-hoje">Hoje</span>{% endif %}
+        </h3>
+
+        {% for h in dia.horarios %}
+        <div class="aula-card">
+
+            <span class="aula-hora">{{ h.horario|time:"H:i" }}</span>
+
+            <div class="aula-info">
+                {% if modo == 'professor' %}
+                <a href="{% url 'detalhe-aluno' h.aluno.pk %}" class="aula-nome">{{ h.aluno.nome }}</a>
+                <span class="aula-treino">
+                    <i class="fas fa-dumbbell"></i>
+                    {{ h.treino.nome_treino|default:"Treino a definir" }}
+                </span>
+                {% else %}
+                <strong class="aula-nome">{{ h.treino.nome_treino|default:"Treino a definir" }}</strong>
+                <span class="aula-treino">
+                    <i class="fas fa-user"></i>
+                    Prof. {{ h.professor.nome }}
+                </span>
+                {% endif %}
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="semana-vazio">
+            <p>
+                {% if dia.eh_hoje %}
+                    Não existe agendamento para hoje.
+                {% else %}
+                    Nenhuma aula agendada neste dia.
+                {% endif %}
+            </p>
+            {% if modo == 'professor' %}
+            <a href="{% url 'agendar-aula' %}">+ Agendar aula</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+    </div>
+    {% endfor %}
+
+</section>
