@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from django.db.models import Count, ProtectedError
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.db.models import Q, Count, ProtectedError
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 
@@ -290,5 +292,49 @@ class ExercicioPorCategoriaList(LoginRequiredMixin, GroupRequiredMixin, ListView
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categoria'] = self.categoria
+        return context
+
+
+class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Treino
+    template_name = 'listar_treino.html'
+    context_object_name = 'treinos'
+    group_required = ["Professor", "Administrador"]
+
+    def get_queryset(self):
+        user = self.request.user
+        hoje = timezone.localdate()
+
+        qs = Treino.objects.select_related('aluno').annotate(
+            qtd_exercicios=Count('exercicio_do_treino')
+        )
+
+        # professor vê os treinos dos alunos dele; admin vê todos
+        if not (user.is_superuser or user.groups.filter(name="Administrador").exists()):
+            qs = qs.filter(aluno__professor=user.pessoa_usuario)
+
+        busca = self.request.GET.get('q', '').strip()
+        if busca:
+            qs = qs.filter(
+                Q(nome_treino__icontains=busca) | Q(aluno__nome__icontains=busca)
+            )
+
+        situacao = self.request.GET.get('situacao', '')
+        if situacao == 'andamento':
+            qs = qs.filter(data_inicio__lte=hoje, data_fim__gte=hoje)
+        elif situacao == 'futuros':
+            qs = qs.filter(data_inicio__gt=hoje)
+        elif situacao == 'encerrados':
+            qs = qs.filter(data_fim__lt=hoje)
+
+        if self.request.GET.get('ordem') == 'antigos':
+            return qs.order_by('data_inicio', 'id')
+        return qs.order_by('-data_inicio', '-id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['busca'] = self.request.GET.get('q', '')
+        context['situacao'] = self.request.GET.get('situacao', '')
+        context['ordem'] = self.request.GET.get('ordem', 'recentes')
         return context
 
