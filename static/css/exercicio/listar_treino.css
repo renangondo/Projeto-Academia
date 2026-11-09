@@ -1,0 +1,249 @@
+.header-total{
+    text-align:center;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.45);
+    border-radius:12px;
+    padding:10px 22px;
+}
+
+.header-total strong{
+    display:block;
+    font-size:26px;
+    line-height:1.1;
+}
+
+.header-total span{
+    font-size:12px;
+    color:#e0f2fe;
+}
+
+/* ---------- barra de filtros ---------- */
+
+.toolbar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.toolbar-busca{
+    flex:1;
+    min-width:240px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:white;
+    border:1px solid #dde3ec;
+    border-radius:10px;
+    padding:0 14px;
+}
+
+.toolbar-busca i{
+    color:#94a3b8;
+}
+
+.toolbar-busca input[type="text"]{
+    flex:1;
+    border:none;
+    outline:none;
+    padding:12px 0;
+    font-size:14px;
+    background:transparent;
+    color:#334155;
+}
+
+.toolbar-busca:focus-within{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+.chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.chip{
+    text-decoration:none;
+    background:white;
+    border:1px solid #dde3ec;
+    color:#475569;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:20px;
+    transition:.2s;
+}
+
+.chip:hover{
+    border-color:#2563eb;
+    color:#2563eb;
+}
+
+.chip.ativo{
+    background:#2563eb;
+    border-color:#2563eb;
+    color:white;
+}
+
+.btn-ordem{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:13px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:10px;
+    transition:.2s;
+}
+
+.btn-ordem:hover{
+    background:#2563eb;
+    color:white;
+}
+
+/* ---------- tabela ---------- */
+
+.tabela-treinos{
+    width:100%;
+    border-collapse:collapse;
+    min-width:860px;
+}
+
+.tabela-treinos thead{
+    background:#eff6ff;
+}
+
+.tabela-treinos th{
+    color:#1e3a8a;
+    font-size:14px;
+    text-align:left;
+    padding:18px;
+    border-bottom:1px solid #bfdbfe;
+}
+
+.tabela-treinos td{
+    padding:16px 18px;
+    border-bottom:1px solid #f1f5f9;
+    color:#334155;
+    font-size:14px;
+    vertical-align:middle;
+}
+
+.tabela-treinos tbody tr:hover{
+    background:#f8fafc;
+}
+
+.tabela-treinos td strong{
+    display:block;
+    color:#0f172a;
+    font-size:15px;
+}
+
+.descricao{
+    display:block;
+    color:#94a3b8;
+    font-size:12px;
+    margin-top:2px;
+}
+
+.link-aluno{
+    color:#2563eb;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.link-aluno:hover{
+    text-decoration:underline;
+}
+
+.periodo{
+    display:block;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.periodo-ate{
+    display:block;
+    font-size:12px;
+    color:#94a3b8;
+}
+
+/* ---------- badges ---------- */
+
+.badge-situacao{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 12px;
+    border-radius:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+}
+
+.badge-situacao.andamento{
+    background:#e6f7ea;
+    color:#1e7e34;
+}
+
+.badge-situacao.futuro{
+    background:#fff4e0;
+    color:#b3730a;
+}
+
+.badge-situacao.encerrado{
+    background:#eee;
+    color:#666;
+}
+
+.situacao-info{
+    display:block;
+    margin-top:4px;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.qtd-exercicios{
+    display:inline-block;
+    min-width:30px;
+    text-align:center;
+    background:#eaf2ff;
+    color:#2563eb;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:8px;
+}
+
+.badge-vazio{
+    display:inline-block;
+    background:#fdecea;
+    color:#a71d2a;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:12px;
+}
+
+.acoes-celula{
+    text-align:right;
+}
+
+.btn-ver{
+    display:inline-block;
+    text-decoration:none;
+    background:#2563eb;
+    color:white;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 16px;
+    border-radius:8px;
+    transition:.2s;
+}
+
+.btn-ver:hover{
+    background:#1d4ed8;
+}
