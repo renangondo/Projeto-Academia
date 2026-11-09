@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q, Count, ProtectedError
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -33,14 +34,6 @@ def exercicios_visiveis(user):
     ).distinct()
 
 ############################## A MAIS #########################################
-class SomenteMeusTreinosMixin:
-    def get_queryset(self):
-        qs = super().get_queryset()
-        user = self.request.user
-        if user.is_superuser or user.groups.filter(name="Administrador").exists():
-            return qs
-        return qs.filter(aluno__professor=user.pessoa_usuario)
-    
 class SomenteMeusExerciciosMixin:
     def get_queryset(self):
         qs = super().get_queryset()
@@ -83,6 +76,11 @@ class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     def get_success_url(self):
 
         return reverse_lazy('detalhe-aluno', kwargs={'pk': self.object.aluno.pk})
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['aluno'].queryset = alunos_do_usuario(self.request.user)
+        return form
     
 
 class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -128,17 +126,23 @@ class ExercicioTreinoCreate(ExerciciosPorCategoriaMixin, LoginRequiredMixin, Gro
     template_name = 'form_exercicio_treino.html'
     group_required = ["Professor", "Administrador"]
 
+    def get_form_kwargs(self):
+        self.treino = get_object_or_404(
+            Treino.objects.filter(aluno__in=alunos_do_usuario(self.request.user)),
+            pk=self.kwargs['pk'],
+        )
+        return super().get_form_kwargs()
+    
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['exercicio'].queryset = exercicios_visiveis(self.request.user)
         return form
 
     def form_valid(self, form):
-        treino = Treino.objects.get(pk=self.kwargs['pk'])
-        form.instance.treino = treino
-        form.instance.cadastrado_por = self.request.user.pessoa_usuario  # lembrando: já corrigimos isso antes
+        form.instance.treino = self.treino
+        form.instance.cadastrado_por = self.request.user.pessoa_usuario
         return super().form_valid(form)
-
+    
     def get_success_url(self):
         return reverse_lazy('detalhe-treino', kwargs={'pk': self.kwargs['pk']})
 
@@ -153,7 +157,7 @@ class CategoriaUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     group_required = ["Administrador"]
 
 
-class TreinoUpdate(SomenteMeusTreinosMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class TreinoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Treino
     fields = ['nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
@@ -171,17 +175,20 @@ class ExercicioUpdate(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequi
     def get_success_url(self):
         return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
 
-class ExercicioTreinoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ExercicioTreinoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    campo_aluno = 'treino__aluno'
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
+    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']   # sem 'treino'
     template_name = 'form.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['exercicio'].queryset = exercicios_visiveis(self.request.user)
         return form
+
+    def get_success_url(self):
+        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
 ############################## DELETE #########################################
 
 class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
@@ -202,7 +209,7 @@ class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
             return HttpResponseRedirect(self.get_success_url())
 
 
-class TreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+class TreinoDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form-excluir.html'
@@ -229,17 +236,19 @@ class ExercicioDelete(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequi
             )
             return HttpResponseRedirect(self.get_success_url())
 
-class ExercicioTreinoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+class ExercicioTreinoDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    campo_aluno = 'treino__aluno'
     model = ExercicioTreino
-    fields = ['treino', 'exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form-excluir.html'
-    success_url = reverse_lazy('inicio')
     group_required = ["Professor", "Administrador"]
+
+    def get_success_url(self):
+        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
 
 
 ############################## DETAIL #########################################
 
-class TreinoDetail(SomenteMeusTreinosMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
+class TreinoDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Treino
     template_name = 'detalhe_treino.html'
     context_object_name = 'treino'
