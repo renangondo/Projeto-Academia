@@ -7,6 +7,11 @@ from .models import TransferenciaAluno
 from django.db.models import Q
 from .models import TransferenciaAluno, expirar_transferencias_vencidas
 from django.contrib import messages
+from django.db import transaction
+from django.utils.crypto import get_random_string
+
+from .permissoes import SomenteDoMeuAlunoMixin, SomenteMeuPerfilProfessorMixin
+from .forms import ProfessorSignupForm
 
 from exercicio.models import Treino
 from medidas.models import Medidas
@@ -173,7 +178,7 @@ class CidadeUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+class ProfessorUpdate(SomenteMeuPerfilProfessorMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
@@ -182,7 +187,8 @@ class ProfessorUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class AlunoUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+class AlunoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    campo_aluno = "pk"
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor", "Aluno"]
@@ -209,13 +215,15 @@ class CidadeDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
 
 
 class ProfessorDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    group_required = ["Administrador"]      # professor não exclui professor
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('listar-professor')
 
-class AlunoDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+class AlunoDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    campo_aluno = "pk"
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
@@ -431,7 +439,8 @@ class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
 
 ############################## DETAIL #########################################
 
-class PessoaDetail(LoginRequiredMixin, GroupRequiredMixin,DetailView):
+class PessoaDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
+    campo_aluno = "pk"
     login_url = reverse_lazy('login')
     model = Pessoa
     context_object_name = "aluno"
