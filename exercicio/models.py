@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.db import models
 
 from cadastros.models import Auditoria, Pessoa
@@ -21,6 +23,19 @@ class Treino(Auditoria):
 
     def __str__(self):
         return "{} Treino: {}".format(self.aluno, self.nome_treino)
+
+    @property
+    def situacao(self):
+        hoje = timezone.localdate()
+        if self.data_fim < hoje:
+            return 'encerrado'
+        if self.data_inicio > hoje:
+            return 'futuro'
+        return 'andamento'
+
+    @property
+    def dias_restantes(self):
+        return (self.data_fim - timezone.localdate()).days
 
 
 ###########################################################################################
