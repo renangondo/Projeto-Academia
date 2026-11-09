@@ -249,22 +249,6 @@ class CidadeList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     group_required = ["Administrador"]
 
 
-class PessoaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
-    login_url = reverse_lazy('login')
-    model = Pessoa
-    template_name = 'cadastros/listar_alunos.html'
-
-    # Sobrescrever o método get_queryset para personalizar a consulta
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        
-        # Se o usuário for do grupo "Administrador", liste tudo
-        if self.request.user.groups.filter(name='Administrador').exists():
-            return queryset
-        # Se não, liste apenas as pessoas associadas ao professor
-        else:
-            return queryset.filter(professor=self.request.user.pessoa_usuario)
-
 class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Pessoa
