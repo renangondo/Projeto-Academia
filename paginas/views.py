@@ -26,7 +26,7 @@ class InicioView(LoginRequiredMixin, TemplateView):
                 tipo="ALUNO", professor=pessoa
             ).count()
             context['total_treinos'] = Treino.objects.filter(
-                cadastrado_por=pessoa
+                aluno__professor=pessoa
             ).count()
 
         elif pessoa and user.groups.filter(name="Aluno").exists():
