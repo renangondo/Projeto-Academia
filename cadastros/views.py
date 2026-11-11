@@ -1,38 +1,63 @@
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
-from django.views.generic import DetailView, TemplateView, View
-from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponseForbidden
-from .models import TransferenciaAluno
-from django.db.models import Q
-from .models import TransferenciaAluno, expirar_transferencias_vencidas
-from django.contrib import messages
-from django.db import transaction
-from django.utils.crypto import get_random_string
 import re
 import unicodedata
-from .permissoes import SomenteDoMeuAlunoMixin, SomenteMeuPerfilProfessorMixin, alunos_do_usuario 
+
+from braces.views import GroupRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group, User
+from django.db import transaction
+from django.db.models import Q
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, TemplateView, View
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 
 from exercicio.models import Treino
 from medidas.models import Medidas
-from django.contrib.auth.models import Group, User
-from .models import Cidade, Estado, Pessoa
-from django.urls import reverse_lazy
 
-# Importar o mixin de login e grupo
-from django.contrib.auth.mixins import LoginRequiredMixin
-from braces.views import GroupRequiredMixin
+from .models import (
+    Cidade,
+    Estado,
+    Pessoa,
+    TransferenciaAluno,
+    expirar_transferencias_vencidas,
+)
+from .permissoes import (
+    SomenteDoMeuAlunoMixin,
+    SomenteMeuPerfilProfessorMixin,
+    alunos_do_usuario,
+)
 
-# Create your views here.
 
-####CREATE VIEW#####
+############################## AUXILIARES #########################################
+
+MSG_PENDENTE = (
+    "Já existe uma solicitação de transferência pendente para esse aluno. "
+    "Aguarde a resposta ou o prazo de 48h expirar."
+)
+
+
+def tem_transferencia_pendente(aluno):
+    expirar_transferencias_vencidas()   # vencidas (48h) deixam de contar como pendentes
+    return TransferenciaAluno.objects.filter(aluno=aluno, status='PENDENTE').exists()
+
+
+def normalizar_texto(texto):
+    """minúsculas e sem acento, para 'joao' achar 'João'."""
+    texto = unicodedata.normalize('NFD', (texto or '').lower())
+    return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
+
+
+############################## CREATE #########################################
+
 class EstadoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
-    model = Estado  # Qual modelo que será cadastrado
+    model = Estado
     group_required = "Administrador"
-    fields = ['nome', 'sigla'] # Quais campos que irá aparecer para cadastrar
-    template_name = 'cadastros/form.html' # Qual template será usado
-    success_url = reverse_lazy('inicio') # Onde será redirecionado
+    fields = ['nome', 'sigla']
+    template_name = 'cadastros/form.html'
+    success_url = reverse_lazy('inicio')
 
 
 class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
@@ -42,7 +67,6 @@ class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     fields = ['nome', 'estado']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
-
 
 
 class CadastroProfessorCreate(CreateView):
@@ -65,7 +89,6 @@ class CadastroProfessorCreate(CreateView):
 
             form.instance.usuario = usuario
             form.instance.tipo = "PROFESSOR"
-            form.instance.precisa_trocar_senha = True
             return super().form_valid(form)
 
 
@@ -76,7 +99,6 @@ class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     fields = ["nome", "idade", "cpf", "telefone", "objetivo", "sexo", "nivel", "cidade"]
     template_name = "cadastros/form.html"
     success_url = reverse_lazy("listar-aluno")
-
 
     def form_valid(self, form):
         cpf = form.cleaned_data["cpf"]
@@ -107,12 +129,17 @@ class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         form = super().get_form(form_class)
         pessoa = self.request.user.pessoa_usuario
 
-        qs = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
-        form.fields['aluno'].queryset = qs
-        form.fields['professor_novo'].queryset = Pessoa.objects.filter(tipo="PROFESSOR").exclude(pk=pessoa.pk)
+        form.fields['aluno'].queryset = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
+        form.fields['professor_novo'].queryset = Pessoa.objects.filter(
+            tipo="PROFESSOR"
+        ).exclude(pk=pessoa.pk)
         return form
 
     def form_valid(self, form):
+        if tem_transferencia_pendente(form.cleaned_data['aluno']):
+            form.add_error(None, MSG_PENDENTE)
+            return self.form_invalid(form)
+
         form.instance.professor_atual = self.request.user.pessoa_usuario
         form.instance.origem = 'PROFESSOR'
         form.instance.status = 'PENDENTE'
@@ -133,34 +160,42 @@ class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, Create
         form = super().get_form(form_class)
         pessoa = self.request.user.pessoa_usuario
 
-        qs = Pessoa.objects.filter(tipo="PROFESSOR")
-        if pessoa.professor:
-            qs = qs.exclude(pk=pessoa.professor.pk)
-        form.fields['professor_novo'].queryset = qs
-        return form
-
-    def form_valid(self, form):
-        pessoa = self.request.user.pessoa_usuario
+        # preenchido aqui (e não no form_valid) porque o clean() do model
+        # precisa do aluno durante a validação
         form.instance.aluno = pessoa
         form.instance.professor_atual = pessoa.professor
         form.instance.origem = 'ALUNO'
         form.instance.status = 'PENDENTE'
+
+        qs = Pessoa.objects.filter(tipo="PROFESSOR")
+        if pessoa.professor:
+            qs = qs.exclude(pk=pessoa.professor.pk)
+        form.fields['professor_novo'].queryset = qs
+
+        return form
+
+    def form_valid(self, form):
+        if tem_transferencia_pendente(form.instance.aluno):
+            form.add_error(None, MSG_PENDENTE)
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('minhas-solicitacoes')
 
+
 ############################## UPDATE #########################################
 
-class EstadoUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+class EstadoUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Estado
     group_required = "Administrador"
-    fields= ['nome', 'sigla']
+    fields = ['nome', 'sigla']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
-class CidadeUpdate(LoginRequiredMixin,GroupRequiredMixin, UpdateView):
+
+class CidadeUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Cidade
     group_required = "Administrador"
@@ -173,7 +208,7 @@ class ProfessorUpdate(SomenteMeuPerfilProfessorMixin, LoginRequiredMixin, GroupR
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
-    fields = ['nome', 'idade','telefone', 'sexo','cidade']
+    fields = ['nome', 'idade', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
@@ -183,9 +218,10 @@ class AlunoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor", "Aluno"]
-    fields = ['nome', 'idade', 'telefone', 'objetivo', 'sexo', 'nivel','cidade']
+    fields = ['nome', 'idade', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
+
 
 ############################## DELETE #########################################
 
@@ -206,12 +242,12 @@ class CidadeDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
 
 
 class ProfessorDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
-    group_required = ["Administrador"]      # professor não exclui professor
     login_url = reverse_lazy('login')
     model = Pessoa
-    group_required = ["Administrador", "Professor"]
+    group_required = ["Administrador"]      # professor não exclui professor
     template_name = 'cadastros/form-excluir.html'
     success_url = reverse_lazy('listar-professor')
+
 
 class AlunoDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     campo_aluno = "pk"
@@ -228,7 +264,6 @@ class EstadoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Estado
     template_name = 'cadastros/listar_estado.html'
-
     group_required = ["Administrador"]
 
 
@@ -236,14 +271,7 @@ class CidadeList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Cidade
     template_name = 'cadastros/listar_cidades.html'
-
     group_required = ["Administrador"]
-
-
-def normalizar_texto(texto):
-    """minúsculas e sem acento, para 'joao' achar 'João'."""
-    texto = unicodedata.normalize('NFD', (texto or '').lower())
-    return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
 
 
 class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -280,19 +308,15 @@ class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         context['busca'] = self.request.GET.get('q', '').strip()
         return context
 
+
 class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Pessoa
     template_name = "cadastros/listar_professores.html"
-
     group_required = ["Administrador"]
 
     def get_queryset(self):
-
-
-        return Pessoa.objects.filter(
-            tipo="PROFESSOR"
-        )
+        return Pessoa.objects.filter(tipo="PROFESSOR")
 
 
 class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView):
@@ -321,89 +345,7 @@ class MinhasSolicitacoesAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListVi
         return TransferenciaAluno.objects.filter(aluno=pessoa).order_by('-cadastrado_em')
 
 
-from .models import TransferenciaAluno, expirar_transferencias_vencidas
-
-
-class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
-    model = TransferenciaAluno
-    fields = ['aluno', 'professor_novo', 'observacao']
-    template_name = 'cadastros/form_transferencia_professor.html'
-    group_required = ["Professor"]
-
-    def get_form(self, form_class=None):
-        expirar_transferencias_vencidas()
-        form = super().get_form(form_class)
-        pessoa = self.request.user.pessoa_usuario
-
-        qs = Pessoa.objects.filter(tipo="ALUNO", professor=pessoa)
-        form.fields['aluno'].queryset = qs
-        form.fields['professor_novo'].queryset = Pessoa.objects.filter(tipo="PROFESSOR").exclude(pk=pessoa.pk)
-        return form
-
-    def form_valid(self, form):
-        form.instance.professor_atual = self.request.user.pessoa_usuario
-        form.instance.origem = 'PROFESSOR'
-        form.instance.status = 'PENDENTE'
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('minhas-transferencias')
-
-
-class TransferenciaSolicitarAluno(LoginRequiredMixin, GroupRequiredMixin, CreateView):
-    model = TransferenciaAluno
-    fields = ['professor_novo', 'observacao']
-    template_name = 'cadastros/form_transferencia_aluno.html'
-    group_required = ["Aluno"]
-
-    def get_form(self, form_class=None):
-        expirar_transferencias_vencidas()
-        form = super().get_form(form_class)
-        pessoa = self.request.user.pessoa_usuario
-
-        qs = Pessoa.objects.filter(tipo="PROFESSOR")
-        if pessoa.professor:
-            qs = qs.exclude(pk=pessoa.professor.pk)
-        form.fields['professor_novo'].queryset = qs
-        return form
-
-    def form_valid(self, form):
-        pessoa = self.request.user.pessoa_usuario
-        form.instance.aluno = pessoa
-        form.instance.professor_atual = pessoa.professor
-        form.instance.origem = 'ALUNO'
-        form.instance.status = 'PENDENTE'
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('minhas-solicitacoes')
-
-
-class MinhasTransferenciasList(LoginRequiredMixin, GroupRequiredMixin, ListView):
-    model = TransferenciaAluno
-    template_name = 'cadastros/listar_transferencias.html'
-    context_object_name = 'transferencias'
-    group_required = ["Professor"]
-
-    def get_queryset(self):
-        expirar_transferencias_vencidas()
-        pessoa = self.request.user.pessoa_usuario
-        return TransferenciaAluno.objects.filter(
-            Q(professor_atual=pessoa) | Q(professor_novo=pessoa)
-        ).order_by('-cadastrado_em')
-
-
-class MinhasSolicitacoesAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
-    model = TransferenciaAluno
-    template_name = 'cadastros/listar_transferencias.html'
-    context_object_name = 'transferencias'
-    group_required = ["Aluno"]
-
-    def get_queryset(self):
-        expirar_transferencias_vencidas()
-        pessoa = self.request.user.pessoa_usuario
-        return TransferenciaAluno.objects.filter(aluno=pessoa).order_by('-cadastrado_em')
-
+############################## RESPOSTA DA TRANSFERÊNCIA ######################
 
 class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
     group_required = ["Professor"]
@@ -430,7 +372,6 @@ class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
 
         transferencia.save()
         return redirect('minhas-transferencias')
-
 
 
 ############################## DETAIL #########################################
@@ -444,46 +385,15 @@ class PessoaDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixi
     group_required = ["Professor", "Administrador"]
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
 
-        context["treinos"] = Treino.objects.filter(
-            aluno=self.object
-)
-
+        context["treinos"] = Treino.objects.filter(aluno=self.object)
         context["medidas"] = Medidas.objects.filter(
             aluno=self.object
         ).order_by("-data_medida")
 
         return context
 
-############################## RESPOSTA #########################################
-class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
-    group_required = ["Professor"]
 
-    def post(self, request, pk):
-        transferencia = get_object_or_404(TransferenciaAluno, pk=pk)
-        pessoa = request.user.pessoa_usuario
-
-        if transferencia.professor_novo != pessoa:
-            return HttpResponseForbidden("Você não pode responder essa transferência.")
-
-        if transferencia.status != 'PENDENTE':
-            return redirect('minhas-transferencias')
-
-        acao = request.POST.get('acao')
-
-        if acao == 'aceitar':
-            transferencia.status = 'ACEITA'
-            transferencia.aluno.professor = pessoa
-            transferencia.aluno.save()
-        elif acao == 'recusar':
-            transferencia.status = 'RECUSADA'
-
-        transferencia.save()
-        return redirect('minhas-transferencias')
-
-
-###################################################################
 class MeuPerfilView(LoginRequiredMixin, TemplateView):
     template_name = 'cadastros/meu_perfil.html'

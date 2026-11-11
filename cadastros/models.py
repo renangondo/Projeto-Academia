@@ -102,8 +102,11 @@ class TransferenciaAluno(Auditoria):
         return self.status == 'PENDENTE' and timezone.now() > self.prazo_limite
 
     def clean(self):
+        if not self.aluno_id:
+            return
+
         conflito = TransferenciaAluno.objects.filter(
-            aluno=self.aluno,
+            aluno_id=self.aluno_id,
             status='PENDENTE',
         ).exclude(pk=self.pk)
 
@@ -114,14 +117,10 @@ class TransferenciaAluno(Auditoria):
             )
 
 
-
 def expirar_transferencias_vencidas():
     limite = timezone.now() - timedelta(hours=TransferenciaAluno.PRAZO_HORAS)
     TransferenciaAluno.objects.filter(
         status='PENDENTE',
         cadastrado_em__lt=limite,
     ).update(status='EXPIRADA')
-
-
-
 
