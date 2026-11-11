@@ -12,7 +12,7 @@ from django.db.models import Q, Count, ProtectedError
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario
-
+from .compartilhar import montar_link_whatsapp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
@@ -248,19 +248,24 @@ class ExercicioTreinoDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupReq
 
 ############################## DETAIL #########################################
 
+
+
+
 class TreinoDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Treino
     template_name = 'detalhe_treino.html'
     context_object_name = 'treino'
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Professor", "Administrador", "Aluno"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['exercicios_treino'] = ExercicioTreino.objects.filter(
+        exercicios = ExercicioTreino.objects.filter(
             treino=self.object
-        ).select_related('exercicio', 'exercicio__categoria')
+        ).select_related('exercicio', 'exercicio__categoria').order_by('cadastrado_em', 'id')
 
+        context['exercicios_treino'] = exercicios
+        context['link_whatsapp'] = montar_link_whatsapp(self.object, exercicios)
         return context
 
 ############################## LIST #########################################
@@ -308,13 +313,14 @@ class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Treino
     template_name = 'listar_treino.html'
     context_object_name = 'treinos'
-    group_required = ["Professor", "Administrador"]
+    group_required = ["Professor", "Administrador", "Aluno"]
 
     def get_queryset(self):
-        user = self.request.user
         hoje = timezone.localdate()
 
-        qs = Treino.objects.select_related('aluno').annotate(
+        qs = Treino.objects.filter(
+            aluno__in=alunos_do_usuario(self.request.user)
+        ).select_related('aluno').annotate(
             qtd_exercicios=Count('exercicio_do_treino')
         )
 

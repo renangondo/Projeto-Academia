@@ -3,7 +3,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
-
+from django.views.generic import TemplateView
+from .utils import calcular_imc, classificar_imc
 from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario, eh_aluno
 from medidas.models import Medidas
 
@@ -48,3 +49,52 @@ class MedidasDelete(SomenteDoMeuAlunoMixin, RetornoMedidasMixin, LoginRequiredMi
     model = Medidas
     template_name = 'form-excluir.html'
     group_required = ["Professor", "Administrador", "Aluno"]
+
+
+##################################################################################
+
+CAMPOS_SERIE = ['peso', 'cintura', 'quadril', 'braco_direito', 'braco_esquerdo',
+                'coxa_direita', 'coxa_esquerda', 'panturrilha_direita',
+                'panturrilha_esquerda', 'peito']
+
+class EvolucaoMedidasView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    template_name = 'medidas/evolucao.html'
+    group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        aluno = get_object_or_404(alunos_do_usuario(self.request.user), pk=self.kwargs['pk'])
+        medidas = list(Medidas.objects.filter(aluno=aluno).order_by('data_medida', 'id'))
+
+        context['aluno'] = aluno
+        context['historico'] = list(reversed(medidas))
+        context['serie_json'] = [
+            {
+                'data': m.data_medida.strftime('%d/%m/%Y'),
+                'imc': calcular_imc(m.peso, m.altura),
+                **{campo: getattr(m, campo) for campo in CAMPOS_SERIE},
+            }
+            for m in medidas
+        ]
+
+        if medidas:
+            atual = medidas[-1]
+            anterior = medidas[-2] if len(medidas) > 1 else None
+            imc = calcular_imc(atual.peso, atual.altura)
+
+            def variacao(campo):
+                if anterior is None:
+                    return None
+                return round(getattr(atual, campo) - getattr(anterior, campo), 1)
+
+            context['resumo'] = {
+                'atual': atual,
+                'imc': imc,
+                'classificacao': classificar_imc(imc),
+                'var_peso': variacao('peso'),
+                'var_cintura': variacao('cintura'),
+                'total': len(medidas),
+            }
+
+        return context

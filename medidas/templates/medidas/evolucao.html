@@ -1,0 +1,144 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/medidas/evolucao.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="evolucao-page">
+
+    <div class="evolucao-header">
+        <div>
+            {% if not is_aluno %}
+            <a href="{% url 'detalhe-aluno' aluno.pk %}" class="voltar-link">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para o aluno
+            </a>
+            {% endif %}
+            <h2>Evolução física</h2>
+            <p>{{ aluno.nome }}</p>
+        </div>
+
+        <a href="{% url 'cadastrar-medidas' aluno.pk %}" class="btn-nova-medida">
+            <i class="fas fa-plus"></i>
+            Nova medida
+        </a>
+    </div>
+
+    {% if resumo %}
+
+    <div class="resumo-cards">
+
+        <div class="resumo-card">
+            <span>Peso atual</span>
+            <strong>{{ resumo.atual.peso|floatformat:1 }} kg</strong>
+            {% if resumo.var_peso is not None %}
+            <small>{% if resumo.var_peso > 0 %}+{% endif %}{{ resumo.var_peso|floatformat:1 }} kg desde a medida anterior</small>
+            {% endif %}
+        </div>
+
+        <div class="resumo-card">
+            <span>IMC</span>
+            <strong>{{ resumo.imc|floatformat:1 }}</strong>
+            <small>{{ resumo.classificacao }}</small>
+        </div>
+
+        <div class="resumo-card">
+            <span>Cintura</span>
+            <strong>{{ resumo.atual.cintura|floatformat:1 }} cm</strong>
+            {% if resumo.var_cintura is not None %}
+            <small>{% if resumo.var_cintura > 0 %}+{% endif %}{{ resumo.var_cintura|floatformat:1 }} cm desde a medida anterior</small>
+            {% endif %}
+        </div>
+
+        <div class="resumo-card">
+            <span>Última medida</span>
+            <strong>{{ resumo.atual.data_medida|date:"d/m/Y" }}</strong>
+            <small>{{ resumo.total }} registro{{ resumo.total|pluralize }}</small>
+        </div>
+
+    </div>
+
+    <div class="grafico-card">
+        <div class="grafico-topo">
+            <h3>Gráfico de evolução</h3>
+            <select id="grafico-grupo">
+                <option value="peso">Peso</option>
+                <option value="imc">IMC</option>
+                <option value="cintura_quadril">Cintura e quadril</option>
+                <option value="bracos">Braços</option>
+                <option value="coxas">Coxas</option>
+                <option value="panturrilhas">Panturrilhas</option>
+                <option value="peito">Peito</option>
+            </select>
+        </div>
+
+        <div class="grafico-area">
+            <canvas id="grafico-medidas"></canvas>
+        </div>
+
+        {% if resumo.total < 2 %}
+        <p class="aviso">Registre mais uma medida para ver a linha de evolução.</p>
+        {% endif %}
+        <p class="aviso">O IMC é uma referência geral e não considera massa muscular.</p>
+    </div>
+
+    <div class="tabela-card">
+        <h3>Histórico de medidas</h3>
+
+        <div class="tabela-scroll">
+            <table class="tabela-medidas">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Peso</th>
+                        <th>Cintura</th>
+                        <th>Quadril</th>
+                        <th>Braço D / E</th>
+                        <th>Coxa D / E</th>
+                        <th>Panturrilha D / E</th>
+                        <th>Peito</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in historico %}
+                    <tr>
+                        <td>{{ m.data_medida|date:"d/m/Y" }}</td>
+                        <td>{{ m.peso }} kg</td>
+                        <td>{{ m.cintura }} cm</td>
+                        <td>{{ m.quadril }} cm</td>
+                        <td>{{ m.braco_direito }} / {{ m.braco_esquerdo }}</td>
+                        <td>{{ m.coxa_direita }} / {{ m.coxa_esquerda }}</td>
+                        <td>{{ m.panturrilha_direita }} / {{ m.panturrilha_esquerda }}</td>
+                        <td>{{ m.peito }} cm</td>
+                        <td class="acoes-medida">
+                            <a href="{% url 'editar-medidas' m.pk %}" class="btn-mini editar"><i class="fas fa-pen"></i></a>
+                            <a href="{% url 'excluir-medidas' m.pk %}" class="btn-mini excluir"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div class="vazio-card">
+        <p>Nenhuma medida registrada ainda.</p>
+        <a href="{% url 'cadastrar-medidas' aluno.pk %}" class="btn-nova-medida">Registrar primeira medida</a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{{ serie_json|json_script:"dados-medidas" }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{% static 'js/medidas/evolucao.js' %}"></script>
+
+{% endblock %}

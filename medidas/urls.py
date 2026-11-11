@@ -1,6 +1,6 @@
 from django.urls import path
 
-from medidas.views import MedidasCreate, MedidasDelete, MedidasUpdate
+from medidas.views import EvolucaoMedidasView, MedidasCreate, MedidasDelete, MedidasUpdate
 
 
 urlpatterns = [
@@ -10,5 +10,7 @@ urlpatterns = [
     path('editar/medidas/<int:pk>', MedidasUpdate.as_view(), name="editar-medidas"),
 
     path('excluir/medidas/<int:pk>', MedidasDelete.as_view(), name="excluir-medidas"),
+
+    path('evolucao/<int:pk>/', EvolucaoMedidasView.as_view(), name="evolucao-medidas"),
 
 ]

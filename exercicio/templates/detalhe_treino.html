@@ -14,9 +14,24 @@
         <div>
             <h2>{{ treino.nome_treino }}</h2>
             <p>{{ treino.descricao }}</p>
+            <small class="treino-datas">
+                {{ treino.aluno.nome }} · {{ treino.data_inicio|date:"d/m/Y" }} a {{ treino.data_fim|date:"d/m/Y" }}<br>
+                Criado em {{ treino.cadastrado_em|date:"d/m/Y" }} · Atualizado em {{ treino.atualizado_em|date:"d/m/Y H:i" }}
+            </small>
         </div>
 
         <div class="treino-acoes">
+
+            <a href="{% url 'treino-pdf' treino.pk %}" class="btn-editar-treino">
+                <i class="fas fa-file-pdf"></i>
+                PDF
+            </a>
+
+            {% if not is_aluno %}
+            <a href="{{ link_whatsapp }}" target="_blank" rel="noopener" class="btn-editar-treino">
+                <i class="fab fa-whatsapp"></i>
+                WhatsApp
+            </a>
 
             <a href="{% url 'editar-treino' treino.pk %}" class="btn-editar-treino">
                 <i class="fas fa-pen"></i>
@@ -26,6 +41,7 @@
             <a href="{% url 'cadastrar-exercicioTreino' treino.id %}" class="btn-novo">
                 + Adicionar Exercício
             </a>
+            {% endif %}
 
         </div>
     </div>
@@ -40,7 +56,7 @@
                     <th>Repetições</th>
                     <th>Descanso</th>
                     <th>Peso Atual</th>
-                    <th>Ações</th>
+                    {% if not is_aluno %}<th>Ações</th>{% endif %}
                 </tr>
             </thead>
 
@@ -54,24 +70,20 @@
                     <td>{{ item.descanso }} Minutos</td>
                     <td>{{ item.peso_atual }} KG</td>
 
+                    {% if not is_aluno %}
                     <td class="acoes">
-
-                        <a href="{% url 'editar-exercicioTreino' item.id %}"
-                            class="btn-editar">
+                        <a href="{% url 'editar-exercicioTreino' item.id %}" class="btn-editar">
                             <i class="fas fa-pen"></i>
                         </a>
-
-                        <a href="{% url 'excluir-exercicioTreino' item.id %}"
-                            class="btn-excluir">
+                        <a href="{% url 'excluir-exercicioTreino' item.id %}" class="btn-excluir">
                             <i class="fas fa-trash"></i>
                         </a>
-
                     </td>
-
+                    {% endif %}
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="sem-registro">
+                    <td colspan="{% if is_aluno %}6{% else %}7{% endif %}" class="sem-registro">
                         Nenhum exercício adicionado neste treino.
                     </td>
                 </tr>

@@ -11,7 +11,6 @@ from django.db import transaction
 from django.utils.crypto import get_random_string
 
 from .permissoes import SomenteDoMeuAlunoMixin, SomenteMeuPerfilProfessorMixin
-from .forms import ProfessorSignupForm
 
 from exercicio.models import Treino
 from medidas.models import Medidas
@@ -52,25 +51,21 @@ class CadastroProfessorCreate(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-
         cpf = form.cleaned_data["cpf"]
 
         if User.objects.filter(username=cpf).exists():
-            form.add.error("cpf", "Já existe um usuario com este CPF")
+            form.add_error("cpf", "Já existe um usuário com este CPF.")
             return self.form_invalid(form)
 
-        usuario = User.objects.create_user(
-            username=form.cleaned_data["cpf"],
-            password=form.cleaned_data["cpf"]
-        )
+        with transaction.atomic():
+            usuario = User.objects.create_user(username=cpf, password=cpf)
+            grupo, _ = Group.objects.get_or_create(name="Professor")
+            usuario.groups.add(grupo)
 
-        grupo, created = Group.objects.get_or_create(name="Professor")
-        usuario.groups.add(grupo)
-
-        form.instance.usuario = usuario
-        form.instance.tipo = "PROFESSOR"
-
-        return super().form_valid(form)
+            form.instance.usuario = usuario
+            form.instance.tipo = "PROFESSOR"
+            form.instance.precisa_trocar_senha = True
+            return super().form_valid(form)
 
 
 class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):

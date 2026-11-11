@@ -181,3 +181,11 @@
     background:white;
     color:#2563eb;
 }
+
+.treino-datas{
+    display:block;
+    margin-top:10px;
+    color:#dbeafe;
+    font-size:12px;
+    line-height:1.6;
+}

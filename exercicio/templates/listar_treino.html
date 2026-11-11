@@ -16,9 +16,9 @@
             <h2>Treinos</h2>
             <p>
                 {% if ordem == 'antigos' %}
-                    Do mais antigo ao mais recente
+                Do mais antigo ao mais recente
                 {% else %}
-                    Do mais recente ao mais antigo
+                Do mais recente ao mais antigo
                 {% endif %}
             </p>
         </div>
@@ -40,17 +40,17 @@
 
         <div class="chips">
             <a href="?q={{ busca|urlencode }}&ordem={{ ordem }}"
-               class="chip{% if not situacao %} ativo{% endif %}">Todos</a>
+                class="chip{% if not situacao %} ativo{% endif %}">Todos</a>
             <a href="?situacao=andamento&q={{ busca|urlencode }}&ordem={{ ordem }}"
-               class="chip{% if situacao == 'andamento' %} ativo{% endif %}">Em andamento</a>
+                class="chip{% if situacao == 'andamento' %} ativo{% endif %}">Em andamento</a>
             <a href="?situacao=futuros&q={{ busca|urlencode }}&ordem={{ ordem }}"
-               class="chip{% if situacao == 'futuros' %} ativo{% endif %}">Futuros</a>
+                class="chip{% if situacao == 'futuros' %} ativo{% endif %}">Futuros</a>
             <a href="?situacao=encerrados&q={{ busca|urlencode }}&ordem={{ ordem }}"
-               class="chip{% if situacao == 'encerrados' %} ativo{% endif %}">Encerrados</a>
+                class="chip{% if situacao == 'encerrados' %} ativo{% endif %}">Encerrados</a>
         </div>
 
         <a href="?situacao={{ situacao }}&q={{ busca|urlencode }}&ordem={% if ordem == 'antigos' %}recentes{% else %}antigos{% endif %}"
-           class="btn-ordem">
+            class="btn-ordem">
             <i class="fas fa-sort"></i>
             {% if ordem == 'antigos' %}Mais antigos primeiro{% else %}Mais recentes primeiro{% endif %}
         </a>
@@ -81,9 +81,12 @@
                     </td>
 
                     <td>
-                        <a href="{% url 'detalhe-aluno' treino.aluno.pk %}" class="link-aluno">
-                            {{ treino.aluno.nome }}
-                        </a>
+                        {% if is_aluno %}
+                        {{ treino.aluno.nome }}
+                        {% else %}
+                        <a href="{% url 'detalhe-aluno' treino.aluno.pk %}" class="link-aluno">{{ treino.aluno.nome
+                            }}</a>
+                        {% endif %}
                     </td>
 
                     <td>
@@ -96,9 +99,10 @@
                         <span class="badge-situacao andamento">Em andamento</span>
                         <small class="situacao-info">
                             {% if treino.dias_restantes == 0 %}
-                                termina hoje
+                            termina hoje
                             {% else %}
-                                {{ treino.dias_restantes }} dia{{ treino.dias_restantes|pluralize }} restante{{ treino.dias_restantes|pluralize }}
+                            {{ treino.dias_restantes }} dia{{ treino.dias_restantes|pluralize }} restante{{
+                            treino.dias_restantes|pluralize }}
                             {% endif %}
                         </small>
                         {% elif treino.situacao == 'futuro' %}
