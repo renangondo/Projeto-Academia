@@ -13,6 +13,10 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario
 from .compartilhar import montar_link_whatsapp
+from django.http import HttpResponse
+from django.utils.text import slugify
+
+from .pdf import gerar_pdf_treino
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
@@ -353,3 +357,21 @@ class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         context['ordem'] = self.request.GET.get('ordem', 'recentes')
         return context
 
+##################################### PDF ###########################################
+class TreinoPDFView(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
+    model = Treino
+    group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get(self, request, *args, **kwargs):
+        treino = self.get_object()
+
+        exercicios = ExercicioTreino.objects.filter(
+            treino=treino
+        ).select_related('exercicio', 'exercicio__categoria').order_by('cadastrado_em', 'id')
+
+        pdf = gerar_pdf_treino(treino, exercicios)
+        nome_arquivo = slugify(f'treino {treino.nome_treino} {treino.aluno.nome}') + '.pdf'
+
+        resposta = HttpResponse(pdf, content_type='application/pdf')
+        resposta['Content-Disposition'] = f'attachment; filename="{nome_arquivo}"'
+        return resposta

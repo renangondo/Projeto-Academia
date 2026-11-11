@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import CategoriaCreate, CategoriaDelete, CategoriaList, CategoriaUpdate, ExercicioCreate, ExercicioDelete, ExercicioPorCategoriaList, ExercicioTreinoDelete, ExercicioTreinoUpdate, ExercicioUpdate, TreinoCreate, ExercicioTreinoCreate, TreinoDelete, TreinoDetail, TreinoList, TreinoUpdate
+from .views import CategoriaCreate, CategoriaDelete, CategoriaList, CategoriaUpdate, ExercicioCreate, ExercicioDelete, ExercicioPorCategoriaList, ExercicioTreinoDelete, ExercicioTreinoUpdate, ExercicioUpdate, TreinoCreate, ExercicioTreinoCreate, TreinoDelete, TreinoDetail, TreinoList, TreinoPDFView, TreinoUpdate
 
 
 
@@ -28,6 +28,8 @@ urlpatterns = [
     path('listar/categoria/', CategoriaList.as_view(), name="listar-categoria"),
     path('listar/exercicio/categoria/<int:pk>/', ExercicioPorCategoriaList.as_view(), name="listar-exercicio-categoria"),
     path('listar/treino/', TreinoList.as_view(), name="listar-treino"),
+
+    path('treino/<int:pk>/pdf/', TreinoPDFView.as_view(), name='treino-pdf'),
 
 
 

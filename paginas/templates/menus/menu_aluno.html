@@ -26,17 +26,17 @@
                 Dashboard
             </a>
 
-            <a href="#">
+            <a href="{% url 'listar-treino' %}">
                 <i class="fas fa-dumbbell"></i>
                 Meu Treino
             </a>
 
-            <a href="#">
+            <a href="{% url 'evolucao-medidas' request.user.pessoa_usuario.pk %}">
                 <i class="fas fa-ruler"></i>
                 Minhas Medidas
             </a>
 
-            <a href="#">
+            <a href="{% url 'meu-perfil' %}">
                 <i class="fas fa-user"></i>
                 Meu Perfil
             </a>
