@@ -78,26 +78,21 @@ class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-
         cpf = form.cleaned_data["cpf"]
 
         if User.objects.filter(username=cpf).exists():
             form.add_error("cpf", "Já existe um usuário cadastrado com esse CPF.")
             return self.form_invalid(form)
 
-        usuario = User.objects.create_user(
-            username=cpf,
-            password=cpf
-        )
+        with transaction.atomic():
+            usuario = User.objects.create_user(username=cpf, password=cpf)
+            grupo, _ = Group.objects.get_or_create(name="Aluno")
+            usuario.groups.add(grupo)
 
-        grupo, created = Group.objects.get_or_create(name="Aluno")
-        usuario.groups.add(grupo)
-
-        form.instance.usuario = usuario
-        form.instance.tipo = "ALUNO"
-        form.instance.professor = self.request.user.pessoa_usuario
-
-        return super().form_valid(form)
+            form.instance.usuario = usuario
+            form.instance.tipo = "ALUNO"
+            form.instance.professor = self.request.user.pessoa_usuario
+            return super().form_valid(form)
 
 
 class TransferenciaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):

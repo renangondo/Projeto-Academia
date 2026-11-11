@@ -23,7 +23,8 @@
         <div class="perfil-grid">
             <div>
                 <span>CPF</span>
-                <strong>{{ p.cpf|slice:":3" }}.{{ p.cpf|slice:"3:6" }}.{{ p.cpf|slice:"6:9" }}-{{ p.cpf|slice:"9:" }}</strong>
+                <strong>{{ p.cpf|slice:":3" }}.{{ p.cpf|slice:"3:6" }}.{{ p.cpf|slice:"6:9" }}-{{ p.cpf|slice:"9:"
+                    }}</strong>
             </div>
             <div>
                 <span>Telefone</span>
@@ -55,18 +56,13 @@
         </div>
 
         <div class="perfil-acoes">
-            <a href="{% url 'alterar-senha' %}" class="btn-perfil">
-                <i class="fas fa-key"></i>
-                Alterar senha
-            </a>
-
             {% if p.tipo == 'ALUNO' %}
-            <a href="{% url 'editar-aluno' p.pk %}" class="btn-perfil secundario">
+            <a href="{% url 'editar-aluno' p.pk %}" class="btn-perfil">
                 <i class="fas fa-pen"></i>
                 Editar meus dados
             </a>
             {% elif p.tipo == 'PROFESSOR' %}
-            <a href="{% url 'editar-professor' p.pk %}" class="btn-perfil secundario">
+            <a href="{% url 'editar-professor' p.pk %}" class="btn-perfil">
                 <i class="fas fa-pen"></i>
                 Editar meus dados
             </a>
