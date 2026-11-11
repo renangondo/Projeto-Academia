@@ -21,6 +21,28 @@
         </a>
     </div>
 
+    <form method="get" class="busca-alunos">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" value="{{ busca }}" placeholder="Buscar por nome, CPF, telefone ou objetivo..."
+            autocomplete="off">
+
+        {% if busca %}
+        <a href="{% url 'listar-aluno' %}" class="busca-limpar" title="Limpar busca">
+            <i class="fas fa-xmark"></i>
+        </a>
+        {% endif %}
+
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if busca %}
+    <p class="busca-resultado">
+        {% with total=object_list|length %}
+        {{ total }} resultado{{ total|pluralize }} para "{{ busca }}"
+        {% endwith %}
+    </p>
+    {% endif %}
+
     <div class="table-container">
         <table class="table-list">
             <thead>
@@ -51,17 +73,25 @@
                     <td>{{ aluno.telefone }}</td>
                     <td>{{ aluno.objetivo }}</td>
                     <td><span class="badge">{{ aluno.nivel }}</span></td>
-                    <td>{{ aluno.professor }}</td>
+                    <td>{{ aluno.professor.nome|default:"-" }}</td>
 
                     <td class="acoes">
                         <a href="{% url 'editar-aluno' aluno.id %}" class="btn-editar">Editar</a>
                         <a href="{% url 'excluir-aluno' aluno.id %}" class="btn-deletar">Excluir</a>
                     </td>
                 </tr>
+
                 {% empty %}
                 <tr>
-                    <td colspan="9" class="sem-registro">Nenhum aluno cadastrado.</td>
+                    <td colspan="9" class="sem-registro">
+                        {% if busca %}
+                        Nenhum aluno encontrado para "{{ busca }}".
+                        {% else %}
+                        Nenhum aluno cadastrado ainda.
+                        {% endif %}
+                    </td>
                 </tr>
+
                 {% endfor %}
             </tbody>
         </table>

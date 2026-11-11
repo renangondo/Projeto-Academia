@@ -126,3 +126,70 @@
         gap: 15px;
     }
 }
+
+.busca-alunos{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:white;
+    border:1px solid #dde3ec;
+    border-radius:12px;
+    padding:6px 8px 6px 16px;
+    margin-bottom:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.04);
+}
+
+.busca-alunos:focus-within{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+.busca-alunos i{
+    color:#94a3b8;
+}
+
+.busca-alunos input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:14px;
+    padding:10px 0;
+    color:#334155;
+}
+
+.busca-alunos button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.busca-alunos button:hover{
+    background:#1d4ed8;
+}
+
+.busca-limpar{
+    color:#94a3b8;
+    text-decoration:none;
+    padding:6px;
+}
+
+.busca-limpar i{
+    color:inherit;
+}
+
+.busca-limpar:hover{
+    color:#dc3545;
+}
+
+.busca-resultado{
+    color:#64748b;
+    font-size:13px;
+    margin:-6px 0 14px;
+}

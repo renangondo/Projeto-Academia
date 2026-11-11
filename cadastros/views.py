@@ -9,8 +9,9 @@ from .models import TransferenciaAluno, expirar_transferencias_vencidas
 from django.contrib import messages
 from django.db import transaction
 from django.utils.crypto import get_random_string
-
-from .permissoes import SomenteDoMeuAlunoMixin, SomenteMeuPerfilProfessorMixin
+import re
+import unicodedata
+from .permissoes import SomenteDoMeuAlunoMixin, SomenteMeuPerfilProfessorMixin, alunos_do_usuario 
 
 from exercicio.models import Treino
 from medidas.models import Medidas
@@ -239,24 +240,45 @@ class CidadeList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     group_required = ["Administrador"]
 
 
+def normalizar_texto(texto):
+    """minúsculas e sem acento, para 'joao' achar 'João'."""
+    texto = unicodedata.normalize('NFD', (texto or '').lower())
+    return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
+
+
 class AlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Pessoa
     template_name = "cadastros/listar_alunos.html"
-
+    context_object_name = 'pessoa_list'
     group_required = ["Professor", "Administrador"]
 
     def get_queryset(self):
+        alunos = alunos_do_usuario(self.request.user).select_related(
+            'professor', 'cidade'
+        ).order_by('nome')
 
-        queryset = Pessoa.objects.filter(tipo="ALUNO")
+        busca = self.request.GET.get('q', '').strip()
+        if not busca:
+            return alunos
 
-        if self.request.user.is_superuser:
-            return queryset
+        termo = normalizar_texto(busca)
+        digitos = re.sub(r'[\s.\-()]', '', busca)
+        busca_numerica = digitos.isdigit()
 
-        return queryset.filter(
-            professor=self.request.user.pessoa_usuario
-        )
+        def combina(aluno):
+            if termo in normalizar_texto(f"{aluno.nome} {aluno.objetivo or ''}"):
+                return True
+            if busca_numerica:
+                return digitos in aluno.cpf or digitos in aluno.telefone
+            return False
 
+        return [a for a in alunos if combina(a)]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['busca'] = self.request.GET.get('q', '').strip()
+        return context
 
 class ProfessorList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     login_url = reverse_lazy('login')
