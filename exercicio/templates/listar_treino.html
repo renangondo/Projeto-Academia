@@ -98,17 +98,18 @@
                         {% if treino.situacao == 'andamento' %}
                         <span class="badge-situacao andamento">Em andamento</span>
                         <small class="situacao-info">
-                            {% if treino.dias_restantes == 0 %}
+                            {% with d=treino.dias_restantes %}
+                            {% if d == 0 %}
                             termina hoje
                             {% else %}
-                            {{ treino.dias_restantes }} dia{{ treino.dias_restantes|pluralize }} restante{{
-                            treino.dias_restantes|pluralize }}
+                            {{ d }} dia{{ d|pluralize }} restante{{ d|pluralize }}
                             {% endif %}
+                            {% endwith %}
                         </small>
                         {% elif treino.situacao == 'futuro' %}
                         <span class="badge-situacao futuro">Futuro</span>
                         <small class="situacao-info">ainda não começou</small>
-                        {% else %}
+                        {% elif treino.situacao == 'encerrado' %}
                         <span class="badge-situacao encerrado">Encerrado</span>
                         {% endif %}
                     </td>

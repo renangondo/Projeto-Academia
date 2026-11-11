@@ -1,6 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.views.generic import DetailView, View
+from django.views.generic import DetailView, TemplateView, View
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from .models import TransferenciaAluno
@@ -465,3 +465,8 @@ class TransferenciaResponder(LoginRequiredMixin, GroupRequiredMixin, View):
 
         transferencia.save()
         return redirect('minhas-transferencias')
+
+
+###################################################################
+class MeuPerfilView(LoginRequiredMixin, TemplateView):
+    template_name = 'cadastros/meu_perfil.html'

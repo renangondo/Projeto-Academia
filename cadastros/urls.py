@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AlunoCreate, AlunoDelete, AlunoList, AlunoUpdate, CadastroProfessorCreate, MinhasSolicitacoesAlunoList, MinhasTransferenciasList, PessoaDetail, CidadeList, EstadoCreate, CidadeCreate, EstadoList, ProfessorDelete, ProfessorList, ProfessorUpdate, TransferenciaCreate, TransferenciaResponder, TransferenciaSolicitarAluno
+from .views import AlunoCreate, AlunoDelete, AlunoList, AlunoUpdate, CadastroProfessorCreate, MeuPerfilView, MinhasSolicitacoesAlunoList, MinhasTransferenciasList, PessoaDetail, CidadeList, EstadoCreate, CidadeCreate, EstadoList, ProfessorDelete, ProfessorList, ProfessorUpdate, TransferenciaCreate, TransferenciaResponder, TransferenciaSolicitarAluno
 from .views import EstadoUpdate, CidadeUpdate
 from .views import EstadoDelete, CidadeDelete
 
@@ -37,6 +37,8 @@ urlpatterns = [
     path('detalhe/aluno/<int:pk>/', PessoaDetail.as_view(), name='detalhe-aluno'),
 
     path('transferencia/<int:pk>/responder/', TransferenciaResponder.as_view(), name="responder-transferencia"),
+
+    path('meu-perfil/', MeuPerfilView.as_view(), name='meu-perfil'),
 
 
 ]

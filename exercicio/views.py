@@ -328,10 +328,6 @@ class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
             qtd_exercicios=Count('exercicio_do_treino')
         )
 
-        # professor vê os treinos dos alunos dele; admin vê todos
-        if not (user.is_superuser or user.groups.filter(name="Administrador").exists()):
-            qs = qs.filter(aluno__professor=user.pessoa_usuario)
-
         busca = self.request.GET.get('q', '').strip()
         if busca:
             qs = qs.filter(
