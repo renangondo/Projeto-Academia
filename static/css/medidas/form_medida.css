@@ -1,0 +1,18 @@
+.aviso-medida{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    background:#eff6ff;
+    border-left:4px solid #2563eb;
+    color:#1e3a8a;
+    padding:14px 16px;
+    border-radius:8px;
+    margin-bottom:22px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.aviso-medida i{
+    margin-top:2px;
+    color:#2563eb;
+}

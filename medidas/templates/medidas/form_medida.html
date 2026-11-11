@@ -1,0 +1,39 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/medidas/form_medida.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="form-page">
+    <div class="form-card">
+
+        <h2>{% if object %}Editar medida{% else %}Nova medida{% endif %}</h2>
+        <p>{{ aluno.nome }}</p>
+
+        {% if ultima and not object %}
+        <div class="aviso-medida">
+            <i class="fas fa-circle-info"></i>
+            <span>
+                Os valores vêm da medida de {{ ultima.data_medida|date:"d/m/Y" }}.
+                Altere só o que mudou. A altura ({{ ultima.altura }}) é mantida automaticamente.
+            </span>
+        </div>
+        {% endif %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-salvar">
+                {% if object %}Salvar alterações{% else %}Salvar medida{% endif %}
+            </button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

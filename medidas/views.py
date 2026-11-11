@@ -1,4 +1,6 @@
+from django import forms
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,10 +23,21 @@ class RetornoMedidasMixin:
         return reverse_lazy('detalhe-aluno', kwargs={'pk': self.object.aluno_id})
 
 
-class MedidasCreate(RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class FormMedidasMixin:
+    template_name = 'medidas/form_medida.html'
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # seletor de data do navegador (e a data de hoje já preenchida)
+        form.fields['data_medida'].widget = forms.DateInput(
+            attrs={'type': 'date'}, format='%Y-%m-%d'
+        )
+        return form
+
+
+class MedidasCreate(FormMedidasMixin, RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Medidas
     fields = CAMPOS
-    template_name = 'form.html'
     group_required = ["Professor", "Administrador", "Aluno"]
 
     def get_form_kwargs(self):
@@ -32,17 +45,57 @@ class MedidasCreate(RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin,
         self.aluno = get_object_or_404(alunos_do_usuario(self.request.user), pk=self.kwargs['pk'])
         return super().get_form_kwargs()
 
+    def get_ultima(self):
+        if not hasattr(self, '_ultima'):
+            self._ultima = Medidas.objects.filter(
+                aluno=self.aluno
+            ).order_by('-data_medida', '-id').first()
+        return self._ultima
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        ultima = self.get_ultima()
+        if ultima:
+            for campo in CAMPOS:
+                if campo not in ('data_medida', 'altura'):
+                    initial[campo] = getattr(ultima, campo)
+
+        initial['data_medida'] = timezone.localdate()
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.get_ultima():
+            form.fields.pop('altura')   # a altura é mantida da última medida
+        return form
+
     def form_valid(self, form):
         form.instance.aluno = self.aluno
         form.instance.cadastrado_por = self.request.user
+
+        ultima = self.get_ultima()
+        if ultima:
+            form.instance.altura = ultima.altura
+
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['aluno'] = self.aluno
+        context['ultima'] = self.get_ultima()
+        return context
 
-class MedidasUpdate(SomenteDoMeuAlunoMixin, RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+
+class MedidasUpdate(FormMedidasMixin, SomenteDoMeuAlunoMixin, RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Medidas
-    fields = CAMPOS          # sem 'aluno': a medida não pode mudar de dono
-    template_name = 'form.html'
+    fields = CAMPOS          # aqui a altura continua editável, para corrigir um erro
     group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['aluno'] = self.object.aluno
+        return context
 
 
 class MedidasDelete(SomenteDoMeuAlunoMixin, RetornoMedidasMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
