@@ -87,6 +87,7 @@ class CadastroProfessorCreate(CreateView):
             grupo, _ = Group.objects.get_or_create(name="Professor")
             usuario.groups.add(grupo)
 
+            form.instance.precisa_trocar_senha = True
             form.instance.usuario = usuario
             form.instance.tipo = "PROFESSOR"
             return super().form_valid(form)
@@ -112,6 +113,7 @@ class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
             grupo, _ = Group.objects.get_or_create(name="Aluno")
             usuario.groups.add(grupo)
 
+            form.instance.precisa_trocar_senha = True
             form.instance.usuario = usuario
             form.instance.tipo = "ALUNO"
             form.instance.professor = self.request.user.pessoa_usuario

@@ -12,7 +12,12 @@
     <div class="form-card">
 
         <h2>Alterar senha</h2>
+
+        {% if request.user.pessoa_usuario.precisa_trocar_senha %}
+        <p>Este é o seu primeiro acesso. Por segurança, defina uma nova senha para continuar.</p>
+        {% else %}
         <p>Informe a senha atual e escolha uma nova senha.</p>
+        {% endif %}
 
         <form method="POST">
             {% csrf_token %}
@@ -22,7 +27,9 @@
             <button type="submit" class="btn-salvar">Salvar nova senha</button>
         </form>
 
+        {% if not request.user.pessoa_usuario.precisa_trocar_senha %}
         <a href="{% url 'meu-perfil' %}" class="link-cancelar">Cancelar</a>
+        {% endif %}
 
     </div>
 </div>
