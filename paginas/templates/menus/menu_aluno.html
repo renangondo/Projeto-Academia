@@ -69,18 +69,17 @@
 
             <h4>Conta</h4>
 
+            <a href="{% url 'alterar-senha' %}">
+                <i class="fas fa-key"></i>
+                Alterar senha
+            </a>
+
             <form action="{% url 'logout' %}" method="POST">
-
                 {% csrf_token %}
-
                 <button class="logout-button">
-
                     <i class="fas fa-right-from-bracket"></i>
-
                     Sair
-
                 </button>
-
             </form>
 
         </div>

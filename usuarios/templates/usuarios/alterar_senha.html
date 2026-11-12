@@ -1,0 +1,29 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cadastros/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/usuarios/alterar_senha.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="form-page">
+    <div class="form-card">
+
+        <h2>Alterar senha</h2>
+        <p>Informe a senha atual e escolha uma nova senha.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-salvar">Salvar nova senha</button>
+        </form>
+
+        <a href="{% url 'meu-perfil' %}" class="link-cancelar">Cancelar</a>
+
+    </div>
+</div>
+{% endblock %}

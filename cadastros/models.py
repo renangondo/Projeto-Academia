@@ -64,6 +64,7 @@ class Pessoa(Auditoria):
     professor = models.ForeignKey("self", on_delete=models.PROTECT, related_name="alunos", limit_choices_to={"tipo": "PROFESSOR"}, null=True, blank=True)
     # Usando para referenciar o model User do próprio Django.
     usuario = models.OneToOneField("auth.User", on_delete=models.CASCADE, related_name="pessoa_usuario")
+    precisa_trocar_senha = models.BooleanField(default=False, verbose_name="Precisa trocar a senha")
     
     def __str__(self):
         return f"{self.nome} - {self.get_tipo_display()}"

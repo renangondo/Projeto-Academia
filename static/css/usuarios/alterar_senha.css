@@ -1,0 +1,36 @@
+.form-card .helptext{
+    display:block;
+    margin-top:8px;
+    color:#64748b;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.form-card .helptext ul{
+    margin:6px 0 0 18px;
+    padding:0;
+}
+
+.form-card .helptext li{
+    margin-bottom:2px;
+}
+
+.form-card ul.errorlist{
+    list-style:none;
+    margin:0 0 6px;
+    padding:0;
+    color:#dc3545;
+    font-size:13px;
+}
+
+.link-cancelar{
+    display:inline-block;
+    margin-top:14px;
+    color:#64748b;
+    font-size:13px;
+    text-decoration:none;
+}
+
+.link-cancelar:hover{
+    color:#0d6efd;
+}
