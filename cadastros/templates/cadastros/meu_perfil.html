@@ -32,7 +32,17 @@
             </div>
             <div>
                 <span>Idade</span>
-                <strong>{% if p.idade %}{{ p.idade }} anos{% else %}-{% endif %}</strong>
+                <strong>
+                    {% if p.idade is not None %}
+                    {{ p.idade }} anos
+                    {% else %}
+                    -
+                    {% endif %}
+                </strong>
+            </div>
+            <div>
+                <span>Nascimento</span>
+                <strong>{{ p.data_nascimento|date:"d/m/Y"|default:"-" }}</strong>
             </div>
             <div>
                 <span>Cidade</span>

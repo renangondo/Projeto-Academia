@@ -31,6 +31,11 @@ class Cidade(Auditoria):
         return "{} ({})".format(self.nome, self.estado.sigla)
 
 ###########################################################################################
+def validar_data_nascimento(valor):
+    if valor > timezone.localdate():
+        raise ValidationError("A data de nascimento não pode ser no futuro.")
+    if valor.year < 1900:
+        raise ValidationError("Data de nascimento inválida.")
 #Models Pessoa
 class Pessoa(Auditoria):
     TIPO_CHOICES = [
@@ -54,7 +59,7 @@ class Pessoa(Auditoria):
     
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, verbose_name="Tipo de Pessoa")
     nome = models.CharField(max_length=50, verbose_name="Nome")
-    idade = models.IntegerField(verbose_name="Idade", null=True, blank=True)
+    data_nascimento = models.DateField(verbose_name="Data de nascimento",null=True,blank=True,validators=[validar_data_nascimento],)
     cpf = models.CharField(max_length=11, unique=True, verbose_name="CPF")
     telefone = models.CharField(max_length=15, verbose_name="Telefone")
     objetivo = models.TextField(verbose_name="Objetivo", null=True, blank=True)
@@ -68,6 +73,17 @@ class Pessoa(Auditoria):
     
     def __str__(self):
         return f"{self.nome} - {self.get_tipo_display()}"
+
+    @property
+    def idade(self):
+        if not self.data_nascimento:
+            return None
+
+        hoje = timezone.localdate()
+        ja_fez_aniversario = (hoje.month, hoje.day) >= (
+            self.data_nascimento.month, self.data_nascimento.day
+        )
+        return hoje.year - self.data_nascimento.year - (0 if ja_fez_aniversario else 1)
 
 
 class TransferenciaAluno(Auditoria):

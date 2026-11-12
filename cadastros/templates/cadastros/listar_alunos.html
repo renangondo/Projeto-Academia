@@ -68,7 +68,7 @@
                             {{ aluno.nome }}
                         </a>
                     </td>
-                    <td>{{ aluno.idade }}</td>
+                    <td>{{ aluno.idade|default_if_none:"-" }}</td>
                     <td>{{ aluno.cpf }}</td>
                     <td>{{ aluno.telefone }}</td>
                     <td>{{ aluno.objetivo }}</td>

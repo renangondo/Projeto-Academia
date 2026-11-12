@@ -12,6 +12,8 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django import forms
+from django.utils import timezone
 
 from exercicio.models import Treino
 from medidas.models import Medidas
@@ -48,6 +50,16 @@ def normalizar_texto(texto):
     texto = unicodedata.normalize('NFD', (texto or '').lower())
     return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
 
+class DataNascimentoMixin:
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if 'data_nascimento' in form.fields:
+            form.fields['data_nascimento'].widget = forms.DateInput(
+                attrs={'type': 'date', 'max': timezone.localdate().isoformat()},
+                format='%Y-%m-%d',
+            )
+        return form
+
 
 ############################## CREATE #########################################
 
@@ -69,9 +81,9 @@ class CidadeCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     success_url = reverse_lazy('inicio')
 
 
-class CadastroProfessorCreate(CreateView):
+class CadastroProfessorCreate(DataNascimentoMixin, CreateView):
     model = Pessoa
-    fields = ['nome', 'idade', 'cpf', 'telefone', 'sexo', 'cidade']
+    fields = ['nome', 'data_nascimento', 'cpf', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/cadastro_professor.html'
     success_url = reverse_lazy('login')
 
@@ -93,11 +105,11 @@ class CadastroProfessorCreate(CreateView):
             return super().form_valid(form)
 
 
-class AlunoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class AlunoCreate(DataNascimentoMixin, LoginRequiredMixin, GroupRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
-    fields = ["nome", "idade", "cpf", "telefone", "objetivo", "sexo", "nivel", "cidade"]
+    fields = ["nome", "data_nascimento", "cpf", "telefone", "objetivo", "sexo", "nivel", "cidade"]
     template_name = "cadastros/form.html"
     success_url = reverse_lazy("listar-aluno")
 
@@ -206,21 +218,21 @@ class CidadeUpdate(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     success_url = reverse_lazy('inicio')
 
 
-class ProfessorUpdate(SomenteMeuPerfilProfessorMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ProfessorUpdate(DataNascimentoMixin, SomenteMeuPerfilProfessorMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor"]
-    fields = ['nome', 'idade', 'telefone', 'sexo', 'cidade']
+    fields = ['nome', 'data_nascimento', 'telefone', 'sexo', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
 
-class AlunoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class AlunoUpdate(DataNascimentoMixin, SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     campo_aluno = "pk"
     login_url = reverse_lazy('login')
     model = Pessoa
     group_required = ["Administrador", "Professor", "Aluno"]
-    fields = ['nome', 'idade', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade']
+    fields = ['nome', 'data_nascimento', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade']
     template_name = 'cadastros/form.html'
     success_url = reverse_lazy('inicio')
 
