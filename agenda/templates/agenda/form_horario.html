@@ -3,6 +3,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/global/autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/agenda/form_horario.css' %}">
 {% endblock %}
 
@@ -86,6 +87,7 @@
 {{ treinos_json|json_script:"dados-treinos" }}
 </script>
 
+<script src="{% static 'js/global/autocomplete.js' %}"></script>
 <script src="{% static 'js/agenda/form_horario.js' %}"></script>
 
 {% endblock %}

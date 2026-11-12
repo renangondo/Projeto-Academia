@@ -93,12 +93,16 @@ function initCombobox({ inputId, listId, valorEl, getOpcoes, obrigatorio = false
             itens.forEach((it, i) => it.el.classList.toggle('ativo', i === indiceAtivo));
             itens[indiceAtivo].el.scrollIntoView({ block: 'nearest' });
 
-        } else if (e.key === 'Enter' && aberta && indiceAtivo >= 0) {
-            e.preventDefault();
-            selecionar(itens[indiceAtivo].opcao);
+        } else if (e.key === 'Enter' && aberta) {
+            if (indiceAtivo >= 0) {
+                e.preventDefault();
+                selecionar(itens[indiceAtivo].opcao);
+            } else if (!valorEl.value) {
+                e.preventDefault();
+                if (itens.length > 0) selecionar(itens[0].opcao);
+            }
 
         } else if (e.key === 'Escape') {
-            fechar();
         }
     });
 
