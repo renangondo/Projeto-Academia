@@ -83,7 +83,10 @@
     </div>
     <div class="section-title">
         <h3>Medidas recentes</h3>
-        <p>Últimos registros de evolução física</p>
+        <p>Últimas duas medidas, com a variação em relação à anterior</p>
+        <a href="{% url 'evolucao-medidas' aluno.id %}" class="link-evolucao">
+            Ver histórico completo e gráficos
+        </a>
     </div>
 
     <div class="medidas-grid">
@@ -95,6 +98,9 @@
                 <div>
                     <h4>Medida Corporal</h4>
                     <span>{{ medida.data_medida }}</span>
+                    <em class="medida-tag{% if forloop.first %} atual{% endif %}">
+                        {% if forloop.first %}Mais recente{% else %}Anterior{% endif %}
+                    </em>
                 </div>
 
                 <a href="{% url 'editar-medidas' medida.id %}" class="btn-editar-medida">
@@ -106,11 +112,12 @@
                 <div>
                     <span>Peso</span>
                     <strong>{{ medida.peso }} kg</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.peso unidade='kg' %}
                 </div>
 
                 <div>
                     <span>Altura</span>
-                    <strong>{{ medida.altura }} m</strong>
+                    <strong>{{ medida.altura_em_metros|floatformat:2 }} m</strong>
                 </div>
             </div>
 
@@ -119,46 +126,55 @@
                 <div class="medida-item">
                     <span>Cintura</span>
                     <strong>{{ medida.cintura }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.cintura unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Quadril</span>
                     <strong>{{ medida.quadril }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.quadril unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Braço Direito</span>
                     <strong>{{ medida.braco_direito }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.braco_direito unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Braço Esquerdo</span>
                     <strong>{{ medida.braco_esquerdo }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.braco_esquerdo unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Coxa Direita</span>
                     <strong>{{ medida.coxa_direita }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.coxa_direita unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Coxa Esquerda</span>
                     <strong>{{ medida.coxa_esquerda }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.coxa_esquerda unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Panturrilha Direita</span>
                     <strong>{{ medida.panturrilha_direita }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.panturrilha_direita unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Panturrilha Esquerda</span>
                     <strong>{{ medida.panturrilha_esquerda }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.panturrilha_esquerda unidade='cm' %}
                 </div>
 
                 <div class="medida-item">
                     <span>Peito</span>
                     <strong>{{ medida.peito }} cm</strong>
+                    {% include 'cadastros/_variacao.html' with v=medida.variacoes.peito unidade='cm' %}
                 </div>
 
             </div>

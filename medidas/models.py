@@ -22,3 +22,8 @@ class Medidas(Auditoria):
 
     def __str__(self):
         return "{}".format(self.aluno)
+
+    @property
+    def altura_em_metros(self):
+        # aceita altura digitada em cm (186) ou em metros (1.86)
+        return self.altura / 100 if self.altura > 3 else self.altura

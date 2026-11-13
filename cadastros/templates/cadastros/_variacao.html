@@ -1,0 +1,12 @@
+{% if v %}
+<em class="variacao variacao-{{ v.sentido }}" title="Variação em relação à medida anterior">
+    {% if v.sentido == 'subiu' %}
+    <i class="fas fa-arrow-up"></i>
+    {% elif v.sentido == 'desceu' %}
+    <i class="fas fa-arrow-down"></i>
+    {% else %}
+    <i class="fas fa-minus"></i>
+    {% endif %}
+    {% if v.sentido != 'igual' %}{{ v.valor|floatformat:1 }} {{ unidade }}{% endif %}
+</em>
+{% endif %}

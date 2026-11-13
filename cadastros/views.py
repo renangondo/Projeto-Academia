@@ -14,7 +14,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django import forms
 from django.utils import timezone
-
+from medidas.utils import calcular_variacoes
 from exercicio.models import Treino
 from medidas.models import Medidas
 
@@ -402,10 +402,19 @@ class PessoaDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixi
         context = super().get_context_data(**kwargs)
 
         context["treinos"] = Treino.objects.filter(aluno=self.object)
-        context["medidas"] = Medidas.objects.filter(
-            aluno=self.object
-        ).order_by("-data_medida")
 
+        # só as duas últimas medidas (a mais recente primeiro)
+        medidas = list(
+            Medidas.objects.filter(aluno=self.object).order_by("-data_medida", "-id")[:2]
+        )
+
+        for medida in medidas:
+            medida.variacoes = {}
+
+        if len(medidas) == 2:
+            medidas[0].variacoes = calcular_variacoes(medidas[0], medidas[1])
+
+        context["medidas"] = medidas
         return context
 
 
