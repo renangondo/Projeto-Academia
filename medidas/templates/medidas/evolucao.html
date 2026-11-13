@@ -36,7 +36,8 @@
             <span>Peso atual</span>
             <strong>{{ resumo.atual.peso|floatformat:1 }} kg</strong>
             {% if resumo.var_peso is not None %}
-            <small>{% if resumo.var_peso > 0 %}+{% endif %}{{ resumo.var_peso|floatformat:1 }} kg desde a medida anterior</small>
+            <small>{% if resumo.var_peso > 0 %}+{% endif %}{{ resumo.var_peso|floatformat:1 }} kg desde a medida
+                anterior</small>
             {% endif %}
         </div>
 
@@ -50,7 +51,8 @@
             <span>Cintura</span>
             <strong>{{ resumo.atual.cintura|floatformat:1 }} cm</strong>
             {% if resumo.var_cintura is not None %}
-            <small>{% if resumo.var_cintura > 0 %}+{% endif %}{{ resumo.var_cintura|floatformat:1 }} cm desde a medida anterior</small>
+            <small>{% if resumo.var_cintura > 0 %}+{% endif %}{{ resumo.var_cintura|floatformat:1 }} cm desde a medida
+                anterior</small>
             {% endif %}
         </div>
 
@@ -62,78 +64,63 @@
 
     </div>
 
-    <div class="grafico-card">
-        <div class="grafico-topo">
-            <h3>Gráfico de evolução</h3>
-            <select id="grafico-grupo">
-                <option value="peso">Peso</option>
-                <option value="imc">IMC</option>
-                <option value="cintura_quadril">Cintura e quadril</option>
-                <option value="bracos">Braços</option>
-                <option value="coxas">Coxas</option>
-                <option value="panturrilhas">Panturrilhas</option>
-                <option value="peito">Peito</option>
-            </select>
-        </div>
+    <div id="graficos" class="graficos-grid"></div>
 
-        <div class="grafico-area">
-            <canvas id="grafico-medidas"></canvas>
-        </div>
-
-        {% if resumo.total < 2 %}
-        <p class="aviso">Registre mais uma medida para ver a linha de evolução.</p>
+    {% if resumo.total < 2 %} <p class="aviso">Registre mais uma medida para comparar a evolução entre as datas.</p>
         {% endif %}
-        <p class="aviso">O IMC é uma referência geral e não considera massa muscular.</p>
-    </div>
+        <p class="aviso">Gráficos das últimas 12 medidas. O IMC é uma referência geral e não considera massa muscular.
+        </p>
 
-    <div class="tabela-card">
-        <h3>Histórico de medidas</h3>
+        <div class="tabela-card">
+            <h3>Histórico de medidas</h3>
 
-        <div class="tabela-scroll">
-            <table class="tabela-medidas">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Peso</th>
-                        <th>Cintura</th>
-                        <th>Quadril</th>
-                        <th>Braço D / E</th>
-                        <th>Coxa D / E</th>
-                        <th>Panturrilha D / E</th>
-                        <th>Peito</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for m in historico %}
-                    <tr>
-                        <td>{{ m.data_medida|date:"d/m/Y" }}</td>
-                        <td>{{ m.peso }} kg</td>
-                        <td>{{ m.cintura }} cm</td>
-                        <td>{{ m.quadril }} cm</td>
-                        <td>{{ m.braco_direito }} / {{ m.braco_esquerdo }}</td>
-                        <td>{{ m.coxa_direita }} / {{ m.coxa_esquerda }}</td>
-                        <td>{{ m.panturrilha_direita }} / {{ m.panturrilha_esquerda }}</td>
-                        <td>{{ m.peito }} cm</td>
-                        <td class="acoes-medida">
-                            <a href="{% url 'editar-medidas' m.pk %}" class="btn-mini editar"><i class="fas fa-pen"></i></a>
-                            <a href="{% url 'excluir-medidas' m.pk %}" class="btn-mini excluir"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="tabela-scroll">
+                <table class="tabela-medidas">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Peso</th>
+                            <th>Cintura</th>
+                            <th>Quadril</th>
+                            <th>Braço D / E</th>
+                            <th>Coxa D / E</th>
+                            <th>Panturrilha D / E</th>
+                            <th>Peito</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in historico %}
+                        <tr>
+                            <td>{{ m.data_medida|date:"d/m/Y" }}</td>
+                            <td>{{ m.peso }} kg</td>
+                            <td>{{ m.cintura }} cm</td>
+                            <td>{{ m.quadril }} cm</td>
+                            <td>{{ m.braco_direito }} / {{ m.braco_esquerdo }}</td>
+                            <td>{{ m.coxa_direita }} / {{ m.coxa_esquerda }}</td>
+                            <td>{{ m.panturrilha_direita }} / {{ m.panturrilha_esquerda }}</td>
+                            <td>{{ m.peito }} cm</td>
+                            <td class="acoes-medida">
+                                <a href="{% url 'editar-medidas' m.pk %}" class="btn-mini editar"><i
+                                        class="fas fa-pen"></i></a>
+                                <a href="{% url 'excluir-medidas' m.pk %}" class="btn-mini excluir"><i
+                                        class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    {% else %}
+        {% else %}
 
-    <div class="vazio-card">
-        <p>Nenhuma medida registrada ainda.</p>
-        <a href="{% url 'cadastrar-medidas' aluno.pk %}" class="btn-nova-medida">Registrar primeira medida</a>
-    </div>
+        <div class="vazio-card">
+            <p>Nenhuma medida registrada ainda.</p>
+            <a href="{% url 'cadastrar-medidas' aluno.pk %}" class="btn-nova-medida">Registrar primeira medida</a>
+        </div>
 
-    {% endif %}
+        {% endif %}
 
 </div>
 

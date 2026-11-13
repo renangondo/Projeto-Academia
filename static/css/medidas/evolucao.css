@@ -104,33 +104,15 @@
     box-shadow:0 8px 25px rgba(0,0,0,.06);
 }
 
-.grafico-topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-bottom:18px;
-}
-
 .grafico-topo h3,
 .tabela-card h3{
     color:#2c3e50;
     font-size:18px;
 }
 
-.grafico-topo select{
-    padding:10px 14px;
-    border:1px solid #dde3ec;
-    border-radius:10px;
-    background:#f8fafd;
-    font-size:14px;
-    color:#2c3e50;
-}
-
 .grafico-area{
     position:relative;
-    height:340px;
+    height:260px;
 }
 
 .aviso{
@@ -197,4 +179,28 @@
 
 .vazio-card .btn-nova-medida{
     margin-top:14px;
+}
+
+
+.graficos-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:22px;
+    margin-bottom:22px;
+}
+
+.graficos-grid .grafico-card{
+    margin-bottom:0;
+}
+
+.graficos-grid .grafico-card h3{
+    color:#2c3e50;
+    font-size:16px;
+    margin-bottom:14px;
+}
+
+@media (max-width:800px){
+    .graficos-grid{
+        grid-template-columns:1fr;
+    }
 }
