@@ -1,98 +1,165 @@
 {% extends 'modelo.html' %}
-{% load static %}
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/dashboard/dashboard_aluno.css' %}">
-{% endblock %}
-
 {% block main %}
 
-<div class="perfil">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/paginas/dashboard_aluno.css' %}">
 
-    <div class="foto">
+{% with p=request.user.pessoa_usuario %}
 
-        <i class="fas fa-circle-user"></i>
+<div class="home">
+
+    <div class="home-topo">
+        <div class="home-perfil">
+            <i class="fas fa-circle-user"></i>
+            <div>
+                <h1>Olá, {{ p.nome }}!</h1>
+                <p>
+                    {% if p.professor %}
+                        Professor responsável: <strong>{{ p.professor.nome }}</strong>
+                    {% else %}
+                        Você ainda não tem um professor responsável.
+                    {% endif %}
+                </p>
+
+                <div class="home-info">
+                    {% if p.nivel %}
+                    <span><i class="fas fa-signal"></i> {{ p.get_nivel_display }}</span>
+                    {% endif %}
+                    {% if p.idade is not None %}
+                    <span><i class="fas fa-cake-candles"></i> {{ p.idade }} anos</span>
+                    {% endif %}
+                    {% if p.objetivo %}
+                    <span><i class="fas fa-bullseye"></i> {{ p.objetivo }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'cadastrar-medidas' p.pk %}" class="home-btn">
+            <i class="fas fa-plus"></i>
+            Registrar medida
+        </a>
+    </div>
+
+    <div class="home-destaques">
+
+        <section class="home-hero">
+            <span class="home-rotulo">
+                <i class="fas fa-calendar-check"></i>
+                Próxima aula
+            </span>
+
+            {% if proxima_aula %}
+            {% with h=proxima_aula.horario %}
+            <h2>{{ proxima_aula.quando }}, {{ h.horario|time:"H:i" }}</h2>
+            <p>
+                <i class="fas fa-dumbbell"></i>
+                {{ h.treino.nome_treino|default:"Treino a definir" }}
+            </p>
+            <p>
+                <i class="fas fa-user"></i>
+                Prof. {{ h.professor.nome }}
+            </p>
+            {% endwith %}
+            {% else %}
+            <h2>Sem aulas agendadas</h2>
+            <p>Fale com o seu professor para marcar os seus horários.</p>
+            {% endif %}
+        </section>
+
+        <section class="home-treino">
+            <span class="home-rotulo">
+                <i class="fas fa-clipboard-list"></i>
+                Treino em andamento
+            </span>
+
+            {% if treino_atual %}
+            {% with d=treino_atual.dias_restantes %}
+            <h2>{{ treino_atual.nome_treino }}</h2>
+            <p>{{ treino_atual.descricao }}</p>
+
+            <div class="home-chips">
+                <span>{{ treino_atual.qtd_exercicios }} exercício{{ treino_atual.qtd_exercicios|pluralize }}</span>
+                <span>
+                    {% if d == 0 %}
+                        termina hoje
+                    {% else %}
+                        {{ d }} dia{{ d|pluralize }} restante{{ d|pluralize }}
+                    {% endif %}
+                </span>
+            </div>
+            {% endwith %}
+
+            <div class="home-acoes">
+                <a href="{% url 'detalhe-treino' treino_atual.pk %}" class="home-btn">Ver treino</a>
+                <a href="{% url 'treino-pdf' treino_atual.pk %}" class="home-btn claro">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF
+                </a>
+            </div>
+            {% else %}
+            <h2>Nenhum treino ativo</h2>
+            <p>Quando o seu professor criar um treino, ele aparece aqui.</p>
+
+            <div class="home-acoes">
+                <a href="{% url 'listar-treino' %}" class="home-btn claro">Ver meus treinos</a>
+            </div>
+            {% endif %}
+        </section>
 
     </div>
 
-    <h1>{{ request.user.pessoa_usuario.nome }}</h1>
+    <div class="home-metricas">
 
-    <p>{{ request.user.username }}</p>
+        <a href="{% url 'evolucao-medidas' p.pk %}" class="home-metrica">
+            <i class="fas fa-weight-scale"></i>
+            <span>Peso atual</span>
+            {% if medida_atual %}
+            <strong>{{ medida_atual.peso|floatformat:1 }} kg</strong>
+            {% include 'cadastros/_variacao.html' with v=variacoes.peso unidade='kg' %}
+            {% else %}
+            <strong>--</strong>
+            <small>Registre a primeira medida</small>
+            {% endif %}
+        </a>
+
+        <a href="{% url 'evolucao-medidas' p.pk %}" class="home-metrica">
+            <i class="fas fa-heart-pulse"></i>
+            <span>IMC</span>
+            {% if imc %}
+            <strong>{{ imc|floatformat:1 }}</strong>
+            <small>{{ imc_classificacao }}</small>
+            {% else %}
+            <strong>--</strong>
+            {% endif %}
+        </a>
+
+        <a href="{% url 'evolucao-medidas' p.pk %}" class="home-metrica">
+            <i class="fas fa-ruler-vertical"></i>
+            <span>Altura</span>
+            {% if medida_atual %}
+            <strong>{{ medida_atual.altura_em_metros|floatformat:2 }} m</strong>
+            {% else %}
+            <strong>--</strong>
+            {% endif %}
+        </a>
+
+        <a href="{% url 'evolucao-medidas' p.pk %}" class="home-metrica">
+            <i class="fas fa-chart-column"></i>
+            <span>Evolução</span>
+            <strong>Ver gráficos</strong>
+        </a>
+
+    </div>
+
+    <div class="home-secao">
+        <h3>Minhas aulas da semana</h3>
+    </div>
+
+    {% include 'agenda/_semana.html' with modo='aluno' %}
 
 </div>
 
-<div class="cards">
-
-    <div class="card">
-
-        <i class="fas fa-weight-scale"></i>
-
-        <h2>{{ peso }} kg</h2>
-
-        <span>Peso Atual</span>
-
-    </div>
-
-    <div class="card">
-
-        <i class="fas fa-ruler"></i>
-
-        <h2>{{ altura }} m</h2>
-
-        <span>Altura</span>
-
-    </div>
-
-    <div class="card">
-
-        <i class="fas fa-chart-line"></i>
-
-        <h2>{{ percentual }}</h2>
-
-        <span>Evolução</span>
-
-    </div>
-
-</div>
-
-<div class="box">
-
-    <h2>Meu treino</h2>
-
-    {% for treino in treinos %}
-
-    <div class="linha">
-
-        {{ treino.nome }}
-
-    </div>
-
-    {% empty %}
-
-    Nenhum treino cadastrado.
-
-    {% endfor %}
-
-</div>
-
-<div class="box">
-
-    <h2>Últimas Medidas</h2>
-
-    {% for medida in medidas %}
-
-    <div class="linha">
-
-        {{ medida.data_medida }}
-
-    </div>
-
-    {% empty %}
-
-    Sem medidas.
-
-    {% endfor %}
-
-</div>
+{% endwith %}
 
 {% endblock %}
