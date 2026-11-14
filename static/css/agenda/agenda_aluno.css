@@ -1,0 +1,226 @@
+.ag-page{
+    max-width:1200px;
+    margin:0 auto;
+    padding:10px 0 30px;
+}
+
+/* ---------- topo ---------- */
+
+.ag-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+}
+
+.ag-topo h2{
+    color:#0d6efd;
+    font-size:28px;
+}
+
+.ag-topo p{
+    color:#64748b;
+    font-size:14px;
+    margin-top:4px;
+}
+
+.ag-resumo{
+    text-align:center;
+    background:white;
+    border-radius:14px;
+    padding:10px 24px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+    border-top:4px solid #2563eb;
+}
+
+.ag-resumo strong{
+    display:block;
+    color:#0f172a;
+    font-size:26px;
+    line-height:1.2;
+}
+
+.ag-resumo span{
+    color:#64748b;
+    font-size:12px;
+}
+
+/* ---------- próxima aula ---------- */
+
+.ag-proxima{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    background:linear-gradient(135deg, #2563eb, #38bdf8);
+    color:white;
+    border-radius:18px;
+    padding:24px 28px;
+    margin-bottom:24px;
+    box-shadow:0 15px 35px rgba(37,99,235,.25);
+}
+
+.ag-proxima-icone{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:rgba(255,255,255,.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    flex-shrink:0;
+}
+
+.ag-rotulo{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    opacity:.9;
+}
+
+.ag-proxima-info h3{
+    font-size:28px;
+    margin:4px 0 8px;
+}
+
+.ag-proxima-info p{
+    color:#e0f2fe;
+    font-size:15px;
+}
+
+.ag-proxima-info p i{
+    margin-right:4px;
+}
+
+/* ---------- semana ---------- */
+
+.ag-semana{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:12px;
+    align-items:start;
+}
+
+.ag-dia{
+    background:white;
+    border-radius:14px;
+    padding:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+    border:2px solid transparent;
+}
+
+.ag-dia.hoje{
+    border-color:#2563eb;
+}
+
+.ag-dia-topo{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:6px;
+    padding-bottom:10px;
+    margin-bottom:10px;
+    border-bottom:1px solid #eef3fb;
+}
+
+.ag-dia-topo strong{
+    color:#0f172a;
+    font-size:16px;
+}
+
+.ag-dia-topo span{
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.ag-dia-topo em{
+    margin-left:auto;
+    background:#2563eb;
+    color:white;
+    font-style:normal;
+    font-size:10px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:10px;
+    text-transform:uppercase;
+}
+
+.ag-aula{
+    background:#eff6ff;
+    border-left:4px solid #2563eb;
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:8px;
+}
+
+.ag-hora{
+    display:block;
+    color:#1e3a8a;
+    font-size:16px;
+    font-weight:700;
+}
+
+.ag-treino{
+    display:block;
+    color:#334155;
+    font-size:13px;
+    font-weight:600;
+    margin-top:2px;
+}
+
+.ag-prof{
+    display:block;
+    color:#64748b;
+    font-size:11px;
+    margin-top:2px;
+}
+
+.ag-livre{
+    color:#cbd5e1;
+    font-size:13px;
+    text-align:center;
+    padding:14px 0;
+}
+
+/* ---------- vazio ---------- */
+
+.ag-vazio{
+    background:white;
+    border-radius:16px;
+    padding:50px 20px;
+    text-align:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+.ag-vazio i{
+    font-size:44px;
+    color:#bfdbfe;
+    margin-bottom:12px;
+}
+
+.ag-vazio h3{
+    color:#334155;
+    font-size:20px;
+    margin-bottom:6px;
+}
+
+.ag-vazio p{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+/* ---------- celular ---------- */
+
+@media (max-width:700px){
+    .ag-proxima{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .ag-semana{
+        grid-template-columns:1fr;
+    }
+}

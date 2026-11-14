@@ -1,16 +1,95 @@
 {% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/agenda/agenda_aluno.css' %}">
+{% endblock %}
+
 {% block main %}
+{% with p=request.user.pessoa_usuario %}
 
-<h2>Minhas Aulas</h2>
+<div class="ag-page">
 
-{% for h in horarios %}
-<div class="linha">
-    <strong>{{ h.get_dia_semana_display }}</strong>
-    às {{ h.horario|time:"H:i" }}
-    com {{ h.professor.nome }}
+    <div class="ag-topo">
+        <div>
+            <h2>Minhas Aulas</h2>
+            <p>
+                {% if p.professor %}
+                    Com o professor <strong>{{ p.professor.nome }}</strong>
+                {% else %}
+                    Sua agenda semanal de aulas
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="ag-resumo">
+            <strong>{{ total_aulas }}</strong>
+            <span>aula{{ total_aulas|pluralize }} por semana</span>
+        </div>
+    </div>
+
+    {% if total_aulas == 0 %}
+
+    <div class="ag-vazio">
+        <i class="fas fa-calendar-xmark"></i>
+        <h3>Nenhuma aula agendada</h3>
+        <p>Fale com o seu professor para marcar os seus horários.</p>
+    </div>
+
+    {% else %}
+
+    {% if proxima_aula %}
+    {% with h=proxima_aula.horario %}
+    <section class="ag-proxima">
+        <div class="ag-proxima-icone">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+
+        <div class="ag-proxima-info">
+            <span class="ag-rotulo">Próxima aula</span>
+            <h3>{{ proxima_aula.quando }}, {{ h.horario|time:"H:i" }}</h3>
+            <p>
+                <i class="fas fa-dumbbell"></i>
+                {{ h.treino.nome_treino|default:"Treino a definir" }}
+                &nbsp;·&nbsp;
+                <i class="fas fa-user"></i>
+                Prof. {{ h.professor.nome }}
+            </p>
+        </div>
+    </section>
+    {% endwith %}
+    {% endif %}
+
+    <div class="ag-semana">
+        {% for dia in semana %}
+        <div class="ag-dia{% if dia.eh_hoje %} hoje{% endif %}">
+
+            <div class="ag-dia-topo">
+                <strong>{{ dia.abreviado }}</strong>
+                <span>{{ dia.data|date:"d/m" }}</span>
+                {% if dia.eh_hoje %}
+                <em>Hoje</em>
+                {% endif %}
+            </div>
+
+            {% for h in dia.horarios %}
+            <div class="ag-aula">
+                <span class="ag-hora">{{ h.horario|time:"H:i" }}</span>
+                <span class="ag-treino">{{ h.treino.nome_treino|default:"Treino a definir" }}</span>
+                <span class="ag-prof">Prof. {{ h.professor.nome }}</span>
+            </div>
+            {% empty %}
+            <p class="ag-livre">Sem aula</p>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+
 </div>
-{% empty %}
-<p>Você ainda não tem aulas agendadas. Fale com seu professor.</p>
-{% endfor %}
 
+{% endwith %}
 {% endblock %}

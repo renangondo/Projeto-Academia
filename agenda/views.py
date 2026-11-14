@@ -2,6 +2,7 @@ from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
+from .utils import montar_semana, proxima_aula
 
 from exercicio.models import Treino
 from .models import HorarioAula
@@ -57,6 +58,15 @@ class AgendaAlunoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         return HorarioAula.objects.filter(
             aluno=self.request.user.pessoa_usuario
         ).select_related('professor', 'treino')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        horarios = context['horarios']
+        context['semana'] = montar_semana(horarios)
+        context['proxima_aula'] = proxima_aula(horarios)
+        context['total_aulas'] = len(horarios)
+        return context
 
 
 ############################## UPDATE #########################################
