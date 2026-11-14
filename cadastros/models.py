@@ -84,6 +84,29 @@ class Pessoa(Auditoria):
             self.data_nascimento.month, self.data_nascimento.day
         )
         return hoje.year - self.data_nascimento.year - (0 if ja_fez_aniversario else 1)
+    
+    @property
+    def cpf_formatado(self):
+        c = self.cpf or ''
+        if len(c) != 11:
+            return c
+        return f"{c[:3]}.{c[3:6]}.{c[6:9]}-{c[9:]}"
+
+    @property
+    def cpf_mascarado(self):
+        c = self.cpf or ''
+        if len(c) != 11:
+            return c
+        return f"***.{c[3:6]}.{c[6:9]}-**"
+
+    @property
+    def telefone_formatado(self):
+        t = ''.join(ch for ch in (self.telefone or '') if ch.isdigit())
+        if len(t) == 11:
+            return f"({t[:2]}) {t[2:7]}-{t[7:]}"
+        if len(t) == 10:
+            return f"({t[:2]}) {t[2:6]}-{t[6:]}"
+        return self.telefone or ''
 
 
 class TransferenciaAluno(Auditoria):

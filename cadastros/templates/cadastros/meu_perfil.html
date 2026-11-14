@@ -23,68 +23,66 @@
         <div class="perfil-grid">
             <div>
                 <span>CPF</span>
-                <strong>{{ p.cpf|slice:":3" }}.{{ p.cpf|slice:"3:6" }}.{{ p.cpf|slice:"6:9" }}-{{ p.cpf|slice:"9:"
-                    }}</strong>
+                <strong>{{ p.cpf_formatado }}</strong>
             </div>
             <div>
                 <span>Telefone</span>
-                <strong>{{ p.telefone }}</strong>
+                <strong>{{ p.telefone_formatado }}</strong>
             </div>
-            <div>
-                <span>Idade</span>
-                <strong>
-                    {% if p.idade is not None %}
-                    {{ p.idade }} anos
-                    {% else %}
-                    -
-                    {% endif %}
-                </strong>
-            </div>
-            <div>
-                <span>Nascimento</span>
-                <strong>{{ p.data_nascimento|date:"d/m/Y"|default:"-" }}</strong>
-            </div>
-            <div>
-                <span>Cidade</span>
-                <strong>{{ p.cidade }}</strong>
-            </div>
-
-            {% if p.tipo == 'ALUNO' %}
-            <div>
-                <span>Nível</span>
-                <strong>{{ p.get_nivel_display|default:"-" }}</strong>
-            </div>
-            <div>
-                <span>Professor</span>
-                <strong>{{ p.professor.nome|default:"-" }}</strong>
-            </div>
-            <div class="largo">
-                <span>Objetivo</span>
-                <strong>{{ p.objetivo|default:"-" }}</strong>
-            </div>
-            {% endif %}
+            <span>Idade</span>
+            <strong>
+                {% if p.idade is not None %}
+                {{ p.idade }} anos
+                {% else %}
+                -
+                {% endif %}
+            </strong>
+        </div>
+        <div>
+            <span>Nascimento</span>
+            <strong>{{ p.data_nascimento|date:"d/m/Y"|default:"-" }}</strong>
+        </div>
+        <div>
+            <span>Cidade</span>
+            <strong>{{ p.cidade }}</strong>
         </div>
 
-        <div class="perfil-acoes">
-            <a href="{% url 'alterar-senha' %}" class="btn-perfil">
-                <i class="fas fa-key"></i>
-                Alterar senha
-            </a>
-
-            {% if p.tipo == 'ALUNO' %}
-            <a href="{% url 'editar-aluno' p.pk %}" class="btn-perfil secundario">
-                <i class="fas fa-pen"></i>
-                Editar meus dados
-            </a>
-            {% elif p.tipo == 'PROFESSOR' %}
-            <a href="{% url 'editar-professor' p.pk %}" class="btn-perfil secundario">
-                <i class="fas fa-pen"></i>
-                Editar meus dados
-            </a>
-            {% endif %}
+        {% if p.tipo == 'ALUNO' %}
+        <div>
+            <span>Nível</span>
+            <strong>{{ p.get_nivel_display|default:"-" }}</strong>
         </div>
-
+        <div>
+            <span>Professor</span>
+            <strong>{{ p.professor.nome|default:"-" }}</strong>
+        </div>
+        <div class="largo">
+            <span>Objetivo</span>
+            <strong>{{ p.objetivo|default:"-" }}</strong>
+        </div>
+        {% endif %}
     </div>
+
+    <div class="perfil-acoes">
+        <a href="{% url 'alterar-senha' %}" class="btn-perfil">
+            <i class="fas fa-key"></i>
+            Alterar senha
+        </a>
+
+        {% if p.tipo == 'ALUNO' %}
+        <a href="{% url 'editar-aluno' p.pk %}" class="btn-perfil secundario">
+            <i class="fas fa-pen"></i>
+            Editar meus dados
+        </a>
+        {% elif p.tipo == 'PROFESSOR' %}
+        <a href="{% url 'editar-professor' p.pk %}" class="btn-perfil secundario">
+            <i class="fas fa-pen"></i>
+            Editar meus dados
+        </a>
+        {% endif %}
+    </div>
+
+</div>
 </div>
 
 {% endwith %}
