@@ -1,0 +1,124 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/historico_cargas.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="hc-page">
+
+    <div class="hc-topo">
+        <div>
+            {% if not is_aluno %}
+            <a href="{% url 'detalhe-aluno' aluno.pk %}" class="hc-voltar">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para o aluno
+            </a>
+            {% endif %}
+            <h2>Histórico de cargas</h2>
+            <p>{{ aluno.nome }}</p>
+        </div>
+
+        {% if filtro %}
+        <a href="{% url 'historico-cargas' aluno.pk %}" class="hc-btn">
+            Ver todos os exercícios
+        </a>
+        {% endif %}
+    </div>
+
+    {% if cartoes %}
+
+    <div class="hc-grid">
+        {% for item in cartoes %}
+        <section class="hc-card">
+
+            <div class="hc-card-topo">
+                <div>
+                    <h3>{{ item.exercicio.nome }}</h3>
+                    <span>{{ item.exercicio.categoria.nome }}</span>
+                </div>
+
+                <em class="hc-variacao hc-{{ item.sentido }}">
+                    {% if item.sentido == 'subiu' %}
+                        <i class="fas fa-arrow-up"></i>
+                    {% elif item.sentido == 'desceu' %}
+                        <i class="fas fa-arrow-down"></i>
+                    {% else %}
+                        <i class="fas fa-minus"></i>
+                    {% endif %}
+
+                    {% if item.sentido == 'igual' %}
+                        sem variação
+                    {% else %}
+                        {{ item.diferenca|floatformat:"-1" }} kg
+                        {% if item.percentual %}
+                            ({{ item.percentual|floatformat:"-1" }}%)
+                        {% endif %}
+                    {% endif %}
+                </em>
+            </div>
+
+            <div class="hc-resumo">
+                <div>
+                    <span>Início</span>
+                    <strong>{{ item.inicial|floatformat:"-1" }} kg</strong>
+                </div>
+                <div>
+                    <span>Atual</span>
+                    <strong>{{ item.atual|floatformat:"-1" }} kg</strong>
+                </div>
+                <div>
+                    <span>Registros</span>
+                    <strong>{{ item.total }}</strong>
+                </div>
+            </div>
+
+            <div class="hc-grafico">
+                <canvas id="grafico-carga-{{ item.exercicio.pk }}"></canvas>
+            </div>
+
+            <ul class="hc-lista">
+                {% for r in item.recentes %}
+                <li>
+                    <span class="hc-data">{{ r.data|date:"d/m/Y" }}</span>
+                    <strong>{{ r.carga|floatformat:"-1" }} kg</strong>
+                    <span class="hc-quem">{{ r.registrado_por.pessoa_usuario.nome|default:"-" }}</span>
+                    <a href="{% url 'excluir-carga' r.pk %}" class="hc-del" title="Excluir registro">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% if not filtro and item.total > 5 %}
+            <a href="?exercicio={{ item.exercicio.pk }}" class="hc-mais">Ver todos os registros</a>
+            {% endif %}
+
+        </section>
+        {% endfor %}
+    </div>
+
+    {% else %}
+
+    <div class="hc-vazio">
+        <i class="fas fa-weight-hanging"></i>
+        <h3>Nenhuma carga registrada ainda</h3>
+        <p>
+            As cargas aparecem aqui quando o professor define o peso de um exercício no treino,
+            ou quando você registra a carga usada pelo ícone de halter na tela do treino.
+        </p>
+        <a href="{% url 'listar-treino' %}" class="hc-btn">Ver treinos</a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{{ graficos_json|json_script:"dados-cargas" }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{% static 'js/exercicio/historico_cargas.js' %}"></script>
+
+{% endblock %}

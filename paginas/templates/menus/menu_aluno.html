@@ -35,6 +35,11 @@
                 <i class="fas fa-ruler"></i>
                 Minhas Medidas
             </a>
+            
+            <a href="{% url 'historico-cargas' request.user.pessoa_usuario.pk %}">
+                <i class="fas fa-weight-hanging"></i>
+                Histórico de Cargas
+            </a>
 
             <a href="{% url 'minha-agenda-aluno' %}">
                 <i class="fas fa-calendar-days"></i>

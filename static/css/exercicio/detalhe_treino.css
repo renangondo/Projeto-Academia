@@ -189,3 +189,32 @@
     font-size:12px;
     line-height:1.6;
 }
+
+.acoes-carga{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn-carga{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    background:#0f766e;
+    color:#fff;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.btn-carga:hover{
+    background:#115e59;
+}
+
+.table-list th.col-acao{
+    width:1%;
+    white-space:nowrap;
+    text-align:center;
+}

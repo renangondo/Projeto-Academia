@@ -64,3 +64,20 @@ class ExercicioTreino(Auditoria):
         return "({}) {} {} Séries {} Rep".format(self.treino, self.exercicio, self.series, self.repeticoes)
 
 
+###########################################################################################
+class HistoricoCarga(Auditoria):
+    aluno = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name="historico_cargas")
+    exercicio = models.ForeignKey(Exercicio, on_delete=models.PROTECT, related_name="historico_cargas")
+    carga = models.FloatField(verbose_name="Carga (kg)")
+    data = models.DateField(default=timezone.localdate, verbose_name="Data")
+    registrado_por = models.ForeignKey(
+        "auth.User", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="cargas_registradas",
+    )
+
+    class Meta:
+        ordering = ["data", "id"]
+        unique_together = ("aluno", "exercicio", "data")
+
+    def __str__(self):
+        return f"{self.aluno.nome} - {self.exercicio.nome}: {self.carga} kg ({self.data})"

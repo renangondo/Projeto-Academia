@@ -15,7 +15,9 @@ from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario
 from .compartilhar import montar_link_whatsapp
 from django.http import HttpResponse
 from django.utils.text import slugify
-
+from django.views.generic import TemplateView
+from .cargas import registrar_carga
+from .models import HistoricoCarga   # junto do import de models que você já tem
 from .pdf import gerar_pdf_treino
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -145,7 +147,13 @@ class ExercicioTreinoCreate(ExerciciosPorCategoriaMixin, LoginRequiredMixin, Gro
     def form_valid(self, form):
         form.instance.treino = self.treino
         form.instance.cadastrado_por = self.request.user.pessoa_usuario
-        return super().form_valid(form)
+
+        response = super().form_valid(form)
+
+        registrar_carga(
+            self.treino.aluno, self.object.exercicio, self.object.peso_atual, self.request.user
+        )
+        return response
     
     def get_success_url(self):
         return reverse_lazy('detalhe-treino', kwargs={'pk': self.kwargs['pk']})
@@ -193,6 +201,18 @@ class ExercicioTreinoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupReq
 
     def get_success_url(self):
         return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
+
+    def form_valid(self, form):
+        mudou = 'peso_atual' in form.changed_data or 'exercicio' in form.changed_data
+
+        response = super().form_valid(form)
+
+        if mudou:
+            registrar_carga(
+                self.object.treino.aluno, self.object.exercicio,
+                self.object.peso_atual, self.request.user
+            )
+        return response
 ############################## DELETE #########################################
 
 class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
@@ -353,6 +373,108 @@ class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         context['ordem'] = self.request.GET.get('ordem', 'recentes')
         return context
 
+#################################### CARGA #######################################################
+class RegistrarCarga(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+    campo_aluno = 'treino__aluno'
+    model = ExercicioTreino
+    fields = ['peso_atual']
+    template_name = 'registrar_carga.html'
+    group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['peso_atual'].label = 'Carga utilizada (kg)'
+        return form
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        registrar_carga(
+            self.object.treino.aluno, self.object.exercicio,
+            self.object.peso_atual, self.request.user
+        )
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
+
+
+class HistoricoCargaDelete(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DeleteView):
+    campo_aluno = 'aluno'
+    model = HistoricoCarga
+    template_name = 'form-excluir.html'
+    group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get_success_url(self):
+        return reverse_lazy('historico-cargas', kwargs={'pk': self.object.aluno_id})
+
+
+class HistoricoCargasView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    template_name = 'historico_cargas.html'
+    group_required = ["Professor", "Administrador", "Aluno"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        aluno = get_object_or_404(alunos_do_usuario(self.request.user), pk=self.kwargs['pk'])
+
+        registros = HistoricoCarga.objects.filter(aluno=aluno).select_related(
+            'exercicio', 'exercicio__categoria', 'registrado_por'
+        ).order_by('data', 'id')
+
+        # ?exercicio=ID mostra só um exercício, com todos os registros
+        filtro = self.request.GET.get('exercicio')
+        if filtro and filtro.isdigit():
+            registros = registros.filter(exercicio_id=filtro)
+        else:
+            filtro = None
+
+        grupos = {}
+        for registro in registros:
+            grupos.setdefault(registro.exercicio_id, []).append(registro)
+
+        cartoes = []
+        graficos = []
+
+        for regs in grupos.values():
+            exercicio = regs[0].exercicio
+            inicial, atual = regs[0].carga, regs[-1].carga
+            diferenca = round(atual - inicial, 1)
+
+            if diferenca > 0:
+                sentido = 'subiu'
+            elif diferenca < 0:
+                sentido = 'desceu'
+            else:
+                sentido = 'igual'
+
+            percentual = round(abs(diferenca) / inicial * 100, 1) if inicial else None
+            recentes = list(reversed(regs)) if filtro else list(reversed(regs[-5:]))
+
+            cartoes.append({
+                'exercicio': exercicio,
+                'inicial': inicial,
+                'atual': atual,
+                'diferenca': abs(diferenca),
+                'percentual': percentual,
+                'sentido': sentido,
+                'total': len(regs),
+                'recentes': recentes,
+            })
+            graficos.append({
+                'id': exercicio.pk,
+                'serie': [
+                    {'data': r.data.strftime('%d/%m/%Y'), 'carga': r.carga}
+                    for r in regs[-20:]
+                ],
+            })
+
+        cartoes.sort(key=lambda c: c['exercicio'].nome)
+
+        context['aluno'] = aluno
+        context['cartoes'] = cartoes
+        context['graficos_json'] = graficos
+        context['filtro'] = filtro
+        return context
 ##################################### PDF ###########################################
 class TreinoPDFView(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Treino
