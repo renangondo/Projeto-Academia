@@ -1,0 +1,22 @@
+th.ordenavel {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+th.ordenavel:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
+.ordenar-icone {
+    margin-left: 6px;
+    font-size: 0.8em;
+    opacity: 0.4;
+}
+
+th.ordenavel:hover .ordenar-icone,
+th.ordenavel[data-direcao="asc"] .ordenar-icone,
+th.ordenavel[data-direcao="desc"] .ordenar-icone {
+    opacity: 1;
+}

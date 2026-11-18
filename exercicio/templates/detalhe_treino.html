@@ -51,7 +51,7 @@
     </div>
 
     <div class="table-container">
-        <table class="table-list">
+        <table class="table-list" data-ordenavel>
             <thead>
                 <tr>
                     <th>Exercício</th>
@@ -60,8 +60,8 @@
                     <th>Repetições</th>
                     <th>Descanso</th>
                     <th>Peso Atual</th>
-                    <th class="col-acao">Cargas</th>
-                    {% if not is_aluno %}<th class="col-acao">Ações</th>{% endif %}
+                    <th class="col-acao" data-ordenar="false">Cargas</th>
+                    {% if not is_aluno %}<th class="col-acao" data-ordenar="false">Ações</th>{% endif %}
                 </tr>
             </thead>
 
