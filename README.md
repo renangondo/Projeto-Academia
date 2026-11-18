@@ -75,7 +75,30 @@ O comando só roda em banco **sem pessoas cadastradas** (ele recusa se já houve
 - Medidas corporais mensais dos últimos 6 meses, histórico semanal de cargas e agenda de aulas
 - 2 solicitações de transferência de aluno (uma pendente e uma recusada)
 
-Ao final, o comando imprime os CPFs. **Todos fazem login com usuário = CPF e senha = CPF.** Os dados são fictícios; os CPFs gerados têm dígitos verificadores válidos, mas não pertencem a pessoas reais.
+Ao final, o comando imprime os CPFs. **Todos fazem login com usuário = CPF e senha = CPF** (somente números). Os usuários do seed não são obrigados a trocar a senha no primeiro acesso. Os dados são fictícios; os CPFs gerados têm dígitos verificadores válidos, mas não pertencem a pessoas reais.
+
+### Acessos para teste
+
+Com a semente padrão, os CPFs são sempre os mesmos:
+
+| Perfil | Nome | Usuário | Senha |
+|---|---|---|---|
+| Administrador | Marcos Antônio Ribeiro | `12345713747` | `12345713747` |
+| Professor | Fernanda Cristina Lopes | `12345827408` | `12345827408` |
+| Professor | Ricardo Almeida Tavares | `12345941103` | `12345941103` |
+| Professor | Juliana Matos Ferreira | `12346054810` | `12346054810` |
+| Aluno | Lucas Gabriel Souza | `12346168580` | `12346168580` |
+| Aluno | Mariana Oliveira Costa | `12346282286` | `12346282286` |
+| Aluno | Pedro Henrique Lima | `12346395994` | `12346395994` |
+| Aluno | Ana Beatriz Santos | `12346509671` | `12346509671` |
+| Aluno | Carlos Eduardo Pereira | `12346623377` | `12346623377` |
+| Aluno | Camila Rodrigues Alves | `12346737038` | `12346737038` |
+| Aluno | Rafael Martins Barbosa | `12346850780` | `12346850780` |
+| Aluno | Larissa Fernandes Rocha | `12346964441` | `12346964441` |
+| Aluno | Gustavo Nunes Carvalho | `12347078100` | `12347078100` |
+| Aluno | Beatriz Gomes Araújo | `12347191853` | `12347191853` |
+
+Cada aluno pertence a um professor: Fernanda (Lucas, Ana, Rafael e Beatriz), Ricardo (Mariana, Carlos e Larissa) e Juliana (Pedro, Camila e Gustavo).
 
 ## Executar
 
