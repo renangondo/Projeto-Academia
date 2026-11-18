@@ -10,7 +10,7 @@
 <div class="form-page">
     <div class="form-card">
 
-        <h2>Cadastrar</h2>
+        <h2>{% if object %}Editar{% else %}Cadastrar{% endif %}</h2>
         <p>Preencha todos os campos obrigatórios</p>
 
         <form action="" method="POST">
@@ -18,7 +18,7 @@
 
             {{ form.as_p }}
 
-            <button type="submit" class="btn-salvar">Cadastrar</button>
+            <button type="submit" class="btn-salvar">{% if object %}Salvar alterações{% else %}Cadastrar{% endif %}</button>
         </form>
 
     </div>

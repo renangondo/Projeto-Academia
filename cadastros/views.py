@@ -8,7 +8,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
@@ -234,7 +234,9 @@ class AlunoUpdate(DataNascimentoMixin, SomenteDoMeuAlunoMixin, LoginRequiredMixi
     group_required = ["Administrador", "Professor", "Aluno"]
     fields = ['nome', 'data_nascimento', 'telefone', 'objetivo', 'sexo', 'nivel', 'cidade']
     template_name = 'cadastros/form.html'
-    success_url = reverse_lazy('inicio')
+
+    def get_success_url(self):
+        return reverse('detalhe-aluno', args=[self.object.pk])
 
 
 ############################## DELETE #########################################
