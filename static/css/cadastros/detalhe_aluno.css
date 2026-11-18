@@ -60,54 +60,25 @@
     transform: translateY(-3px);
 }
 
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+.aluno-detalhe > .kpi-grid {
     margin-bottom: 35px;
 }
 
-.info-card {
+.section-title {
+    margin: 35px 0 18px;
+}
+
+.dados-pessoais {
     background: #ffffff;
     border-radius: 16px;
     padding: 24px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
-    transition: 0.25s;
-    position: relative;
-    overflow: hidden;
+    margin-bottom: 35px;
 }
 
-.info-card::before {
-    content: "";
-    width: 5px;
-    height: 100%;
-    background: linear-gradient(180deg, #2563eb, #38bdf8);
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.info-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.18);
-}
-
-.info-card span {
-    display: block;
-    color: #64748b;
-    font-size: 13px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.info-card strong {
-    color: #0f172a;
-    font-size: 18px;
-}
-
-.section-title {
-    margin: 35px 0 18px;
+.dados-pessoais .section-title {
+    margin: 0 0 18px;
 }
 
 .section-title h3 {
@@ -217,9 +188,8 @@
 }
 
 .medida-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 35px rgba(37, 99, 235, 0.18);
-    border-color: #bfdbfe;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
 }
 
 .medida-card-header {
@@ -380,7 +350,6 @@
 }
 
 @media (max-width: 1100px) {
-    .info-grid,
     .treino-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -397,7 +366,6 @@
         padding: 20px;
     }
 
-    .info-grid,
     .treino-grid {
         grid-template-columns: 1fr;
     }

@@ -24,34 +24,98 @@
         </div>
     </div>
 
-    <div class="info-grid">
+    <ul class="kpi-grid">
 
-        <div class="info-card">
-            <span>Idade</span>
-            <strong>
-                {% if aluno.idade is not None %}
-                {{ aluno.idade }} anos
-                {% else %}
-                -
-                {% endif %}
-            </strong>
+        <li class="kpi-card kpi-azul">
+            <span class="kpi-icone"><i class="fa-solid fa-hourglass-half"></i></span>
+            <div class="kpi-conteudo">
+                <span class="kpi-rotulo">Idade</span>
+                <strong class="kpi-valor">
+                    {% if aluno.idade is not None %}
+                    {{ aluno.idade }} anos
+                    {% else %}
+                    -
+                    {% endif %}
+                </strong>
+            </div>
+        </li>
+
+        <li class="kpi-card kpi-verde">
+            <span class="kpi-icone"><i class="fa-solid fa-bullseye"></i></span>
+            <div class="kpi-conteudo">
+                <span class="kpi-rotulo">Objetivo</span>
+                <strong class="kpi-valor">{{ aluno.objetivo|default:"-" }}</strong>
+            </div>
+        </li>
+
+        <li class="kpi-card kpi-roxo">
+            <span class="kpi-icone"><i class="fa-solid fa-signal"></i></span>
+            <div class="kpi-conteudo">
+                <span class="kpi-rotulo">Nível</span>
+                <strong class="kpi-valor">{{ aluno.get_nivel_display|default:"-" }}</strong>
+            </div>
+        </li>
+
+        <li class="kpi-card kpi-ciano">
+            <span class="kpi-icone"><i class="fa-solid fa-user-tie"></i></span>
+            <div class="kpi-conteudo">
+                <span class="kpi-rotulo">Professor</span>
+                <strong class="kpi-valor">{{ aluno.professor|default:"-" }}</strong>
+            </div>
+        </li>
+
+    </ul>
+
+    <div class="dados-pessoais">
+        <div class="section-title">
+            <h3>Dados pessoais</h3>
+            <p>Informações de cadastro do aluno</p>
         </div>
 
-        <div class="info-card">
-            <span>Objetivo</span>
-            <strong>{{ aluno.objetivo }}</strong>
-        </div>
-
-        <div class="info-card">
-            <span>Nível</span>
-            <strong>{{ aluno.get_nivel_display }}</strong>
-        </div>
-
-        <div class="info-card">
-            <span>Professor</span>
-            <strong>{{ aluno.professor }}</strong>
-        </div>
-
+        <ul class="kpi-grid">
+            <li class="kpi-card kpi-azul">
+                <span class="kpi-icone"><i class="fa-solid fa-id-card"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">CPF</span>
+                    <strong class="kpi-valor">{{ aluno.cpf_formatado|default:"-" }}</strong>
+                </div>
+            </li>
+            <li class="kpi-card kpi-verde">
+                <span class="kpi-icone"><i class="fa-solid fa-phone"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">Telefone</span>
+                    <strong class="kpi-valor">{{ aluno.telefone_formatado|default:"-" }}</strong>
+                </div>
+            </li>
+            <li class="kpi-card kpi-laranja">
+                <span class="kpi-icone"><i class="fa-solid fa-cake-candles"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">Data de nascimento</span>
+                    <strong class="kpi-valor">{{ aluno.data_nascimento|date:"d/m/Y"|default:"-" }}</strong>
+                </div>
+            </li>
+            <li class="kpi-card kpi-roxo">
+                <span class="kpi-icone"><i class="fa-solid fa-venus-mars"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">Sexo</span>
+                    <strong class="kpi-valor">{{ aluno.get_sexo_display|default:"-" }}</strong>
+                </div>
+            </li>
+            <li class="kpi-card kpi-rosa">
+                <span class="kpi-icone"><i class="fa-solid fa-location-dot"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">Cidade</span>
+                    <strong class="kpi-valor">{{ aluno.cidade|default:"-" }}</strong>
+                </div>
+            </li>
+            <li class="kpi-card kpi-ciano">
+                <span class="kpi-icone"><i class="fa-solid fa-calendar-check"></i></span>
+                <div class="kpi-conteudo">
+                    <span class="kpi-rotulo">Cadastrado em</span>
+                    <strong class="kpi-valor">{{ aluno.cadastrado_em|date:"d/m/Y" }}</strong>
+                </div>
+            </li>
+        </ul>
     </div>
 
     <div class="section-title">

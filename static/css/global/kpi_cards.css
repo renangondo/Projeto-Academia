@@ -1,0 +1,67 @@
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kpi-card {
+    --cor: #2563eb;
+    --cor-fundo: #dbeafe;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: 0.25s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.kpi-icone {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--cor-fundo);
+    color: var(--cor);
+    font-size: 18px;
+}
+
+.kpi-conteudo {
+    min-width: 0;
+}
+
+.kpi-rotulo {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.kpi-valor {
+    display: block;
+    color: #0f172a;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+.kpi-azul    { --cor: #2563eb; --cor-fundo: #dbeafe; }
+.kpi-verde   { --cor: #16a34a; --cor-fundo: #dcfce7; }
+.kpi-laranja { --cor: #ea580c; --cor-fundo: #ffedd5; }
+.kpi-roxo    { --cor: #7c3aed; --cor-fundo: #ede9fe; }
+.kpi-rosa    { --cor: #db2777; --cor-fundo: #fce7f3; }
+.kpi-ciano   { --cor: #0891b2; --cor-fundo: #cffafe; }
