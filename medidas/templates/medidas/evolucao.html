@@ -101,10 +101,9 @@
                             <td>{{ m.panturrilha_direita }} / {{ m.panturrilha_esquerda }}</td>
                             <td>{{ m.peito }} cm</td>
                             <td class="acoes-medida">
-                                <a href="{% url 'editar-medidas' m.pk %}" class="btn-mini editar"><i
-                                        class="fas fa-pen"></i></a>
-                                <a href="{% url 'excluir-medidas' m.pk %}" class="btn-mini excluir"><i
-                                        class="fas fa-trash"></i></a>
+                                {% url 'editar-medidas' m.pk as editar_url %}
+                                {% url 'excluir-medidas' m.pk as excluir_url %}
+                                {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
                             </td>
                         </tr>
                         {% endfor %}

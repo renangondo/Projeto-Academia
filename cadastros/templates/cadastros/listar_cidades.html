@@ -40,8 +40,9 @@
                     <td><span class="badge">{{ cidade.estado }}</span></td>
 
                     <td class="acoes">
-                        <a href="{% url 'editar-cidade' cidade.id %}" class="btn-editar">Editar</a>
-                        <a href="{% url 'excluir-cidade' cidade.id %}" class="btn-deletar">Excluir</a>
+                        {% url 'editar-cidade' cidade.id as editar_url %}
+                        {% url 'excluir-cidade' cidade.id as excluir_url %}
+                        {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
                     </td>
                 </tr>
                 {% empty %}

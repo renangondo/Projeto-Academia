@@ -76,8 +76,9 @@
                     <td>{{ aluno.professor.nome|default:"-" }}</td>
 
                     <td class="acoes">
-                        <a href="{% url 'editar-aluno' aluno.id %}" class="btn-editar">Editar</a>
-                        <a href="{% url 'excluir-aluno' aluno.id %}" class="btn-deletar">Excluir</a>
+                        {% url 'editar-aluno' aluno.id as editar_url %}
+                        {% url 'excluir-aluno' aluno.id as excluir_url %}
+                        {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
                     </td>
                 </tr>
 

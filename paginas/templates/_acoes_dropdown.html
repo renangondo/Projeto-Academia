@@ -1,0 +1,32 @@
+{% comment %}
+Uso: {% include '_acoes_dropdown.html' with editar_url=... excluir_url=... %}
+Opcionais: editar_label e excluir_label (padrão "Editar" e "Excluir"); excluir_bloqueado (texto de dica que mostra "Excluir" desativado quando não há excluir_url).
+Veja .github/skills/acoes-dropdown/SKILL.md.
+{% endcomment %}
+<div class="acoes-dropdown">
+    <button type="button" class="acoes-dropdown-toggle" aria-haspopup="menu" aria-expanded="false" aria-label="Ações">
+        <i class="fas fa-ellipsis-vertical"></i>
+    </button>
+    <ul class="acoes-dropdown-menu" role="menu">
+        {% if editar_url %}
+        <li role="none">
+            <a href="{{ editar_url }}" role="menuitem" class="acao-editar">
+                <i class="fas fa-pen"></i> {{ editar_label|default:"Editar" }}
+            </a>
+        </li>
+        {% endif %}
+        {% if excluir_url %}
+        <li role="none">
+            <a href="{{ excluir_url }}" role="menuitem" class="acao-excluir">
+                <i class="fas fa-trash"></i> {{ excluir_label|default:"Excluir" }}
+            </a>
+        </li>
+        {% elif excluir_bloqueado %}
+        <li role="none">
+            <span role="menuitem" aria-disabled="true" class="acao-excluir desativado" title="{{ excluir_bloqueado }}">
+                <i class="fas fa-trash"></i> {{ excluir_label|default:"Excluir" }}
+            </span>
+        </li>
+        {% endif %}
+    </ul>
+</div>

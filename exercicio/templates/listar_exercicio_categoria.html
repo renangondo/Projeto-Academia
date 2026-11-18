@@ -56,15 +56,9 @@
 
             {% if request.user.is_superuser or exercicio.cadastrado_por.usuario == request.user %}
             <div class="item-acoes">
-                <a href="{% url 'editar-exercicio' exercicio.pk %}" class="btn-editar">
-                    <i class="fas fa-pen"></i>
-                    Editar
-                </a>
-
-                <a href="{% url 'excluir-exercicio' exercicio.pk %}" class="btn-excluir">
-                    <i class="fas fa-trash"></i>
-                    Excluir
-                </a>
+                {% url 'editar-exercicio' exercicio.pk as editar_url %}
+                {% url 'excluir-exercicio' exercicio.pk as excluir_url %}
+                {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
             </div>
             {% endif %}
 

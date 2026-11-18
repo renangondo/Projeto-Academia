@@ -82,50 +82,6 @@
     gap:10px;
 }
 
-.btn-editar,
-.btn-excluir{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    text-decoration:none;
-    padding:8px 14px;
-    border-radius:8px;
-    font-size:13px;
-    font-weight:600;
-    transition:.2s;
-}
-
-.btn-editar{
-    background:#eaf2ff;
-    color:#0d6efd;
-}
-
-.btn-editar:hover{
-    background:#0d6efd;
-    color:white;
-}
-
-.btn-excluir{
-    background:#fdecea;
-    color:#dc3545;
-}
-
-.btn-excluir:hover{
-    background:#dc3545;
-    color:white;
-}
-
-.btn-excluir.desativado{
-    background:#f1f1f1;
-    color:#bbb;
-    cursor:not-allowed;
-}
-
-.btn-excluir.desativado:hover{
-    background:#f1f1f1;
-    color:#bbb;
-}
-
 .lista-vazio{
     padding:40px;
     text-align:center;

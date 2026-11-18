@@ -86,9 +86,8 @@
                     <span class="hc-data">{{ r.data|date:"d/m/Y" }}</span>
                     <strong>{{ r.carga|floatformat:"-1" }} kg</strong>
                     <span class="hc-quem">{{ r.registrado_por.pessoa_usuario.nome|default:"-" }}</span>
-                    <a href="{% url 'excluir-carga' r.pk %}" class="hc-del" title="Excluir registro">
-                        <i class="fas fa-trash"></i>
-                    </a>
+                    {% url 'excluir-carga' r.pk as excluir_url %}
+                    {% include '_acoes_dropdown.html' with excluir_url=excluir_url %}
                 </li>
                 {% endfor %}
             </ul>

@@ -1,0 +1,84 @@
+.acoes-dropdown {
+    display: inline-block;
+}
+
+.acoes-dropdown-toggle {
+    background: none;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 8px;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.acoes-dropdown-toggle:hover,
+.acoes-dropdown-toggle:focus-visible {
+    background: #f1f5f9;
+    outline: none;
+}
+
+/* Fixed: escapa de containers com overflow (tabelas e cards de lista). O JS posiciona o menu ao abrir. */
+.acoes-dropdown-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    min-width: 150px;
+    margin: 4px 0 0;
+    padding: 6px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.acoes-dropdown.aberto .acoes-dropdown-menu {
+    display: block;
+}
+
+.acoes-dropdown-menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: #0f172a;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.acoes-dropdown-menu a:hover,
+.acoes-dropdown-menu a:focus-visible {
+    background: #f1f5f9;
+}
+
+.acoes-dropdown-menu .desativado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: not-allowed;
+    white-space: nowrap;
+}
+
+.acoes-dropdown-menu .desativado i {
+    color: #cbd5e1;
+}
+
+.acoes-dropdown-menu i {
+    width: 16px;
+    text-align: center;
+}
+
+.acoes-dropdown-menu .acao-editar i {
+    color: #2563eb;
+}
+
+.acoes-dropdown-menu .acao-excluir i {
+    color: #dc2626;
+}

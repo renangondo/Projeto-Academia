@@ -44,8 +44,9 @@
                     <td><span class="badge">{{ professor.cidade }}</span></td>
 
                     <td class="acoes">
-                        <a href="{% url 'editar-professor' professor.id %}" class="btn-editar">Editar</a>
-                        <a href="{% url 'excluir-professor' professor.id %}" class="btn-deletar">Excluir</a>
+                        {% url 'editar-professor' professor.id as editar_url %}
+                        {% url 'excluir-professor' professor.id as excluir_url %}
+                        {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
                     </td>
                 </tr>
                 {% empty %}

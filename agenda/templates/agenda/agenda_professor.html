@@ -26,10 +26,12 @@
     <div class="linha">
         <span>{{ h.horario|time:"H:i" }}</span>
         <strong>{{ h.aluno.nome }}</strong>
-        <a href="{% url 'editar-horario-treino' h.pk %}" class="link-treino">
+        <span class="treino-nome">
             {% if h.treino %}{{ h.treino.nome_treino }}{% else %}Definir treino{% endif %}
-        </a>
-        <a href="{% url 'excluir-horario' h.pk %}">Remover</a>
+        </span>
+        {% url 'editar-horario-treino' h.pk as editar_url %}
+        {% url 'excluir-horario' h.pk as excluir_url %}
+        {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url excluir_label="Remover" %}
     </div>
     {% endfor %}
 </div>

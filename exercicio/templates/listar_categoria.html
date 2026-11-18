@@ -37,22 +37,11 @@
             </a>
 
             <div class="item-acoes">
-                <a href="{% url 'editar-categoria' categoria.pk %}" class="btn-editar">
-                    <i class="fas fa-pen"></i>
-                    Editar
-                </a>
-
+                {% url 'editar-categoria' categoria.pk as editar_url %}
                 {% if categoria.qtd_exercicios == 0 %}
-                <a href="{% url 'excluir-categoria' categoria.pk %}" class="btn-excluir">
-                    <i class="fas fa-trash"></i>
-                    Excluir
-                </a>
-                {% else %}
-                <span class="btn-excluir desativado" title="Não é possível excluir: há exercícios nesta categoria">
-                    <i class="fas fa-trash"></i>
-                    Excluir
-                </span>
+                {% url 'excluir-categoria' categoria.pk as excluir_url %}
                 {% endif %}
+                {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url excluir_bloqueado="Não é possível excluir: há exercícios nesta categoria" %}
             </div>
 
         </div>

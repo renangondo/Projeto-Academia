@@ -89,14 +89,9 @@
 
                     {% if not is_aluno %}
                     <td>
-                        <div class="acoes">
-                            <a href="{% url 'editar-exercicioTreino' item.id %}" class="btn-editar">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <a href="{% url 'excluir-exercicioTreino' item.id %}" class="btn-excluir">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </div>
+                        {% url 'editar-exercicioTreino' item.id as editar_url %}
+                        {% url 'excluir-exercicioTreino' item.id as excluir_url %}
+                        {% include '_acoes_dropdown.html' with editar_url=editar_url excluir_url=excluir_url %}
                     </td>
                     {% endif %}
                 </tr>

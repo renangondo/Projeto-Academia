@@ -185,19 +185,6 @@
     font-size:12px;
 }
 
-.hc-del{
-    color:#cbd5e1;
-    text-decoration:none;
-    padding:4px 6px;
-    border-radius:6px;
-    transition:.2s;
-}
-
-.hc-del:hover{
-    color:#dc3545;
-    background:#fdecea;
-}
-
 .hc-mais{
     display:inline-block;
     margin-top:12px;
