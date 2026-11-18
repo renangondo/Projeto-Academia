@@ -22,8 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/paginas/dashboard/dashboard_professor.css' %}">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <!-- CSS ESPECÍFICO -->
     {% block css %}
@@ -33,94 +32,100 @@
 
 <body>
 
-<div class="layout">
+    <div class="layout">
 
-    {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated %}
 
         {% if is_admin %}
-            {% include 'menus/menu_admin.html' %}
+        {% include 'menus/menu_admin.html' %}
 
         {% elif is_professor %}
-            {% include 'menus/menu_professor.html' %}
+        {% include 'menus/menu_professor.html' %}
 
         {% elif is_aluno %}
-            {% include 'menus/menu_aluno.html' %}
+        {% include 'menus/menu_aluno.html' %}
 
         {% endif %}
 
-    {% endif %}
+        {% endif %}
 
-    <div class="main-area">
+        <div class="main-area">
 
-        <!-- TOPO -->
-        <header class="topbar">
+            <!-- TOPO -->
+            <header class="topbar">
 
-            <div class="titulo">
+                <div class="titulo">
 
-                <h2>
+                    {% if request.user.is_authenticated %}
+                    {% if request.resolver_match.url_name != 'inicio' %}
+                    <a href="{% url 'inicio' %}" id="btn-voltar" class="btn-voltar-topo" title="Voltar">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    {% endif %}
+                    {% endif %}
 
-                    {% block titulo %}
+                    <h2>
+                        {% block titulo %}
                         RG - Sistema de Gerenciamento de Treino
-                    {% endblock %}
-
-                </h2>
-
-            </div>
-
-            {% if request.user.is_authenticated %}
-
-            <div class="usuario">
-
-                <i class="fas fa-circle-user"></i>
-
-                <div>
-
-                    <strong>
-
-                        {{ request.user.pessoa_usuario.nome }}
-
-                    </strong>
-
-                    <small>
-
-                        {% if is_admin %}
-
-                            Administrador
-
-                        {% elif is_professor %}
-
-                            Professor
-
-                        {% elif is_aluno %}
-
-                            Aluno
-
-                        {% endif %}
-
-                    </small>
+                        {% endblock %}
+                    </h2>
 
                 </div>
 
-            </div>
+                {% if request.user.is_authenticated %}
 
-            {% endif %}
+                <div class="usuario">
 
-        </header>
+                    <i class="fas fa-circle-user"></i>
 
-        <!-- CONTEÚDO -->
+                    <div>
 
-        <main class="conteudo">
+                        <strong>
 
-            {% block main %}
+                            {{ request.user.pessoa_usuario.nome }}
 
-            {% endblock %}
+                        </strong>
 
-        </main>
+                        <small>
+
+                            {% if is_admin %}
+
+                            Administrador
+
+                            {% elif is_professor %}
+
+                            Professor
+
+                            {% elif is_aluno %}
+
+                            Aluno
+
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </header>
+
+            <!-- CONTEÚDO -->
+
+            <main class="conteudo">
+
+                {% block main %}
+
+                {% endblock %}
+
+            </main>
+
+        </div>
 
     </div>
-
-</div>
-
+    <script src="{% static 'js/global/voltar.js' %}"></script>
 </body>
 
 </html>

@@ -236,6 +236,17 @@ nav{
 
 }
 
+a.logo{
+    text-decoration:none;
+    color:inherit;
+    cursor:pointer;
+    transition:.2s;
+}
+
+a.logo:hover{
+    background:rgba(255,255,255,.08);
+}
+
 /* ==========================================
    RESPONSIVO
 ========================================== */
