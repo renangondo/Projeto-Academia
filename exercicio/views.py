@@ -1,6 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-
+from django import forms
 from cadastros.models import Pessoa
 from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView, ListView
@@ -40,6 +40,18 @@ def exercicios_visiveis(user):
     ).distinct()
 
 ############################## A MAIS #########################################
+class DatasTreinoMixin:
+    """Mostra o seletor de data do navegador nos campos de início e encerramento."""
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        for campo in ('data_inicio', 'data_fim'):
+            if campo in form.fields:
+                form.fields[campo].widget = forms.DateInput(
+                    attrs={'type': 'date'}, format='%Y-%m-%d'
+                )
+        return form
+    
 class SomenteMeusExerciciosMixin:
     def get_queryset(self):
         qs = super().get_queryset()
@@ -58,7 +70,7 @@ class CategoriaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     group_required = ["Administrador"]
 
 
-class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
+class TreinoCreate(DatasTreinoMixin, LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Treino
     fields = ['aluno', 'nome_treino', 'data_inicio', 'data_fim', 'descricao']
     template_name = 'form.html'
@@ -72,8 +84,11 @@ class TreinoCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
                 initial['aluno'] = aluno
             except Pessoa.DoesNotExist:
                 initial['aluno'] = None
-                        
+
+        initial.setdefault('data_inicio', timezone.localdate())
+        
         return initial
+                    
     
     def form_valid(self, form):
         form.instance.cadastrado_por = self.request.user.pessoa_usuario
@@ -187,7 +202,7 @@ class ExercicioUpdate(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequi
     def get_success_url(self):
         return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
 
-class ExercicioTreinoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ExercicioTreinoUpdate(DatasTreinoMixin, SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     campo_aluno = 'treino__aluno'
     model = ExercicioTreino
     fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']   # sem 'treino'

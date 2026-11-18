@@ -1,7 +1,7 @@
 from datetime import timezone
 from django.utils import timezone
 from django.db import models
-
+from django.core.exceptions import ValidationError
 from cadastros.models import Auditoria, Pessoa
 
 # Create your models here.
@@ -23,6 +23,12 @@ class Treino(Auditoria):
 
     def __str__(self):
         return "{} Treino: {}".format(self.aluno, self.nome_treino)
+
+    def clean(self):
+        if self.data_inicio and self.data_fim and self.data_fim < self.data_inicio:
+            raise ValidationError(
+                {'data_fim': 'A data de encerramento não pode ser anterior à data de início.'}
+            )
 
     @property
     def situacao(self):
