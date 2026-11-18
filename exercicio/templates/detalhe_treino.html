@@ -77,12 +77,14 @@
 
                     <td>
                         <div class="acoes-carga">
-                            <a href="{% url 'registrar-carga' item.id %}" class="btn-carga" title="Registrar carga">
+                            <a href="{% url 'registrar-carga' item.id %}" class="btn-carga">
                                 <i class="fas fa-weight-hanging"></i>
+                                Registrar carga
                             </a>
                             <a href="{% url 'historico-cargas' treino.aluno.pk %}?exercicio={{ item.exercicio.pk }}"
-                                class="btn-carga" title="Ver histórico">
+                                class="btn-carga">
                                 <i class="fas fa-chart-line"></i>
+                                Ver histórico
                             </a>
                         </div>
                     </td>
