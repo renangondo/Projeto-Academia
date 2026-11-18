@@ -24,9 +24,19 @@ class HorarioAulaCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        form = context['form']
+
+        context['alunos_json'] = [
+            {"id": a.pk, "nome": a.nome}
+            for a in form.fields['aluno'].queryset
+        ]
         context['treinos_json'] = [
-            {"id": t.pk, "nome": t.nome_treino, "aluno": t.aluno_id}
-            for t in context['form'].fields['treino'].queryset
+            {
+                "id": t.pk,
+                "aluno": t.aluno_id,
+                "nome": f"{t.nome_treino} ({t.data_inicio:%d/%m/%Y} a {t.data_fim:%d/%m/%Y})",
+            }
+            for t in form.fields['treino'].queryset
         ]
         return context
 

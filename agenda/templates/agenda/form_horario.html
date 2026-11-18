@@ -3,7 +3,6 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
-<link rel="stylesheet" href="{% static 'css/global/autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/agenda/form_horario.css' %}">
 {% endblock %}
 
@@ -35,7 +34,7 @@
                 <label for="aluno-busca">Aluno</label>
 
                 <input type="text" id="aluno-busca" placeholder="Digite o nome do aluno..." autocomplete="off">
-                <input type="hidden" name="aluno" id="aluno-id" required>
+                <input type="hidden" name="aluno" id="aluno-id" value="{{ form.aluno.value|default_if_none:'' }}">
 
                 <div id="aluno-lista" class="autocomplete-lista"></div>
 
@@ -78,16 +77,8 @@
     </div>
 </div>
 
-<script id="dados-alunos" type="application/json">
-[
-    {% for aluno in form.fields.aluno.queryset %}
-    {"id": {{ aluno.pk }}, "nome": "{{ aluno.nome|escapejs }}"}{% if not forloop.last %},{% endif %}
-    {% endfor %}
-]
+{{ alunos_json|json_script:"dados-alunos" }}
 {{ treinos_json|json_script:"dados-treinos" }}
-</script>
-
-<script src="{% static 'js/global/autocomplete.js' %}"></script>
 <script src="{% static 'js/agenda/form_horario.js' %}"></script>
 
 {% endblock %}

@@ -247,3 +247,8 @@
     font-style:italic;
 
 }
+
+.autocomplete-item.ativo{
+    background:#eaf2ff;
+    color:#0d6efd;
+}
