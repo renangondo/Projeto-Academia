@@ -70,7 +70,7 @@
                     </td>
                     <td>{{ aluno.idade|default_if_none:"-" }}</td>
                     <td>{{ aluno.cpf }}</td>
-                    <td>{{ aluno.telefone }}</td>
+                    <td>{{ aluno.telefone_formatado }}</td>
                     <td>{{ aluno.objetivo }}</td>
                     <td><span class="badge">{{ aluno.nivel }}</span></td>
                     <td>{{ aluno.professor.nome|default:"-" }}</td>
