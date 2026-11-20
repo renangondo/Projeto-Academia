@@ -1,0 +1,131 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/paginas/modelo.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/detalhe_treino.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/listar_treino.css' %}">
+<link rel="stylesheet" href="{% static 'css/exercicio/listar_exercicio.css' %}">
+{% endblock %}
+
+{% block main %}
+
+<div class="list-container">
+
+    <div class="list-header">
+        <div>
+            <h2>Exercícios</h2>
+            <p>
+                {% if origem == 'meus' %}
+                    Os exercícios que você criou
+                {% elif origem == 'catalogo' %}
+                    Catálogo geral, criado pelo administrador
+                {% else %}
+                    Catálogo geral e os seus exercícios
+                {% endif %}
+            </p>
+        </div>
+
+        <a href="{% url 'cadastrar-exercicio' %}?categoria={{ categoria_sel }}" class="btn-novo">
+            + Novo exercício
+        </a>
+    </div>
+
+    <div class="toolbar">
+
+        <form method="get" class="toolbar-busca">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" value="{{ busca }}" placeholder="Buscar exercício..." autocomplete="off">
+
+            <select name="categoria">
+                <option value="">Todas as categorias</option>
+                {% for c in categorias %}
+                <option value="{{ c.pk }}" {% if categoria_sel == c.pk|stringformat:"d" %}selected{% endif %}>
+                    {{ c.nome }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <input type="hidden" name="origem" value="{{ origem }}">
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <div class="chips">
+            <a href="?origem=meus&q={{ busca|urlencode }}&categoria={{ categoria_sel }}"
+               class="chip{% if origem == 'meus' %} ativo{% endif %}">Meus exercícios</a>
+            <a href="?origem=catalogo&q={{ busca|urlencode }}&categoria={{ categoria_sel }}"
+               class="chip{% if origem == 'catalogo' %} ativo{% endif %}">Catálogo geral</a>
+            <a href="?origem=todos&q={{ busca|urlencode }}&categoria={{ categoria_sel }}"
+               class="chip{% if origem == 'todos' %} ativo{% endif %}">Todos</a>
+        </div>
+
+    </div>
+
+    <div class="table-container">
+        <table class="tabela-treinos">
+            <thead>
+                <tr>
+                    <th>Exercício</th>
+                    <th>Categoria</th>
+                    <th>Origem</th>
+                    <th class="col-acao">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for exercicio in exercicios %}
+                <tr>
+                    <td>
+                        <strong>{{ exercicio.nome }}</strong>
+                        {% if exercicio.descricao %}
+                        <span class="descricao">{{ exercicio.descricao }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="badge-categoria">{{ exercicio.categoria.nome }}</span>
+                    </td>
+
+                    <td>
+                        {% if exercicio.do_catalogo %}
+                        <span class="badge-origem catalogo">Catálogo geral</span>
+                        {% elif exercicio.cadastrado_por.usuario == request.user %}
+                        <span class="badge-origem proprio">Criado por você</span>
+                        {% else %}
+                        <span class="badge-origem outro">{{ exercicio.cadastrado_por.nome }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if is_admin or exercicio.cadastrado_por.usuario == request.user %}
+                        <div class="acoes">
+                            <a href="{% url 'editar-exercicio' exercicio.pk %}" class="btn-editar">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a href="{% url 'excluir-exercicio' exercicio.pk %}" class="btn-excluir">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="sem-registro">
+                        {% if busca or categoria_sel %}
+                            Nenhum exercício encontrado com esses filtros.
+                        {% elif origem == 'meus' %}
+                            Você ainda não criou nenhum exercício.
+                        {% else %}
+                            Nenhum exercício cadastrado.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

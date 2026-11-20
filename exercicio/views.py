@@ -19,7 +19,8 @@ from django.views.generic import TemplateView
 from .cargas import registrar_carga
 from .models import HistoricoCarga   # junto do import de models que você já tem
 from .pdf import gerar_pdf_treino
-
+import unicodedata
+from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario, eh_admin   # inclua o eh_admin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 
@@ -38,6 +39,23 @@ def exercicios_visiveis(user):
         | Q(cadastrado_por__usuario__is_superuser=True)
         | Q(cadastrado_por__usuario__groups__name="Administrador")
     ).distinct()
+
+def normalizar(texto):
+    """minúsculas e sem acento, para 'agachamento' achar 'Agachamento'."""
+    texto = unicodedata.normalize('NFD', (texto or '').lower())
+    return ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
+
+
+def do_catalogo(usuario):
+    """Exercício do catálogo geral = criado por um administrador."""
+    return usuario.is_superuser or any(g.name == "Administrador" for g in usuario.groups.all())
+
+
+def destino_exercicios(user, categoria_id):
+    """Admin volta para a lista da categoria; professor volta para a sua lista."""
+    if eh_admin(user):
+        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': categoria_id})
+    return reverse_lazy('listar-exercicio')
 
 ############################## A MAIS #########################################
 class DatasTreinoMixin:
@@ -122,7 +140,7 @@ class ExercicioCreate(LoginRequiredMixin, GroupRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
+        return destino_exercicios(self.request.user, self.object.categoria_id)
 
 
 
@@ -215,7 +233,7 @@ class ExercicioTreinoUpdate(DatasTreinoMixin, SomenteDoMeuAlunoMixin, LoginRequi
         return form
 
     def get_success_url(self):
-        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
+        return destino_exercicios(self.request.user, self.object.categoria_id)
 
     def form_valid(self, form):
         mudou = 'peso_atual' in form.changed_data or 'exercicio' in form.changed_data
@@ -263,7 +281,7 @@ class ExercicioDelete(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequi
     group_required = ["Professor", "Administrador"]
 
     def get_success_url(self):
-        return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
+        return destino_exercicios(self.request.user, self.object.categoria_id)
 
     def form_valid(self, form):
         try:
@@ -308,16 +326,6 @@ class TreinoDetail(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixi
         return context
 
 ############################## LIST #########################################
-
-class ExercicioList(LoginRequiredMixin, GroupRequiredMixin, ListView):
-    model = Exercicio
-    template_name = "exercicio/listar_exercicio.html"
-    group_required = ["Professor", "Administrador"]
-
-    def get_queryset(self):
-        return exercicios_visiveis(self.request.user)
-
-
 class CategoriaList(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Categoria
     template_name = 'listar_categoria.html'
@@ -388,6 +396,56 @@ class TreinoList(LoginRequiredMixin, GroupRequiredMixin, ListView):
         context['ordem'] = self.request.GET.get('ordem', 'recentes')
         return context
 
+
+class ExercicioList(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    model = Exercicio
+    template_name = 'listar_exercicio.html'
+    context_object_name = 'exercicios'
+    group_required = ["Professor", "Administrador"]
+
+    def get_origem(self):
+        return self.request.GET.get('origem') or ('todos' if eh_admin(self.request.user) else 'meus')
+
+    def get_queryset(self):
+        user = self.request.user
+        pessoa = getattr(user, 'pessoa_usuario', None)
+        origem = self.get_origem()
+
+        qs = exercicios_visiveis(user).select_related(
+            'categoria', 'cadastrado_por__usuario'
+        ).prefetch_related('cadastrado_por__usuario__groups')
+
+        if origem == 'meus':
+            qs = qs.filter(cadastrado_por=pessoa) if pessoa else qs.none()
+        elif origem == 'catalogo':
+            qs = qs.filter(
+                Q(cadastrado_por__usuario__is_superuser=True)
+                | Q(cadastrado_por__usuario__groups__name="Administrador")
+            ).distinct()
+
+        categoria = self.request.GET.get('categoria', '')
+        if categoria.isdigit():
+            qs = qs.filter(categoria_id=categoria)
+
+        lista = list(qs.order_by('categoria__nome', 'nome'))
+
+        busca = self.request.GET.get('q', '').strip()
+        if busca:
+            termo = normalizar(busca)
+            lista = [e for e in lista if termo in normalizar(e.nome)]
+
+        for e in lista:
+            e.do_catalogo = do_catalogo(e.cadastrado_por.usuario)
+
+        return lista
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['origem'] = self.get_origem()
+        context['busca'] = self.request.GET.get('q', '').strip()
+        context['categoria_sel'] = self.request.GET.get('categoria', '')
+        context['categorias'] = Categoria.objects.order_by('nome')
+        return context
 #################################### CARGA #######################################################
 class RegistrarCarga(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     campo_aluno = 'treino__aluno'

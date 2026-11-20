@@ -81,11 +81,9 @@
                     </td>
 
                     <td>
-                        {% if is_aluno %}
-                        {{ treino.aluno.nome }}
+                        {% if is_aluno %}{{ treino.aluno.nome }}
                         {% else %}
-                        <a href="{% url 'detalhe-aluno' treino.aluno.pk %}" class="link-aluno">{{ treino.aluno.nome
-                            }}</a>
+                        <a href="{% url 'detalhe-aluno' treino.aluno.pk %}" class="link-aluno">{{ treino.aluno.nome}}</a>
                         {% endif %}
                     </td>
 
