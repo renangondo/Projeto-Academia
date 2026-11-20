@@ -15,9 +15,9 @@
                 <h1>Olá, {{ p.nome }}!</h1>
                 <p>
                     {% if p.professor %}
-                        Professor responsável: <strong>{{ p.professor.nome }}</strong>
+                    Professor responsável: <strong>{{ p.professor.nome }}</strong>
                     {% else %}
-                        Você ainda não tem um professor responsável.
+                    Você ainda não tem um professor responsável.
                     {% endif %}
                 </p>
 
@@ -67,47 +67,51 @@
             {% endif %}
         </section>
 
-        <section class="home-treino">
-            <span class="home-rotulo">
-                <i class="fas fa-clipboard-list"></i>
-                Treino em andamento
-            </span>
+    </div>
 
-            {% if treino_atual %}
-            {% with d=treino_atual.dias_restantes %}
-            <h2>{{ treino_atual.nome_treino }}</h2>
-            <p>{{ treino_atual.descricao }}</p>
+    <div class="home-secao home-secao-treinos">
+        <h3>
+            Meus treinos em andamento
+            <span class="home-contador">{{ treinos_atuais|length }}</span>
+        </h3>
+        <a href="{% url 'listar-treino' %}" class="home-link">Ver todos os treinos</a>
+    </div>
 
-            <div class="home-chips">
-                <span>{{ treino_atual.qtd_exercicios }} exercício{{ treino_atual.qtd_exercicios|pluralize }}</span>
-                <span>
-                    {% if d == 0 %}
-                        termina hoje
-                    {% else %}
-                        {{ d }} dia{{ d|pluralize }} restante{{ d|pluralize }}
-                    {% endif %}
-                </span>
+    {% if treinos_atuais %}
+
+    <div class="home-bloco-treinos">
+
+        <div class="home-linhas">
+            {% for t in treinos_visiveis %}
+            {% include 'dashboards/_linha_treino.html' %}
+            {% endfor %}
+        </div>
+
+        {% if treinos_restantes %}
+        <details class="home-mais">
+            <summary>
+                Mostrar mais {{ treinos_restantes|length }} treino{{ treinos_restantes|length|pluralize }}
+            </summary>
+
+            <div class="home-linhas">
+                {% for t in treinos_restantes %}
+                {% include 'dashboards/_linha_treino.html' %}
+                {% endfor %}
             </div>
-            {% endwith %}
-
-            <div class="home-acoes">
-                <a href="{% url 'detalhe-treino' treino_atual.pk %}" class="home-btn">Ver treino</a>
-                <a href="{% url 'treino-pdf' treino_atual.pk %}" class="home-btn claro">
-                    <i class="fas fa-file-pdf"></i>
-                    PDF
-                </a>
-            </div>
-            {% else %}
-            <h2>Nenhum treino ativo</h2>
-            <p>Quando o seu professor criar um treino, ele aparece aqui.</p>
-
-            <div class="home-acoes">
-                <a href="{% url 'listar-treino' %}" class="home-btn claro">Ver meus treinos</a>
-            </div>
-            {% endif %}
-        </section>
+        </details>
+        {% endif %}
 
     </div>
+
+    {% else %}
+
+    <div class="home-treinos-vazio">
+        <i class="fas fa-clipboard-list"></i>
+        <p>Nenhum treino em andamento. Quando o seu professor criar um treino, ele aparece aqui.</p>
+        <a href="{% url 'listar-treino' %}" class="home-btn claro">Ver meus treinos</a>
+    </div>
+
+    {% endif %}
 
     <div class="home-metricas">
 

@@ -9,7 +9,7 @@ from agenda.models import HorarioAula
 from agenda.utils import montar_semana
 from cadastros.models import Pessoa
 from exercicio.models import Treino
-
+from agenda.utils import ABREVIACOES, montar_semana, proxima_aula
 
 
 class InicioView(LoginRequiredMixin, TemplateView):
@@ -55,10 +55,36 @@ class InicioView(LoginRequiredMixin, TemplateView):
                 context['variacoes'] = calcular_variacoes(atual, anterior)
 
             hoje = timezone.localdate()
-            context['treino_atual'] = Treino.objects.filter(
-                aluno=pessoa, data_inicio__lte=hoje, data_fim__gte=hoje
-            ).annotate(
-                qtd_exercicios=Count('exercicio_do_treino')
-            ).order_by('-data_inicio', '-id').first()
+
+            treinos_atuais = list(
+                Treino.objects.filter(
+                    aluno=pessoa, data_inicio__lte=hoje, data_fim__gte=hoje
+                ).annotate(
+                    qtd_exercicios=Count('exercicio_do_treino')
+                ).order_by('nome_treino', 'id')
+            )
+
+            # em quais dias da semana cada treino aparece na agenda
+            dias_por_treino = {}
+            for h in horarios:
+                if h.treino_id:
+                    dias = dias_por_treino.setdefault(h.treino_id, [])
+                    abreviacao = ABREVIACOES[h.dia_semana]
+                    if abreviacao not in dias:
+                        dias.append(abreviacao)
+
+            proxima = context['proxima_aula']
+            treino_proximo = proxima['horario'].treino_id if proxima else None
+
+            for t in treinos_atuais:
+                t.dias_semana = dias_por_treino.get(t.pk, [])
+                t.eh_proximo = (t.pk == treino_proximo)
+
+            # o treino da próxima aula primeiro; os demais em ordem alfabética
+            treinos_atuais.sort(key=lambda t: (not t.eh_proximo, t.nome_treino))
+
+            context['treinos_atuais'] = treinos_atuais
+            context['treinos_visiveis'] = treinos_atuais[:4]
+            context['treinos_restantes'] = treinos_atuais[4:]
 
         return context

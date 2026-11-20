@@ -1,0 +1,40 @@
+<article class="home-linha{% if t.eh_proximo %} destaque{% endif %}">
+
+    <div class="home-linha-nome">
+        <strong>{{ t.nome_treino }}</strong>
+        <span>{{ t.descricao }}</span>
+    </div>
+
+    <div class="home-linha-dias">
+        {% for dia in t.dias_semana %}
+        <span class="home-dia">{{ dia }}</span>
+        {% empty %}
+        <span class="home-sem-dia">Sem dia na agenda</span>
+        {% endfor %}
+
+        {% if t.eh_proximo %}
+        <em class="home-selo">Próxima aula</em>
+        {% endif %}
+    </div>
+
+    <div class="home-linha-info">
+        {% with d=t.dias_restantes %}
+        <span>{{ t.qtd_exercicios }} exercício{{ t.qtd_exercicios|pluralize }}</span>
+        <span>
+            {% if d == 0 %}
+                termina hoje
+            {% else %}
+                {{ d }} dia{{ d|pluralize }} restante{{ d|pluralize }}
+            {% endif %}
+        </span>
+        {% endwith %}
+    </div>
+
+    <div class="home-linha-acoes">
+        <a href="{% url 'detalhe-treino' t.pk %}" class="home-btn">Ver treino</a>
+        <a href="{% url 'treino-pdf' t.pk %}" class="home-btn claro" title="Baixar PDF">
+            <i class="fas fa-file-pdf"></i>
+        </a>
+    </div>
+
+</article>
