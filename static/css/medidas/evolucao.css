@@ -199,6 +199,102 @@
     margin-bottom:14px;
 }
 
+/* o card passa a "medir" a própria largura para decidir onde fica o comparativo */
+.graficos-grid .grafico-card{
+    container-type:inline-size;
+}
+
+.grafico-corpo{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr);
+    gap:16px;
+}
+
+/* card largo: comparativo ao lado do gráfico */
+@container (min-width: 420px){
+    .grafico-corpo{
+        grid-template-columns:minmax(0, 1fr) 150px;
+    }
+}
+
+.comparativo{
+    background:#f8fafd;
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.comparativo h4{
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+.comp-bloco{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.comp-bloco + .comp-bloco{
+    padding-top:12px;
+    border-top:1px solid #e5eaf2;
+}
+
+.comp-rotulo{
+    color:#64748b;
+    font-size:11px;
+    font-weight:700;
+}
+
+.comp-atual{
+    color:#0f172a;
+    font-size:20px;
+}
+
+.comp-linha{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.comp-linha small{
+    color:#94a3b8;
+    font-size:11px;
+}
+
+.comp-chip{
+    display:inline-flex;
+    align-items:center;
+    align-self:flex-start;
+    gap:5px;
+    font-style:normal;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+}
+
+.comp-subiu{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.comp-desceu{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.comp-igual{
+    background:#f1f5f9;
+    color:#64748b;
+}
+
 @media (max-width:800px){
     .graficos-grid{
         grid-template-columns:1fr;
