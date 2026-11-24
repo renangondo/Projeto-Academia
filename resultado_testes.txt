@@ -1,5 +1,5 @@
 Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
-Found 15 test(s).
+Found 37 test(s).
 Operations to perform:
   Synchronize unmigrated apps: messages, staticfiles
   Apply all migrations: admin, agenda, auth, cadastros, contenttypes, exercicio, medidas, sessions
@@ -30,38 +30,82 @@ Running migrations:
   Applying cadastros.0002_grupos_iniciais... OK
   Applying medidas.0001_initial... OK
   Applying sessions.0001_initial...test_ta01_cadastrar_aluno_com_dados_validos (cadastros.tests.CasosFuncionaisTestes.test_ta01_cadastrar_aluno_com_dados_validos)
-TA-01 (CT-01) - Cadastrar aluno com dados v�lidos. ... ok
+TA-01 (CT-01) - Cadastrar aluno com dados válidos. ... ok
 test_ta02_cadastro_com_cpf_ja_existente_e_rejeitado (cadastros.tests.CasosFuncionaisTestes.test_ta02_cadastro_com_cpf_ja_existente_e_rejeitado)
-TA-02 (CT-02) - Cadastrar pessoa com CPF j� existente. ... ok
+TA-02 (CT-02) - Cadastrar pessoa com CPF já existente. ... ok
 test_ta03_registrar_medidas_vinculadas_ao_aluno (cadastros.tests.CasosFuncionaisTestes.test_ta03_registrar_medidas_vinculadas_ao_aluno)
 TA-03 (CT-03) - Registrar medidas corporais de um aluno. ... ok
 test_ta04_criar_treino_com_exercicios (cadastros.tests.CasosFuncionaisTestes.test_ta04_criar_treino_com_exercicios)
-TA-04 (CT-04) - Criar treino com exerc�cios, s�ries, repeti��es, descanso e carga. ... ok
+TA-04 (CT-04) - Criar treino com exercícios, séries, repetições, descanso e carga. ... ok
 test_ta05_evolucao_das_medidas_com_mais_de_um_registro (cadastros.tests.CasosFuncionaisTestes.test_ta05_evolucao_das_medidas_com_mais_de_um_registro)
-TA-05 (CT-05) - Evolu��o do aluno com mais de um registro de medidas. ... ok
+TA-05 (CT-05) - Evolução do aluno com mais de um registro de medidas. ... ok
 test_ta06_exportar_treino_em_pdf (cadastros.tests.CasosFuncionaisTestes.test_ta06_exportar_treino_em_pdf)
 TA-06 (CT-06) - Exportar um treino em PDF. ... ok
 test_ta07_agendar_aula_em_horario_ocupado (cadastros.tests.CasosFuncionaisTestes.test_ta07_agendar_aula_em_horario_ocupado)
-TA-07 (CT-07) - Cadastrar aula em hor�rio j� ocupado pelo professor. ... ok
+TA-07 (CT-07) - Cadastrar aula em horário já ocupado pelo professor. ... ok
 test_ta08_transferencia_com_solicitacao_pendente_e_bloqueada (cadastros.tests.CasosFuncionaisTestes.test_ta08_transferencia_com_solicitacao_pendente_e_bloqueada)
-TA-08 (CT-08) - Solicitar transfer�ncia de aluno que j� possui solicita��o pendente. ... ok
+TA-08 (CT-08) - Solicitar transferência de aluno que já possui solicitação pendente. ... ok
 test_ta09_solicitacao_sem_resposta_expira_em_48_horas (cadastros.tests.CasosFuncionaisTestes.test_ta09_solicitacao_sem_resposta_expira_em_48_horas)
-TA-09 (CT-09) - Solicita��o de transfer�ncia sem resposta ap�s 48 horas. ... ok
+TA-09 (CT-09) - Solicitação de transferência sem resposta após 48 horas. ... ok
 test_ta10_professor_nao_ve_aluno_de_outro_professor (cadastros.tests.SegurancaERegrasTestes.test_ta10_professor_nao_ve_aluno_de_outro_professor)
-TA-10 - Professor n�o acessa o detalhe de aluno de outro professor. ... ok
+TA-10 - Professor não acessa o detalhe de aluno de outro professor. ... ok
 test_ta11_aluno_nao_ve_evolucao_de_outro_aluno (cadastros.tests.SegurancaERegrasTestes.test_ta11_aluno_nao_ve_evolucao_de_outro_aluno)
-TA-11 - O aluno n�o acessa a evolu��o de outro aluno. ... ok
+TA-11 - O aluno não acessa a evolução de outro aluno. ... ok
 test_ta12_professor_nao_ve_treino_de_aluno_de_outro_professor (cadastros.tests.SegurancaERegrasTestes.test_ta12_professor_nao_ve_treino_de_aluno_de_outro_professor)
-TA-12 - Professor n�o acessa o treino de aluno de outro professor. ... ok
+TA-12 - Professor não acessa o treino de aluno de outro professor. ... ok
 test_ta13_visitante_e_redirecionado_ao_login (cadastros.tests.SegurancaERegrasTestes.test_ta13_visitante_e_redirecionado_ao_login)
-TA-13 - Quem n�o est� logado � redirecionado para o login. ... ok
+TA-13 - Quem não está logado é redirecionado para o login. ... ok
 test_ta14_calculo_e_classificacao_do_imc (cadastros.tests.SegurancaERegrasTestes.test_ta14_calculo_e_classificacao_do_imc)
-TA-14 - O IMC � calculado e classificado nas faixas da OMS. ... ok
+TA-14 - O IMC é calculado e classificado nas faixas da OMS. ... ok
 test_ta15_senha_fraca_e_recusada_e_senha_forte_e_aceita (cadastros.tests.SegurancaERegrasTestes.test_ta15_senha_fraca_e_recusada_e_senha_forte_e_aceita)
-TA-15 - Senhas fracas s�o recusadas na troca de senha. ... ok
+TA-15 - Senhas fracas são recusadas na troca de senha. ... ok
+test_ta16_professor_se_cadastra_pela_tela_publica (cadastros.tests_extras.CadastrosExtrasTestes.test_ta16_professor_se_cadastra_pela_tela_publica)
+TA-16 - O cadastro público de professor cria o acesso com o CPF. ... ok
+test_ta17_professor_edita_so_o_proprio_perfil (cadastros.tests_extras.CadastrosExtrasTestes.test_ta17_professor_edita_so_o_proprio_perfil)
+TA-17 - O professor edita o próprio perfil, mas não o de outro professor. ... ok
+test_ta18_professor_edita_e_exclui_aluno (cadastros.tests_extras.CadastrosExtrasTestes.test_ta18_professor_edita_e_exclui_aluno)
+TA-18 - O professor edita um aluno e exclui um aluno sem vínculos. ... ok
+test_ta19_busca_de_alunos_por_nome_sem_acento_e_por_cpf (cadastros.tests_extras.CadastrosExtrasTestes.test_ta19_busca_de_alunos_por_nome_sem_acento_e_por_cpf)
+TA-19 - A lista de alunos busca por nome (sem acento) e por CPF. ... ok
+test_ta20_aceitar_transferencia_passa_o_aluno_ao_novo_professor (cadastros.tests_extras.CadastrosExtrasTestes.test_ta20_aceitar_transferencia_passa_o_aluno_ao_novo_professor)
+TA-20 - Ao aceitar a transferência, o novo professor passa a ver o aluno. ... ok
+test_ta21_recusar_transferencia_mantem_o_professor (cadastros.tests_extras.CadastrosExtrasTestes.test_ta21_recusar_transferencia_mantem_o_professor)
+TA-21 - Ao recusar a transferência, o aluno continua com o professor atual. ... ok
+test_ta22_so_o_destinatario_responde_a_transferencia (cadastros.tests_extras.CadastrosExtrasTestes.test_ta22_so_o_destinatario_responde_a_transferencia)
+TA-22 - Quem não é o destinatário não pode responder à solicitação. ... ok
+test_ta23_professor_solicita_transferencia_e_ve_as_telas (cadastros.tests_extras.CadastrosExtrasTestes.test_ta23_professor_solicita_transferencia_e_ve_as_telas)
+TA-23 - O professor solicita a transferência; a duplicada é bloqueada. ... ok
+test_ta24_primeiro_acesso_exige_troca_de_senha (cadastros.tests_extras.CadastrosExtrasTestes.test_ta24_primeiro_acesso_exige_troca_de_senha)
+TA-24 - No primeiro acesso a troca de senha é obrigatória e depois é liberada. ... ok
+test_ta25_dashboard_do_professor (cadastros.tests_extras.PaineisEAgendaTestes.test_ta25_dashboard_do_professor)
+TA-25 - O dashboard do professor mostra totais e a agenda da semana. ... ok
+test_ta26_dashboard_do_aluno (cadastros.tests_extras.PaineisEAgendaTestes.test_ta26_dashboard_do_aluno)
+TA-26 - O dashboard do aluno mostra a próxima aula, o IMC e a variação. ... ok
+test_ta27_proxima_aula_considera_o_dia_e_a_hora_atuais (cadastros.tests_extras.PaineisEAgendaTestes.test_ta27_proxima_aula_considera_o_dia_e_a_hora_atuais)
+TA-27 - A próxima aula é calculada a partir do dia e da hora atuais. ... ok
+test_ta28_agenda_agrupa_as_aulas_por_dia_da_semana (cadastros.tests_extras.PaineisEAgendaTestes.test_ta28_agenda_agrupa_as_aulas_por_dia_da_semana)
+TA-28 - A semana tem 7 dias, marca o dia de hoje e agrupa as aulas. ... ok
+test_ta29_variacao_entre_as_duas_ultimas_medidas (cadastros.tests_extras.PaineisEAgendaTestes.test_ta29_variacao_entre_as_duas_ultimas_medidas)
+TA-29 - A variação indica se cada medida subiu, desceu ou ficou igual. ... ok
+test_ta30_exercicio_do_professor_e_privado (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta30_exercicio_do_professor_e_privado)
+TA-30 - O exercício criado por um professor é visível só para ele. ... ok
+test_ta31_lista_de_exercicios_do_professor (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta31_lista_de_exercicios_do_professor)
+TA-31 - A lista separa os exercícios do professor e o catálogo geral. ... ok
+test_ta32_editar_treino_valida_as_datas (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta32_editar_treino_valida_as_datas)
+TA-32 - A edição do treino recusa data de encerramento anterior ao início. ... ok
+test_ta33_editar_e_excluir_exercicio_do_treino (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta33_editar_e_excluir_exercicio_do_treino)
+TA-33 - Editar a carga de um exercício do treino gera histórico; excluir remove. ... ok
+test_ta34_historico_de_cargas (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta34_historico_de_cargas)
+TA-34 - O histórico guarda uma carga por dia e respeita o acesso do aluno. ... ok
+test_ta35_compartilhar_treino_por_whatsapp (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta35_compartilhar_treino_por_whatsapp)
+TA-35 - O link do WhatsApp leva o número do aluno e o treino na mensagem. ... ok
+test_ta36_aluno_registra_edita_e_exclui_as_proprias_medidas (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta36_aluno_registra_edita_e_exclui_as_proprias_medidas)
+TA-36 - O aluno registra medidas (reaproveitando a altura), edita e exclui. ... ok
+test_ta37_representacoes_e_propriedades_dos_models (cadastros.tests_extras.TreinosExerciciosECargasTestes.test_ta37_representacoes_e_propriedades_dos_models)
+TA-37 - Formatação de CPF e telefone, idade e textos dos registros. ... ok
 
 ----------------------------------------------------------------------
-Ran 15 tests in 10.939s
+Ran 37 tests in 21.996s
 
 OK
 Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

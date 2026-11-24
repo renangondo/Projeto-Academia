@@ -220,10 +220,10 @@ class ExercicioUpdate(SomenteMeusExerciciosMixin, LoginRequiredMixin, GroupRequi
     def get_success_url(self):
         return reverse_lazy('listar-exercicio-categoria', kwargs={'pk': self.object.categoria_id})
 
-class ExercicioTreinoUpdate(DatasTreinoMixin, SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
+class ExercicioTreinoUpdate(SomenteDoMeuAlunoMixin, LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     campo_aluno = 'treino__aluno'
     model = ExercicioTreino
-    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']   # sem 'treino'
+    fields = ['exercicio', 'series', 'repeticoes', 'descanso', 'peso_atual']
     template_name = 'form.html'
     group_required = ["Professor", "Administrador"]
 
@@ -231,9 +231,6 @@ class ExercicioTreinoUpdate(DatasTreinoMixin, SomenteDoMeuAlunoMixin, LoginRequi
         form = super().get_form(form_class)
         form.fields['exercicio'].queryset = exercicios_visiveis(self.request.user)
         return form
-
-    def get_success_url(self):
-        return destino_exercicios(self.request.user, self.object.categoria_id)
 
     def form_valid(self, form):
         mudou = 'peso_atual' in form.changed_data or 'exercicio' in form.changed_data
@@ -246,6 +243,9 @@ class ExercicioTreinoUpdate(DatasTreinoMixin, SomenteDoMeuAlunoMixin, LoginRequi
                 self.object.peso_atual, self.request.user
             )
         return response
+
+    def get_success_url(self):
+        return reverse_lazy('detalhe-treino', kwargs={'pk': self.object.treino_id})
 ############################## DELETE #########################################
 
 class CategoriaDelete(LoginRequiredMixin, GroupRequiredMixin, DeleteView):

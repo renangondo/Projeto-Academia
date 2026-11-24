@@ -2,23 +2,31 @@ import re
 from urllib.parse import quote
 
 
-def montar_link_whatsapp(treino, exercicios):
-    telefone = re.sub(r'\D', '', treino.aluno.telefone or '')
-    if len(telefone) in (10, 11):
-        telefone = '55' + telefone      # DDD + número: acrescenta o código do Brasil
+def normalizar_telefone(telefone):
+    """Devolve só dígitos com DDI 55, ou None se o número for inválido."""
+    digitos = re.sub(r'\D', '', telefone or '')
+    if len(digitos) in (10, 11):
+        return '55' + digitos
+    if len(digitos) in (12, 13) and digitos.startswith('55'):
+        return digitos
+    return None
 
-    linhas = [
-        f'Olá, {treino.aluno.nome}! Seu treino *{treino.nome_treino}* está pronto.',
-        f'Período: {treino.data_inicio:%d/%m/%Y} a {treino.data_fim:%d/%m/%Y}',
-        '',
-    ]
 
-    for item in exercicios:
+def montar_mensagem(treino):
+    linhas = [f'Olá, {treino.aluno.nome}! Segue o seu treino:', '']  # AJUSTAR: nome do campo
+    linhas.append(f'*{treino.nome}*')                                   # AJUSTAR: nome do treino
+    linhas.append('')
+    for item in treino.exerciciotreino_set.select_related('exercicio'):  # AJUSTAR: related_name
         linhas.append(
-            f'• {item.exercicio.nome}: {item.series}x{item.repeticoes}'
-            f' | descanso {item.descanso} min | {item.peso_atual:g} kg'
+            f'• {item.exercicio.nome}: {item.series}x{item.repeticoes}'  # AJUSTAR: campos
         )
+    linhas.append('')
+    linhas.append('Bom treino! 💪')
+    return '\n'.join(linhas)
 
-    linhas += ['', 'Bons treinos! 💪']
 
-    return f'https://wa.me/{telefone}?text={quote(chr(10).join(linhas))}'
+def montar_link_whatsapp(treino):
+    numero = normalizar_telefone(treino.aluno.telefone)  # AJUSTAR: campo do telefone
+    if not numero:
+        return None
+    return f'https://wa.me/{numero}?text={quote(montar_mensagem(treino))}'
