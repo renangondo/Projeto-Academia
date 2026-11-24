@@ -6,13 +6,10 @@ from .models import Categoria, Treino, Exercicio, ExercicioTreino
 from django.views.generic import DetailView, ListView
 from django.urls import reverse_lazy
 from django.db.models import Count, ProtectedError
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Q, Count, ProtectedError
 from django.utils import timezone
-from django.shortcuts import get_object_or_404
 from cadastros.permissoes import SomenteDoMeuAlunoMixin, alunos_do_usuario
-from .compartilhar import montar_link_whatsapp
 from django.http import HttpResponse
 from django.utils.text import slugify
 from django.views.generic import TemplateView
@@ -25,7 +22,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+
+from cadastros.permissoes import alunos_do_usuario
+from .compartilhar import montar_link_whatsapp
+from .models import Treino
+
+
+@login_required
+def enviar_treino_whatsapp(request, pk):
+    # só treinos de alunos do próprio professor (404 para os demais)
+    treino = get_object_or_404(
+        Treino, pk=pk, aluno__in=alunos_do_usuario(request.user)  # AJUSTAR se o FK tiver outro nome
+    )
+    link = montar_link_whatsapp(treino)
+    if not link:
+        messages.error(request, 'O aluno não tem um telefone válido cadastrado.')
+        return redirect('detalhe-treino', pk=treino.pk)
+    return redirect(link)
+
+
 # Create your views here.
+
 
 from django.db.models import Q
 
